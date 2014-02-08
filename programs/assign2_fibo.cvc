@@ -1,0 +1,39 @@
+extern void printInt(int val);
+extern void printSpaces(int num);
+extern void printNewlines(int num);
+
+extern int scanInt();
+
+export int main()
+{
+	int n;
+	int prv = 0;
+	int cur = 1;
+	
+	void advance()
+	{
+		int nxt = prv + cur;
+		prv = cur;
+		cur = nxt;
+	}
+	
+	n = scanInt();
+	if (n < 1)
+	{
+		n = 1;
+	}
+	printInt(n);
+	printNewlines(2);
+	
+	printInt(cur);
+	printSpaces(1);
+	for (int i = 1, n)
+	{
+		advance();
+		printInt(cur);
+		printSpaces(1);
+	}
+	printNewlines(1);
+	
+	return 0;
+}
