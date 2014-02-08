@@ -1,0 +1,103 @@
+extern void printInt(int val);
+extern void printSpaces(int num);
+extern void printNewlines(int num);
+
+extern int scanInt();
+
+export int main()
+{
+	int len = 10;
+	int[len] vct;
+	
+	printInt(len);
+	printNewlines(2);
+	
+	scan_vector(vct);
+	printNewlines(1);
+	print_vector(vct);
+	
+	printNewlines(2);
+	
+	sort_vector(vct);
+	print_vector(vct);
+	
+	return 0;
+}
+
+
+/* Three methods: scan_vector(), print_vector() and sort_vector(). */
+void scan_vector(int[len] vct)
+{
+	for (int i = 0, len)
+	{
+		vct[i] = scanInt();
+	}
+}
+
+void print_vector(int[len] vct)
+{
+	for (int i = 0, len)
+	{
+		printInt(vct[i]);
+		printSpaces(1);
+	}
+	printNewlines(1);
+}
+
+void sort_vector(int[len] vct)
+{
+	quicksort(vct, 0, len - 1);
+}
+
+/* The quicksort() function sorts a (section of a) vector in place. The elements
+ * [left, right] (both sides inclusive) are partitioned into two sections, 
+ * where the first section contains elements which are all lower than all the 
+ * elements in the second section. These sections are then quicksorted. */
+void quicksort(int[len] vct, int left, int right)
+{
+	int pivot;
+	
+	if (left < right)
+	{
+		pivot = partition(vct, left, right);
+		quicksort(vct, left, pivot - 1);
+		quicksort(vct, pivot + 1, right);
+	}
+}
+
+/* Partition() chooses a value as a pivot. It then proceeds to move the elements
+ * smaller or equal to the pivotvalue to the left; that is, at any point all
+ * elements before key are smaller or equal to the pivotvalue, and when done,
+ * all the elements that are not before key, are thus higher than pivotvalue.
+ * Then the pivot is swapped to key and is in exactly the right spot. */
+int partition(int[len] vct, int left, int right)
+{
+	int pivot = left + (right - left) / 2;
+	int pivotvalue = vct[pivot];
+	int key = left;
+	swap(vct, pivot, right);
+	
+	for (int i = left, right)
+	{
+		if (vct[i] <= pivotvalue)
+		{
+			if (i != key)
+			{
+				swap(vct, i, key);
+			}
+			key = key + 1;
+		}
+	}
+	
+	swap(vct, key, right);
+	return key;
+}
+
+/* Swaps two elements, no questions asked. */
+void swap(int[len] vct, int a, int b)
+{
+	int tmp = vct[a];
+	vct[a] = vct[b];
+	vct[b] = tmp;
+}
+
