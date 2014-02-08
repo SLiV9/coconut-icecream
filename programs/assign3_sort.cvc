@@ -6,47 +6,45 @@ extern int scanInt();
 
 export int main()
 {
-	int len = 10;
+	int len = scanPositiveInt();
 	int[len] vct;
+	
+	void scan_vector()
+	{
+		for (int i = 0, len)
+		{
+			vct[i] = scanInt();
+		}
+	}
+	
+	void print_vector()
+	{
+		for (int i = 0, len)
+		{
+			printInt(vct[i]);
+			printSpaces(1);
+		}
+		printNewlines(1);
+	}
+	
+	void sort_vector()
+	{
+		quicksort(vct, 0, len - 1);
+	}
 	
 	printInt(len);
 	printNewlines(2);
 	
-	scan_vector(vct);
+	scan_vector();
 	printNewlines(1);
-	print_vector(vct);
+	print_vector();
 	
 	printNewlines(2);
 	
-	sort_vector(vct);
-	print_vector(vct);
+	sort_vector();
+	print_vector();
 	
 	return 0;
-}
-
-
-/* Three methods: scan_vector(), print_vector() and sort_vector(). */
-void scan_vector(int[len] vct)
-{
-	for (int i = 0, len)
-	{
-		vct[i] = scanInt();
-	}
-}
-
-void print_vector(int[len] vct)
-{
-	for (int i = 0, len)
-	{
-		printInt(vct[i]);
-		printSpaces(1);
-	}
-	printNewlines(1);
-}
-
-void sort_vector(int[len] vct)
-{
-	quicksort(vct, 0, len - 1);
 }
 
 /* The quicksort() function sorts a (section of a) vector in place. The elements
@@ -75,7 +73,15 @@ int partition(int[len] vct, int left, int right)
 	int pivot = left + (right - left) / 2;
 	int pivotvalue = vct[pivot];
 	int key = left;
-	swap(vct, pivot, right);
+	
+	void swap(int a, int b)
+	{
+		int tmp = vct[a];
+		vct[a] = vct[b];
+		vct[b] = tmp;
+	}
+	
+	swap(pivot, right);
 	
 	for (int i = left, right)
 	{
@@ -83,21 +89,23 @@ int partition(int[len] vct, int left, int right)
 		{
 			if (i != key)
 			{
-				swap(vct, i, key);
+				swap(i, key);
 			}
 			key = key + 1;
 		}
 	}
 	
-	swap(vct, key, right);
+	swap(key, right);
 	return key;
 }
 
-/* Swaps two elements, no questions asked. */
-void swap(int[len] vct, int a, int b)
+/* Little wrapper. */
+int scanPositiveInt()
 {
-	int tmp = vct[a];
-	vct[a] = vct[b];
-	vct[b] = tmp;
+	int n = scanInt();
+	if (n < 1)
+	{
+		n = 1;
+	}
+	return n;
 }
-
