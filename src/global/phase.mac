@@ -38,6 +38,12 @@ SUBPHASE( as4ip,
 					ALWAYS,
 					as4)
 
+SUBPHASE( as4ac,
+					"Arithmetic Operator Counting",
+					AS4ACdoCount,
+					ALWAYS,
+					as4)
+
 ENDPHASE( as4)
 
 /******************************************************************************/

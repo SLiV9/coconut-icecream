@@ -28,6 +28,12 @@
       	</travuser>
       </traversal>
       
+      <traversal id="AS4AC" name="Arithmetic Operator Counting" default="sons" include="as4ac.h">
+      	<travuser>
+      		<node name="BinOp" />
+      	</travuser>
+      </traversal>
+      
       <traversal id="PRT" name="Print Syntax Tree" default="user" include="print.h" />
       <traversal id="COPY" name="Copy Syntax Tree" default="user" include="copy_node.h" />
       <traversal id="FREE" name="Free Syntax Tree" default="user" include="free_node.h" />
