@@ -6,28 +6,24 @@ extern int scanInt();
 
 export int main()
 {
-	int n = scanPositiveInt();
-	int prv = 0;
-	int cur = 1;
+	int a = scanPositiveInt();
 	
-	void advance()
+	int fact()
 	{
-		int nxt = prv + cur;
-		prv = cur;
-		cur = nxt;
+		int r = 1;
+		
+		for (int i = 2, a)
+		{
+			r = r * i;
+		}
+		
+		return r;
 	}
 	
-	printInt(n);
+	printInt(a);
 	printNewlines(2);
 	
-	printInt(cur);
-	printSpaces(1);
-	for (int i = 1, n)
-	{
-		advance();
-		printInt(cur);
-		printSpaces(1);
-	}
+	printInt(fact());
 	printNewlines(1);
 	
 	return 0;
