@@ -1,0 +1,41 @@
+extern void printInt(int val);
+extern void printSpaces(int num);
+extern void printNewlines(int num);
+
+extern int scanInt();
+
+export int main()
+{
+	int a = scanPositiveInt();
+	
+	int fact()
+	{
+		int r = 1;
+		
+		for (int i = 2, a)
+		{
+			r = r * i;
+		}
+		
+		return r;
+	}
+	
+	printInt(a);
+	printNewlines(2);
+	
+	printInt(fact());
+	printNewlines(1);
+	
+	return 0;
+}
+
+/* Little wrapper. */
+int scanPositiveInt()
+{
+	int n = scanInt();
+	if (n < 1)
+	{
+		n = 1;
+	}
+	return n;
+}

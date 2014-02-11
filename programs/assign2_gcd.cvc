@@ -1,0 +1,56 @@
+extern void printInt(int val);
+extern void printSpaces(int num);
+extern void printNewlines(int num);
+
+extern int scanInt();
+
+export int main()
+{
+	int prv;
+	int cur;
+	
+	void swap()
+	{
+		int tmp;
+		tmp = prv;
+		prv = cur;
+		cur = tmp;
+	}
+	
+	void calcGCD()
+	{
+		int nxt;
+		
+		while (cur != 0)
+		{
+			nxt = prv % cur;
+			prv = cur;
+			cur = nxt;
+		}
+	}
+	
+	prv = scanInt();
+	cur = scanInt();
+	
+	if ((prv < 0) || (cur < 0))
+	{
+		prv = 0;
+		cur = 0;
+	}
+	else if (cur > prv)
+	{
+		swap();
+	}
+	
+	printInt(prv);
+	printSpaces(2);
+	printInt(cur);
+	printNewlines(2);
+	
+	calcGCD();
+	
+	printInt(prv);
+	printNewlines(1);
+	
+	return 0;
+}
