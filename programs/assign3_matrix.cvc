@@ -1,0 +1,94 @@
+extern void printInt(int val);
+extern void printSpaces(int num);
+extern void printNewlines(int num);
+
+extern int scanInt();
+
+export int main()
+{
+  int len = scanPositiveInt();
+  int[len,len] mata;
+  int[len,len] matb;
+  int[len,len] res;
+  int ret;
+  void scan_mat(int[n,k] mat)
+  {
+    for (int i = 0, n)
+      {
+        for (int j = 0, k)
+          {
+            mat[i,j] = scanInt();
+          }
+
+      }
+  }
+
+  void print_mat(int[n,k] mat)
+  {
+    for (int i = 0, n)
+      {
+        for (int j = 0, k)
+          {
+            printInt(mat[i,j]);
+            printSpaces(1);
+
+          }
+        printNewlines(1);
+      }
+  }
+
+
+  printInt(len);
+  printNewlines(2);
+
+  scan_mat(mata);
+  printNewlines(1);
+  print_mat(mata);
+
+  printNewlines(2);
+
+  scan_mat(matb);
+  printNewlines(1);
+  print_mat(matb);
+
+
+  ret = 0;
+  if(mul(mata,matb,res)){
+    print_mat(res);
+  }else{
+    printInt(666);
+    ret = 1;
+  }
+
+
+  return ret;
+}
+
+
+bool mul(int[ax,ay] matrixa,int[bx,by] matrixb,int[rx,ry] res)
+{
+  bool ret = false;
+  if(ax == by && ay == bx && rx == ry && ry == ay){
+    for(int i = 0,rx){
+      for(int j = 0,ry){
+        res[i,j] = 0;
+        for(int k = 0,ax){
+          res[i,j] = res[i,j] + matrixa[i,k]*matrixb[k,j];
+        }
+      }
+    }
+    ret = true;
+  }
+  return ret;
+}
+
+/* Little wrapper. */
+int scanPositiveInt()
+{
+  int n = scanInt();
+  if (n < 1)
+    {
+      n = 1;
+    }
+  return n;
+}
