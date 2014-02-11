@@ -22,6 +22,10 @@
     -->
     <general>
       <traversal id="AS4IP" name="Identifier Prefixing" default="sons" include="as4ip.h">
+      	<travuser>
+      		<node name="Var" />
+      		<node name="VarLet" />
+      	</travuser>
       </traversal>
       
       <traversal id="PRT" name="Print Syntax Tree" default="user" include="print.h" />
