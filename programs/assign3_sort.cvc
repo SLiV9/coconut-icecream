@@ -55,48 +55,48 @@ void quicksort(int[len] vct, int left, int right)
 {
 	int pivot;
 	
+	/* Partition() chooses a value as a pivot. It then proceeds to move the elements
+	 * smaller or equal to the pivotvalue to the left; that is, at any point all
+	 * elements before key are smaller or equal to the pivotvalue, and when done,
+	 * all the elements that are not before key, are thus higher than pivotvalue.
+	 * Then the pivot is swapped to key and is in exactly the right spot. */
+	int partition()
+	{
+		int pivot = left + (right - left) / 2;
+		int pivotvalue = vct[pivot];
+		int key = left;
+	
+		void swap(int a, int b)
+		{
+			int tmp = vct[a];
+			vct[a] = vct[b];
+			vct[b] = tmp;
+		}
+	
+		swap(pivot, right);
+	
+		for (int i = left, right)
+		{
+			if (vct[i] <= pivotvalue)
+			{
+				if (i != key)
+				{
+					swap(i, key);
+				}
+				key = key + 1;
+			}
+		}
+	
+		swap(key, right);
+		return key;
+	}
+	
 	if (left < right)
 	{
-		pivot = partition(vct, left, right);
+		pivot = partition();
 		quicksort(vct, left, pivot - 1);
 		quicksort(vct, pivot + 1, right);
 	}
-}
-
-/* Partition() chooses a value as a pivot. It then proceeds to move the elements
- * smaller or equal to the pivotvalue to the left; that is, at any point all
- * elements before key are smaller or equal to the pivotvalue, and when done,
- * all the elements that are not before key, are thus higher than pivotvalue.
- * Then the pivot is swapped to key and is in exactly the right spot. */
-int partition(int[len] vct, int left, int right)
-{
-	int pivot = left + (right - left) / 2;
-	int pivotvalue = vct[pivot];
-	int key = left;
-	
-	void swap(int a, int b)
-	{
-		int tmp = vct[a];
-		vct[a] = vct[b];
-		vct[b] = tmp;
-	}
-	
-	swap(pivot, right);
-	
-	for (int i = left, right)
-	{
-		if (vct[i] <= pivotvalue)
-		{
-			if (i != key)
-			{
-				swap(i, key);
-			}
-			key = key + 1;
-		}
-	}
-	
-	swap(key, right);
-	return key;
 }
 
 /* Little wrapper. */

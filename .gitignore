@@ -10,6 +10,7 @@ bin/
 framework/
 *.output
 doc/
+make_track
 
 ### framework dependency files
 .*.d
