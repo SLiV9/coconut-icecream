@@ -10,7 +10,9 @@ node* AS4IPvar(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("AS4IPvar");
 
-  VAR_NAME( arg_node) = STRcat("__", VAR_NAME( arg_node));
+	char* oldname = VAR_NAME( arg_node);
+  VAR_NAME( arg_node) = STRcat("__", oldname);
+  free(oldname);
 
   DBUG_RETURN (arg_node);
 }
@@ -19,7 +21,9 @@ node* AS4IPvarlet(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("AS4IPvarlet");
 
-  VARLET_NAME( arg_node) = STRcat("__", VARLET_NAME( arg_node));
+	char* oldname = VARLET_NAME( arg_node);
+  VARLET_NAME( arg_node) = STRcat("__", oldname);
+  free(oldname);
 
   DBUG_RETURN (arg_node);
 }
