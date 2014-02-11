@@ -26,6 +26,19 @@ SUBPHASE( scp,
 
 ENDPHASE( ld) 
 
+/******************************************************************************/
+
+PHASE( as4,
+			 "Assignment 4",
+			 ALWAYS)
+
+SUBPHASE( as4ip,
+					"Identifier Prefixing",
+					AS4IPdoIdPrefix,
+					ALWAYS,
+					as4)
+
+ENDPHASE( as4)
 
 /******************************************************************************/
 
