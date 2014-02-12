@@ -1,35 +1,37 @@
 extern void printInt(int val);
+extern void printFloat(float val);
 extern void printSpaces(int num);
 extern void printNewlines(int num);
 
 extern int scanInt();
+extern float scanFloat();
 
 export int main()
 {
   int len = scanPositiveInt();
-  int[len,len] mata;
-  int[len,len] matb;
-  int[len,len] res;
+  float[len,len] mata;
+  float[len,len] matb;
+  float[len,len] res;
   int ret;
-  void scan_mat(int[n,k] mat)
+  void scan_mat(float[n,k] mat)
   {
     for (int i = 0, n)
       {
         for (int j = 0, k)
           {
-            mat[i,j] = scanInt();
+            mat[i,j] = scanFloat();
           }
 
       }
   }
 
-  void print_mat(int[n,k] mat)
+  void print_mat(float[n,k] mat)
   {
     for (int i = 0, n)
       {
         for (int j = 0, k)
           {
-            printInt(mat[i,j]);
+            printFloat(mat[i,j]);
             printSpaces(1);
 
           }
@@ -51,11 +53,15 @@ export int main()
   printNewlines(1);
   print_mat(matb);
 
+  printNewlines(1);
 
   ret = 0;
-  if(mul(mata,matb,res)){
+  if(mul(mata,matb,res))
+  {
     print_mat(res);
-  }else{
+  }
+  else
+  {
     printInt(666);
     ret = 1;
   }
@@ -65,14 +71,18 @@ export int main()
 }
 
 
-bool mul(int[ax,ay] matrixa,int[bx,by] matrixb,int[rx,ry] res)
+bool mul(float[ax,ay] matrixa, float[bx,by] matrixb, float[rx,ry] res)
 {
   bool ret = false;
-  if(ax == by && ay == bx && rx == ry && ry == ay){
-    for(int i = 0,rx){
-      for(int j = 0,ry){
-        res[i,j] = 0;
-        for(int k = 0,ax){
+  if(ax == by && ay == bx && rx == ry && ry == ay)
+  {
+    for(int i = 0,rx)
+    {
+      for(int j = 0,ry)
+      {
+        res[i,j] = 0.0;
+        for(int k = 0,ax)
+        {
           res[i,j] = res[i,j] + matrixa[i,k]*matrixb[k,j];
         }
       }
@@ -87,8 +97,8 @@ int scanPositiveInt()
 {
   int n = scanInt();
   if (n < 1)
-    {
-      n = 1;
-    }
+  {
+    n = 1;
+  }
   return n;
 }
