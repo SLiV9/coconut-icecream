@@ -112,6 +112,49 @@ PRTassign (node * arg_node, info * arg_info)
 
 /** <!--******************************************************************-->
  *
+ * @fn PRTmonop
+ *
+ * @brief Prints the node and its sons/attributes
+ *
+ * @param arg_node MonOp node to process
+ * @param arg_info pointer to info structure
+ *
+ * @return processed node
+ *
+ ***************************************************************************/
+
+node *
+PRTmonop (node * arg_node, info * arg_info)
+{
+  char *tmp;
+
+  DBUG_ENTER ("PRTmonop");
+
+  printf( "( ");
+
+  switch (MONOP_OP( arg_node)) {
+    case MO_neg:
+      tmp = "-";
+      break;
+    case MO_not:
+      tmp = "!";
+      break;
+    case MO_unknown:
+      DBUG_ASSERT( 0, "unknown monop detected!");
+  }
+
+  printf( " %s ", tmp);
+
+  MONOP_ARG( arg_node) = TRAVdo( MONOP_ARG( arg_node), arg_info);
+
+  printf( ")");
+
+  DBUG_RETURN (arg_node);
+}
+
+
+/** <!--******************************************************************-->
+ *
  * @fn PRTbinop
  *
  * @brief Prints the node and its sons/attributes

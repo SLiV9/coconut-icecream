@@ -6,6 +6,7 @@
     <type name="Int" ctype="int" init="0" copy="literal" />
     <type name="Bool" ctype="bool" init="FALSE" copy="literal" />
     <type name="Float" ctype="float" init="0.0" copy="literal" />
+    <type name="MonOp" ctype="monop" init="MO_unknown" copy="literal" />
     <type name="BinOp" ctype="binop" init="BO_unknown" copy="literal" />
     <type name="Link" ctype="node*" init="NULL" copy="lookup" />
     <type name="CompilerPhase" ctype="compiler_phase_t" init="PH_initial" copy="literal" />
@@ -107,6 +108,34 @@
         </son>
       </sons>
       <attributes />
+    </node>
+    <node name="MonOp">
+    	<sons>
+    		<son name="Arg">
+    			<targets>
+    				<target mandatory="yes">
+    					<set name="Expr" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
+    	</sons>
+    	<attributes>
+    		<attribute name="Op">
+		  		<type name="MonOp">
+		  			<targets>
+		  				<target mandatory="yes">
+								<any />
+								<phases>
+									<all />
+								</phases>
+		  				</target>
+		  			</targets>
+		  		</type>
+    		</attribute>
+    	</attributes>
     </node>
     <node name="BinOp">
       <sons>
