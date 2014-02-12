@@ -6,6 +6,7 @@
     <type name="Int" ctype="int" init="0" copy="literal" />
     <type name="Bool" ctype="bool" init="FALSE" copy="literal" />
     <type name="Float" ctype="float" init="0.0" copy="literal" />
+    <type name="ValueType" ctype="vtype" init="VT_unknown" copy="literal" />
     <type name="MonOp" ctype="monop" init="MO_unknown" copy="literal" />
     <type name="BinOp" ctype="binop" init="BO_unknown" copy="literal" />
     <type name="Link" ctype="node*" init="NULL" copy="lookup" />
@@ -48,7 +49,7 @@
         <node name="BinOp" />
         <node name="Var" />
         <node name="Call" />
-        <node name="Num" />
+        <node name="Int" />
         <node name="Float" />
         <node name="Bool" />
       </target>
@@ -56,6 +57,7 @@
     <nodeset name="Instr">
       <target>
         <node name="Assign" />
+        <node name="Call" />
       </target>
     </nodeset>
   </nodesets>
@@ -302,7 +304,7 @@
         </attribute>
       </attributes>
     </node>
-   <node name="Num">
+   <node name="Int">
       <sons />
       <attributes>
         <attribute name="Value">

@@ -11,6 +11,9 @@ framework/
 *.output
 doc/
 make_track
+civic.lex.c
+civic.tab.c
+civic.tab.h
 
 ### framework dependency files
 .*.d

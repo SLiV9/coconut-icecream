@@ -62,7 +62,7 @@
                            }
 
 [0-9]+                     { yylval.cint=atoi(yytext);
-                             FILTER( NUM);
+                             FILTER( INT);
                            }
 
 \n.*                       { global.line += 1;

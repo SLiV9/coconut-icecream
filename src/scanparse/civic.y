@@ -33,7 +33,7 @@ static int yyerror( char *errname);
 %token MINUS PLUS STAR SLASH PERCENT LE LT GE GT EQ NE OR AND
 %token TRUEVAL FALSEVAL LET
 
-%token <cint> NUM
+%token <cint> INT
 %token <cflt> FLOAT
 %token <id> ID
 
@@ -114,9 +114,9 @@ floatval: FLOAT
            }
          ;
 
-intval: NUM
+intval: INT
         {
-          $$ = TBmakeNum( $1);
+          $$ = TBmakeInt( $1);
         }
       ;
 

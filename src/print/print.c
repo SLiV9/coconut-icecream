@@ -166,7 +166,7 @@ PRTmonop (node * arg_node, info * arg_info)
     case MO_not:
       tmp = "!";
       break;
-    case MO_num:
+    case MO_int:
     	tmp = "int";
     	cast = TRUE;
     	break;
@@ -309,7 +309,7 @@ PRTfloat (node * arg_node, info * arg_info)
  *
  * @brief Prints the node and its sons/attributes
  *
- * @param arg_node Num node to process
+ * @param arg_node Int node to process
  * @param arg_info pointer to info structure
  *
  * @return processed node
@@ -317,11 +317,11 @@ PRTfloat (node * arg_node, info * arg_info)
  ***************************************************************************/
 
 node *
-PRTnum (node * arg_node, info * arg_info)
+PRTint (node * arg_node, info * arg_info)
 {
-  DBUG_ENTER ("PRTnum");
+  DBUG_ENTER ("PRTint");
 
-  printf( "%i", NUM_VALUE( arg_node));
+  printf( "%i", INT_VALUE( arg_node));
 
   DBUG_RETURN (arg_node);
 }
