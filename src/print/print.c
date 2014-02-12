@@ -81,11 +81,11 @@ PRTinstrs (node * arg_node, info * arg_info)
 
 /** <!--******************************************************************-->
  *
- * @fn PRTparams
+ * @fn PRTargs
  *
  * @brief Prints the node and its sons/attributes
  *
- * @param arg_node Params node to process
+ * @param arg_node Args node to process
  * @param arg_info pointer to info structure
  *
  * @return processed node
@@ -93,13 +93,13 @@ PRTinstrs (node * arg_node, info * arg_info)
  ***************************************************************************/
 
 node *
-PRTparams (node * arg_node, info * arg_info)
+PRTargs (node * arg_node, info * arg_info)
 {
-  DBUG_ENTER ("PRTparams");
+  DBUG_ENTER ("PRTargs");
 
-  PARAMS_EXPR( arg_node) = TRAVdo( PARAMS_EXPR( arg_node), arg_info);
+  ARGS_EXPR( arg_node) = TRAVdo( ARGS_EXPR( arg_node), arg_info);
   
-  PARAMS_NEXT( arg_node) = TRAVopt( PARAMS_NEXT( arg_node), arg_info);
+  ARGS_NEXT( arg_node) = TRAVopt( ARGS_NEXT( arg_node), arg_info);
   
   DBUG_RETURN (arg_node);
 }
@@ -424,7 +424,7 @@ PRTcall (node * arg_node, info * arg_info)
 
   printf( "%s(", CALL_NAME( arg_node));
   
-  CALL_PARAMS( arg_node) = TRAVopt( CALL_PARAMS( arg_node), arg_info);
+  CALL_ARGS( arg_node) = TRAVopt( CALL_ARGS( arg_node), arg_info);
   
   printf( ")");
 
