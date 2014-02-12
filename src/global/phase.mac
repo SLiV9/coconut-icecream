@@ -30,7 +30,7 @@ ENDPHASE( ld)
 
 PHASE( as4,
 			 "Assignment 4",
-			 ALWAYS)
+			 NEVER)
 
 SUBPHASE( as4ip,
 					"Identifier Prefixing",
