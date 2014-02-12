@@ -44,6 +44,7 @@
   <nodesets>
     <nodeset name="Expr">
       <target>
+      	<node name="MonOp" />
         <node name="BinOp" />
         <node name="Var" />
         <node name="Num" />

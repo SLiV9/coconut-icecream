@@ -127,6 +127,7 @@ node *
 PRTmonop (node * arg_node, info * arg_info)
 {
   char *tmp;
+  bool cast = FALSE;
 
   DBUG_ENTER ("PRTmonop");
 
@@ -139,15 +140,35 @@ PRTmonop (node * arg_node, info * arg_info)
     case MO_not:
       tmp = "!";
       break;
+    case MO_num:
+    	tmp = "int";
+    	cast = TRUE;
+    	break;
+    case MO_float:
+    	tmp = "float";
+    	cast = TRUE;
+    	break;
+    case MO_bool:
+    	tmp = "bool";
+    	cast = TRUE;
+    	break;
     case MO_unknown:
       DBUG_ASSERT( 0, "unknown monop detected!");
   }
 
   printf( " %s ", tmp);
+  
+  if (cast)
+  {
+  	printf( ")");
+  }
 
   MONOP_ARG( arg_node) = TRAVdo( MONOP_ARG( arg_node), arg_info);
 
-  printf( ")");
+	if (!cast)
+	{
+  	printf( ")");
+  }
 
   DBUG_RETURN (arg_node);
 }
