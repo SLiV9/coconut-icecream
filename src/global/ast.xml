@@ -52,6 +52,7 @@
         <node name="Int" />
         <node name="Float" />
         <node name="Bool" />
+        <node name="Cast" />
       </target>
     </nodeset>
     <nodeset name="Instr">
@@ -354,6 +355,34 @@
           </type>
         </attribute>
       </attributes>
+    </node>
+    <node name="Cast">
+    	<sons>
+    		<son name="Expr">
+    			<targets>
+    				<target mandatory="yes">
+    					<set name="Expr" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
+    	</sons>
+    	<attributes>
+    		<attribute name="Type">
+		  		<type name="ValueType">
+		  			<targets>
+		  				<target mandatory="yes">
+								<any />
+								<phases>
+									<all />
+								</phases>
+		  				</target>
+		  			</targets>
+		  		</type>
+    		</attribute>
+    	</attributes>
     </node>
     <node name="Error">
       <sons>

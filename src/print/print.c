@@ -153,7 +153,6 @@ node *
 PRTmonop (node * arg_node, info * arg_info)
 {
   char *tmp;
-  bool cast = FALSE;
 
   DBUG_ENTER ("PRTmonop");
 
@@ -166,35 +165,15 @@ PRTmonop (node * arg_node, info * arg_info)
     case MO_not:
       tmp = "!";
       break;
-    case MO_int:
-    	tmp = "int";
-    	cast = TRUE;
-    	break;
-    case MO_float:
-    	tmp = "float";
-    	cast = TRUE;
-    	break;
-    case MO_bool:
-    	tmp = "bool";
-    	cast = TRUE;
-    	break;
     case MO_unknown:
       DBUG_ASSERT( 0, "unknown monop detected!");
   }
 
   printf( " %s ", tmp);
-  
-  if (cast)
-  {
-  	printf( ")");
-  }
 
   MONOP_EXPR( arg_node) = TRAVdo( MONOP_EXPR( arg_node), arg_info);
 
-	if (!cast)
-	{
-  	printf( ")");
-  }
+  printf( ")");
 
   DBUG_RETURN (arg_node);
 }
@@ -352,6 +331,52 @@ PRTbool (node * arg_node, info * arg_info)
     printf( "false");
   }
   
+  DBUG_RETURN (arg_node);
+}
+
+
+/** <!--******************************************************************-->
+ *
+ * @fn PRTcast
+ *
+ * @brief Prints the node and its sons/attributes
+ *
+ * @param arg_node Cast node to process
+ * @param arg_info pointer to info structure
+ *
+ * @return processed node
+ *
+ ***************************************************************************/
+
+node *
+PRTcast (node * arg_node, info * arg_info)
+{
+  char *tmp;
+
+  DBUG_ENTER ("PRTcast");
+
+  printf( "( ");
+
+  switch (CAST_TYPE( arg_node)) {
+    case VT_int:
+    	tmp = "int";
+    	break;
+    case VT_float:
+    	tmp = "float";
+    	break;
+    case VT_bool:
+    	tmp = "bool";
+    	break;
+    case VT_unknown:
+      DBUG_ASSERT( 0, "unknown monop detected!");
+  }
+
+  printf( " %s ", tmp);
+  
+  printf( ")");
+
+  CAST_EXPR( arg_node) = TRAVdo( CAST_EXPR( arg_node), arg_info);
+
   DBUG_RETURN (arg_node);
 }
 

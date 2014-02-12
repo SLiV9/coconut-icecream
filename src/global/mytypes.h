@@ -9,7 +9,7 @@ typedef enum { VT_int, VT_float, VT_bool, VT_unknown } vtype;
 /*
  * This enumeration defines all monops
  */
-typedef enum { MO_not, MO_neg, MO_int, MO_float, MO_bool, MO_unknown } monop;
+typedef enum { MO_not, MO_neg, MO_unknown } monop;
 
 /*
  * This enumeration defines all binops
