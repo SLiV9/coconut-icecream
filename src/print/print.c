@@ -52,6 +52,59 @@ static info *FreeInfo( info *info)
 }
 
 
+/** <!--******************************************************************-->
+ *
+ * @fn PRTbody
+ *
+ * @brief Prints the node and its sons/attributes
+ *
+ * @param arg_node Body node to process
+ * @param arg_info pointer to info structure
+ *
+ * @return processed node
+ *
+ ***************************************************************************/
+
+node *
+PRTbody (node * arg_node, info * arg_info)
+{
+  DBUG_ENTER ("PRTbody");
+
+  BODY_VARDECS( arg_node) = TRAVdo( BODY_VARDECS( arg_node), arg_info);
+  
+  BODY_INSTRS( arg_node) = TRAVdo( BODY_INSTRS( arg_node), arg_info);
+  
+  BODY_RETURN( arg_node) = TRAVopt( BODY_RETURN( arg_node), arg_info);
+  
+  DBUG_RETURN (arg_node);
+}
+
+
+/** <!--******************************************************************-->
+ *
+ * @fn PRTvardecs
+ *
+ * @brief Prints the node and its sons/attributes
+ *
+ * @param arg_node Vardecs node to process
+ * @param arg_info pointer to info structure
+ *
+ * @return processed node
+ *
+ ***************************************************************************/
+
+node *
+PRTvardecs (node * arg_node, info * arg_info)
+{
+  DBUG_ENTER ("PRTvardecs");
+
+  VARDECS_VARDEC( arg_node) = TRAVdo( VARDECS_VARDEC( arg_node), arg_info);
+  
+  VARDECS_NEXT( arg_node) = TRAVopt( VARDECS_NEXT( arg_node), arg_info);
+  
+  DBUG_RETURN (arg_node);
+}
+
 
 /** <!--******************************************************************-->
  *
@@ -59,7 +112,7 @@ static info *FreeInfo( info *info)
  *
  * @brief Prints the node and its sons/attributes
  *
- * @param arg_node BinOp node to process
+ * @param arg_node Instrs node to process
  * @param arg_info pointer to info structure
  *
  * @return processed node
@@ -107,11 +160,60 @@ PRTargs (node * arg_node, info * arg_info)
 
 /** <!--******************************************************************-->
  *
- * @fn PRTinstr
+ * @fn PRTvardec
  *
  * @brief Prints the node and its sons/attributes
  *
- * @param arg_node BinOp node to process
+ * @param arg_node VarDec node to process
+ * @param arg_info pointer to info structure
+ *
+ * @return processed node
+ *
+ ***************************************************************************/
+
+node *
+PRTvardec (node * arg_node, info * arg_info)
+{
+	char* tmp;
+
+  DBUG_ENTER ("PRTvardec");
+  
+  switch (VARDEC_TYPE( arg_node)) {
+    case VT_int:
+    	tmp = "int";
+    	break;
+    case VT_float:
+    	tmp = "float";
+    	break;
+    case VT_bool:
+    	tmp = "bool";
+    	break;
+    case VT_unknown:
+      DBUG_ASSERT( 0, "unknown vtype detected!");
+  }
+
+  printf( " %s ", tmp);
+
+  printf( "%s", VARDEC_NAME( arg_node));
+  
+  if (VARDEC_EXPR( arg_node) != NULL) {
+    printf( " = ");
+    VARDEC_EXPR( arg_node) = TRAVdo( VARDEC_EXPR( arg_node), arg_info);
+  }
+  
+  printf( ";\n");
+  
+  DBUG_RETURN (arg_node);
+}
+
+
+/** <!--******************************************************************-->
+ *
+ * @fn PRTassign
+ *
+ * @brief Prints the node and its sons/attributes
+ *
+ * @param arg_node Assign node to process
  * @param arg_info pointer to info structure
  *
  * @return processed node
@@ -368,7 +470,7 @@ PRTcast (node * arg_node, info * arg_info)
     	tmp = "bool";
     	break;
     case VT_unknown:
-      DBUG_ASSERT( 0, "unknown monop detected!");
+      DBUG_ASSERT( 0, "unknown vtype detected!");
   }
 
   printf( " %s ", tmp);

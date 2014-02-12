@@ -11,8 +11,11 @@
 
 #include "types.h"
 
+extern node *PRTbody (node * arg_node, info * arg_info);
+extern node *PRTvardecs (node * arg_node, info * arg_info);
 extern node *PRTinstrs (node * arg_node, info * arg_info);
 extern node *PRTargs (node * arg_node, info * arg_info);
+extern node *PRTvardec (node * arg_node, info * arg_info);
 extern node *PRTassign (node * arg_node, info * arg_info);
 extern node *PRTvar (node * arg_node, info * arg_info);
 extern node *PRTvarlet (node * arg_node, info * arg_info);
