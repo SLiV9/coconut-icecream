@@ -12,9 +12,11 @@
 #include "types.h"
 
 extern node *PRTinstrs (node * arg_node, info * arg_info);
+extern node *PRTparams (node * arg_node, info * arg_info);
 extern node *PRTassign (node * arg_node, info * arg_info);
 extern node *PRTvar (node * arg_node, info * arg_info);
 extern node *PRTvarlet (node * arg_node, info * arg_info);
+extern node *PRTcall (node * arg_node, info * arg_info);
 extern node *PRTmonop (node * arg_node, info * arg_info);
 extern node *PRTbinop (node * arg_node, info * arg_info);
 extern node *PRTfloat (node * arg_node, info * arg_info);

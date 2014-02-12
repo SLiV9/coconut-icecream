@@ -47,6 +47,7 @@
       	<node name="MonOp" />
         <node name="BinOp" />
         <node name="Var" />
+        <node name="Call" />
         <node name="Num" />
         <node name="Float" />
         <node name="Bool" />
@@ -85,6 +86,31 @@
       </sons>
       <attributes />
     </node>
+    <node name="Params">
+      <sons>
+        <son name="Expr">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="Params" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
      <node name="Assign">
       <sons>
         <son name="Let">
@@ -112,7 +138,7 @@
     </node>
     <node name="MonOp">
     	<sons>
-    		<son name="Arg">
+    		<son name="Expr">
     			<targets>
     				<target mandatory="yes">
     					<set name="Expr" />
@@ -208,6 +234,46 @@
     </node>
     <node name="Var">
       <sons>
+      </sons>
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Decl">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="Call">
+      <sons>
+      	<son name="Params">
+          <targets>
+            <target mandatory="no">
+              <node name="Params" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
       </sons>
       <attributes>
         <attribute name="Name">
