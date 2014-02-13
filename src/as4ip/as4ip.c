@@ -6,12 +6,12 @@
 #include "str.h"
 #include <string.h>
 
-node* AS4IPvar(node *arg_node, info *arg_info)
+node* AS4IPvarcall(node *arg_node, info *arg_info)
 {
-  DBUG_ENTER ("AS4IPvar");
+  DBUG_ENTER ("AS4IPvarcall");
 
-	char* oldname = VAR_NAME( arg_node);
-  VAR_NAME( arg_node) = STRcat("__", oldname);
+	char* oldname = VARCALL_NAME( arg_node);
+  VARCALL_NAME( arg_node) = STRcat("__", oldname);
   free(oldname);
 
   DBUG_RETURN (arg_node);

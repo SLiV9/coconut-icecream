@@ -26,11 +26,11 @@
     <general>
       <traversal id="AS4IP" name="Identifier Prefixing" default="sons" include="as4ip.h">
       	<travuser>
-      		<node name="Var" />
+      		<node name="VarCall" />
       		<node name="VarLet" />
       	</travuser>
       </traversal>
-      
+    	
       <traversal id="AS4AC" name="Arithmetic Operator Counting" default="sons" include="as4ac.h">
       	<travuser>
       		<node name="BinOp" />
@@ -48,8 +48,8 @@
       <target>
       	<node name="MonOp" />
         <node name="BinOp" />
-        <node name="Var" />
-        <node name="Call" />
+        <node name="VarCall" />
+        <node name="FunCall" />
         <node name="Int" />
         <node name="Float" />
         <node name="Bool" />
@@ -59,7 +59,7 @@
     <nodeset name="Instr">
       <target>
         <node name="Assign" />
-        <node name="Call" />
+        <node name="FunCall" />
         <node name="If" />
         <node name="While" />
         <node name="For" />
@@ -238,10 +238,10 @@
     </node>
     <node name="FunDef">
       <sons>
-      	<son name="Header">
+      	<son name="Dec">
       		<targets>
 		    		<target mandatory="yes">
-		    			<node name="Header" />
+		    			<node name="FunHead" />
 		    			<phases>
 		    				<all />
 		    			</phases>
@@ -276,10 +276,10 @@
     </node>
     <node name="FunDec">
       <sons>
-      	<son name="Header">
+      	<son name="Dec">
       		<targets>
 		    		<target mandatory="yes">
-		    			<node name="Header" />
+		    			<node name="FunHead" />
 		    			<phases>
 		    				<all />
 		    			</phases>
@@ -289,7 +289,7 @@
       </sons>
       <attributes />
     </node>
-    <node name="Header">
+    <node name="FunHead">
       <sons>
       	<son name="Params">
       		<targets>
@@ -689,7 +689,7 @@
             </targets>
           </type>
         </attribute>
-        <attribute name="Decl">
+        <attribute name="Dec">
           <type name="Link">
             <targets>
               <target mandatory="no">
@@ -703,7 +703,7 @@
         </attribute>
       </attributes>
     </node>
-    <node name="Var">
+    <node name="VarCall">
       <sons>
       </sons>
       <attributes>
@@ -719,7 +719,7 @@
             </targets>
           </type>
         </attribute>
-        <attribute name="Decl">
+        <attribute name="Dec">
           <type name="Link">
             <targets>
               <target mandatory="no">
@@ -733,7 +733,7 @@
         </attribute>
       </attributes>
     </node>
-    <node name="Call">
+    <node name="FunCall">
       <sons>
       	<son name="Args">
           <targets>
@@ -759,7 +759,7 @@
             </targets>
           </type>
         </attribute>
-        <attribute name="Decl">
+        <attribute name="Dec">
           <type name="Link">
             <targets>
               <target mandatory="no">
