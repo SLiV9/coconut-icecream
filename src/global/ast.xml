@@ -577,6 +577,18 @@
     		</son>
     	</sons>
     	<attributes>
+        <attribute name="Iter">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
     		<attribute name="From">
     			<type name="Int">
     				<targets>
