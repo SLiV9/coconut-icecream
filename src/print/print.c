@@ -134,32 +134,6 @@ PRTinstrs (node * arg_node, info * arg_info)
 
 /** <!--******************************************************************-->
  *
- * @fn PRTargs
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node Args node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
-
-node *
-PRTargs (node * arg_node, info * arg_info)
-{
-  DBUG_ENTER ("PRTargs");
-
-  ARGS_EXPR( arg_node) = TRAVdo( ARGS_EXPR( arg_node), arg_info);
-  
-  ARGS_NEXT( arg_node) = TRAVopt( ARGS_NEXT( arg_node), arg_info);
-  
-  DBUG_RETURN (arg_node);
-}
-
-
-/** <!--******************************************************************-->
- *
  * @fn PRTassign
  *
  * @brief Prints the node and its sons/attributes

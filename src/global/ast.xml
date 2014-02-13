@@ -166,7 +166,7 @@
         <son name="VarDec">
           <targets>
             <target mandatory="yes">
-              <node name="VarDecPlus" />
+              <node name="VarDec" />
               <phases>
                 <all />
               </phases>
@@ -213,7 +213,7 @@
     </node>
     <node name="Args">
       <sons>
-        <son name="Expr">
+        <son name="Arg">
           <targets>
             <target mandatory="yes">
               <set name="Expr" />
@@ -386,7 +386,7 @@
         <son name="Dec">
           <targets>
             <target mandatory="yes">
-              <node name="VarDec" />
+              <node name="VarHead" />
               <phases>
                 <all />
               </phases>
@@ -401,7 +401,7 @@
         <son name="Dec">
           <targets>
             <target mandatory="yes">
-              <node name="VarDec" />
+              <node name="VarHead" />
               <phases>
                 <all />
               </phases>
@@ -411,12 +411,12 @@
       </sons>
       <attributes />
     </node>
-    <node name="VarDecPlus">
+    <node name="VarDec">
       <sons>
         <son name="Dec">
           <targets>
             <target mandatory="yes">
-              <node name="VarDec" />
+              <node name="VarHead" />
               <phases>
                 <all />
               </phases>
@@ -436,7 +436,7 @@
       </sons>
       <attributes />
     </node>
-    <node name="VarDec">
+    <node name="VarHead">
       <sons />
       <attributes>
         <attribute name="Name">
