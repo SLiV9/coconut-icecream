@@ -331,6 +331,16 @@
     </node>
     <node name="GlobDef">
       <sons>
+        <son name="Dec">
+          <targets>
+            <target mandatory="yes">
+              <node name="VarHead" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
         <son name="Expr">
           <targets>
             <target mandatory="no">
@@ -343,30 +353,6 @@
         </son>
       </sons>
       <attributes>
-        <attribute name="Name">
-          <type name="String">
-            <targets>
-              <target mandatory="yes">
-                <any />
-                <phases>
-                  <all />
-                </phases>
-              </target>
-            </targets>
-          </type>
-        </attribute>
-        <attribute name="Type">
-        	<type name="ValueType">
-        		<targets>
-        			<target mandatory="yes">
-		      			<any />
-		      			<phases>
-		      				<all />
-		      			</phases>
-		      		</target>
-        		</targets>
-        	</type>
-        </attribute>
     		<attribute name="Export">
     			<type name="Bool">
     				<targets>
@@ -565,6 +551,36 @@
     </node>
     <node name="For">
     	<sons>
+    		<son name="From">
+    			<targets>
+    				<target mandatory="yes">
+    					<set name="Expr" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
+    		<son name="To">
+    			<targets>
+    				<target mandatory="yes">
+    					<set name="Expr" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
+    		<son name="Incr">
+    			<targets>
+    				<target mandatory="no">
+    					<set name="Expr" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
     		<son name="Do">
     			<targets>
     				<target mandatory="yes">
@@ -589,42 +605,6 @@
             </targets>
           </type>
         </attribute>
-    		<attribute name="From">
-    			<type name="Int">
-    				<targets>
-              <target mandatory="yes">
-                <any />
-                <phases>
-                  <all />
-                </phases>
-              </target>
-            </targets>
-    			</type>
-    		</attribute>
-    		<attribute name="To">
-    			<type name="Int">
-    				<targets>
-              <target mandatory="yes">
-                <any />
-                <phases>
-                  <all />
-                </phases>
-              </target>
-            </targets>
-    			</type>
-    		</attribute>
-    		<attribute name="Incr">
-    			<type name="Int">
-    				<targets>
-              <target mandatory="no">
-                <any />
-                <phases>
-                  <all />
-                </phases>
-              </target>
-            </targets>
-    			</type>
-    		</attribute>
     	</attributes>
     </node>    
     <node name="MonOp">
