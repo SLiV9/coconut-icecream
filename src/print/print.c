@@ -160,55 +160,6 @@ PRTargs (node * arg_node, info * arg_info)
 
 /** <!--******************************************************************-->
  *
- * @fn PRTvardec
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node VarDec node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
-
-node *
-PRTvardec (node * arg_node, info * arg_info)
-{
-	char* tmp;
-
-  DBUG_ENTER ("PRTvardec");
-  
-  switch (VARDEC_TYPE( arg_node)) {
-    case VT_int:
-    	tmp = "int";
-    	break;
-    case VT_float:
-    	tmp = "float";
-    	break;
-    case VT_bool:
-    	tmp = "bool";
-    	break;
-    case VT_unknown:
-      DBUG_ASSERT( 0, "unknown vtype detected!");
-  }
-
-  printf( " %s ", tmp);
-
-  printf( "%s", VARDEC_NAME( arg_node));
-  
-  if (VARDEC_EXPR( arg_node) != NULL) {
-    printf( " = ");
-    VARDEC_EXPR( arg_node) = TRAVdo( VARDEC_EXPR( arg_node), arg_info);
-  }
-  
-  printf( ";\n");
-  
-  DBUG_RETURN (arg_node);
-}
-
-
-/** <!--******************************************************************-->
- *
  * @fn PRTassign
  *
  * @brief Prints the node and its sons/attributes

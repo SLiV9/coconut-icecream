@@ -69,8 +69,8 @@
     	<target>
     		<node name="FunDef" />
     		<node name="FunDec" />
-    		<node name="VarDef" />
-    		<node name="VarDec" />
+    		<node name="GlobDef" />
+    		<node name="GlobDec" />
     	</target>
     </nodeset>
   </nodesets>
@@ -138,10 +138,10 @@
   	</node>
     <node name="Params">
       <sons>
-        <son name="VarDec">
+        <son name="Param">
           <targets>
             <target mandatory="yes">
-              <node name="VarDec" />
+              <node name="Param" />
               <phases>
                 <all />
               </phases>
@@ -166,7 +166,7 @@
         <son name="VarDec">
           <targets>
             <target mandatory="yes">
-              <node name="VarDec" />
+              <node name="VarDecPlus" />
               <phases>
                 <all />
               </phases>
@@ -329,7 +329,7 @@
         </attribute>
       </attributes>
     </node>
-    <node name="VarDef">
+    <node name="GlobDef">
       <sons>
         <son name="Expr">
           <targets>
@@ -381,8 +381,48 @@
     		</attribute>
       </attributes>
     </node>
-    <node name="VarDec">
+    <node name="GlobDec">
       <sons>
+        <son name="Dec">
+          <targets>
+            <target mandatory="yes">
+              <node name="VarDec" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="Param">
+      <sons>
+        <son name="Dec">
+          <targets>
+            <target mandatory="yes">
+              <node name="VarDec" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="VarDecPlus">
+      <sons>
+        <son name="Dec">
+          <targets>
+            <target mandatory="yes">
+              <node name="VarDec" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
         <son name="Expr">
           <targets>
             <target mandatory="no">
@@ -394,6 +434,10 @@
           </targets>
         </son>
       </sons>
+      <attributes />
+    </node>
+    <node name="VarDec">
+      <sons />
       <attributes>
         <attribute name="Name">
           <type name="String">
