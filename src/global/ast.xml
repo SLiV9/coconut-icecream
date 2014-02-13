@@ -64,6 +64,14 @@
         <node name="For" />
       </target>
     </nodeset>
+    <nodeset name="Declar">
+    	<target>
+    		<node name="FunDef" />
+    		<node name="FunDec" />
+    		<node name="VarDef" />
+    		<node name="VarDec" />
+    	</target>
+    </nodeset>
   </nodesets>
 
   <syntaxtree>
@@ -108,7 +116,7 @@
   	 	</sons>
       <attributes />
   	</node>
-    <node name="GlobVarDecs">
+    <node name="Params">
       <sons>
         <son name="VarDec">
           <targets>
@@ -123,7 +131,7 @@
         <son name="Next">
           <targets>
             <target mandatory="no">
-              <node name="GlobVarDecs" />
+              <node name="Params" />
               <phases>
                 <all />
               </phases>
@@ -207,6 +215,151 @@
         </son>
       </sons>
       <attributes />
+    </node>
+    <node name="FunDef">
+      <sons>
+      	<son name="Header">
+      		<targets>
+		    		<target mandatory="yes">
+		    			<node name="Header" />
+		    			<phases>
+		    				<all />
+		    			</phases>
+		    		</target>
+		    	</targets>
+      	</son>
+      	<son name="Body">
+          <targets>
+            <target mandatory="yes">
+              <node name="Body" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+      	</son>
+      </sons>
+      <attributes>
+    		<attribute name="Export">
+    			<type name="Bool">
+    				<targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+    			</type>
+    		</attribute>
+      </attributes>
+    </node>
+    <node name="FunDec">
+      <sons>
+      	<son name="Header">
+      		<targets>
+		    		<target mandatory="yes">
+		    			<node name="Header" />
+		    			<phases>
+		    				<all />
+		    			</phases>
+		    		</target>
+		    	</targets>
+      	</son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="Header">
+      <sons>
+      	<son name="Params">
+      		<targets>
+            <target mandatory="no">
+              <node name="Params" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+      	</son>
+      </sons>
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="yes">
+		      			<any />
+		      			<phases>
+		      				<all />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="VarDef">
+      <sons>
+        <son name="Expr">
+          <targets>
+            <target mandatory="no">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="yes">
+		      			<any />
+		      			<phases>
+		      				<all />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
+    		<attribute name="Export">
+    			<type name="Bool">
+    				<targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+    			</type>
+    		</attribute>
+      </attributes>
     </node>
     <node name="VarDec">
       <sons>
