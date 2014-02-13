@@ -7,6 +7,7 @@
     <type name="Bool" ctype="bool" init="FALSE" copy="literal" />
     <type name="Float" ctype="float" init="0.0" copy="literal" />
     <type name="ValueType" ctype="vtype" init="VT_unknown" copy="literal" />
+    <type name="ReturnType" ctype="rtype" init="RT_unknown" copy="literal" />
     <type name="MonOp" ctype="monop" init="MO_unknown" copy="literal" />
     <type name="BinOp" ctype="binop" init="BO_unknown" copy="literal" />
     <type name="Link" ctype="node*" init="NULL" copy="lookup" />
@@ -75,9 +76,28 @@
   </nodesets>
 
   <syntaxtree>
-  	<node name="Program">
+  	<node name="Declars">
   	 	<sons>
-  	 		
+        <son name="Declar">
+          <targets>
+            <target mandatory="yes">
+              <set name="Declar" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="Declars" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
   	 	</sons>
   	 	<attributes />
   	</node>
@@ -296,7 +316,7 @@
           </type>
         </attribute>
         <attribute name="Type">
-        	<type name="ValueType">
+        	<type name="ReturnType">
         		<targets>
         			<target mandatory="yes">
 		      			<any />
