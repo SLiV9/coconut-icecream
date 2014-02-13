@@ -59,12 +59,21 @@
       <target>
         <node name="Assign" />
         <node name="Call" />
+        <node name="If" />
+        <node name="While" />
+        <node name="For" />
       </target>
     </nodeset>
   </nodesets>
 
   <syntaxtree>
-  	 <node name="Body">
+  	<node name="Program">
+  	 	<sons>
+  	 		
+  	 	</sons>
+  	 	<attributes />
+  	</node>
+  	<node name="Body">
   	 	<sons>
   	 		<son name="VarDecs">
   	 			<targets>
@@ -98,7 +107,32 @@
   	 		</son>
   	 	</sons>
       <attributes />
-  	 </node>
+  	</node>
+    <node name="GlobVarDecs">
+      <sons>
+        <son name="VarDec">
+          <targets>
+            <target mandatory="yes">
+              <node name="VarDec" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="GlobVarDecs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
     <node name="VarDecs">
       <sons>
         <son name="VarDec">
@@ -239,6 +273,131 @@
       </sons>
       <attributes />
     </node>
+    <node name="If">
+    	<sons>
+    		<son name="Cond">
+    			<targets>
+    				<target mandatory="yes">
+    					<set name="Expr" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
+    		<son name="Then">
+    			<targets>
+    				<target mandatory="yes">
+    					<node name="Instrs" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
+    		<son name="Else">
+    			<targets>
+    				<target mandatory="no">
+    					<node name="Instrs" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
+    	</sons>
+    	<attributes />
+    </node>
+    <node name="While">
+    	<sons>
+    		<son name="Cond">
+    			<targets>
+    				<target mandatory="yes">
+    					<set name="Expr" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
+    		<son name="Do">
+    			<targets>
+    				<target mandatory="yes">
+    					<node name="Instrs" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
+    	</sons>
+    	<attributes>
+    		<attribute name="DoFirst">
+    			<type name="Bool">
+    				<targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+    			</type>
+    		</attribute>
+    	</attributes>
+    </node>
+    <node name="For">
+    	<sons>
+    		<son name="Do">
+    			<targets>
+    				<target mandatory="yes">
+    					<node name="Instrs" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
+    	</sons>
+    	<attributes>
+    		<attribute name="From">
+    			<type name="Int">
+    				<targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+    			</type>
+    		</attribute>
+    		<attribute name="To">
+    			<type name="Int">
+    				<targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+    			</type>
+    		</attribute>
+    		<attribute name="Incr">
+    			<type name="Int">
+    				<targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+    			</type>
+    		</attribute>
+    	</attributes>
+    </node>    
     <node name="MonOp">
     	<sons>
     		<son name="Expr">
