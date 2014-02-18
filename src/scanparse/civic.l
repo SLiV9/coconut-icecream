@@ -66,11 +66,11 @@
                              FILTER( ID);
                            }
 
-[0-9]+\.[0-9]*             { yylval.cfloat=atof(yytext);
+[0-9]+\.[0-9]*             { yylval.cflt=atof(yytext);
                              FILTER( FLOAT);
                            }
 
-[0-9]*\.[0-9]+             { yylval.cfloat=atof(yytext);
+[0-9]*\.[0-9]+             { yylval.cflt=atof(yytext);
                              FILTER( FLOAT);
                            }
 
