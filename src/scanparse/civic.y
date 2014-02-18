@@ -29,7 +29,7 @@ static int yyerror( char *errname);
  node               *node;
 }
 
-%token BRACKET_L BRACKET_R COMMA SEMICOLON
+%token BRL BRR BCL BCR COMMA SEMICOLON
 %token MINUS PLUS STAR SLASH PERCENT LE LT GE GT EQ NE OR AND
 %token TRUEVAL FALSEVAL LET
 
@@ -88,7 +88,7 @@ expr: constant
       {
         $$ = TBmakeVarcall( STRcpy( $1));
       }
-    | BRACKET_L expr binop expr BRACKET_R
+    | BRL expr binop expr BRR
       {
         $$ = TBmakeBinop( $3, $2, $4);
       }

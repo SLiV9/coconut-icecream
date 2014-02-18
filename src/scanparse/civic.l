@@ -32,8 +32,11 @@
 
 %%
 
-"("                        { FILTER( BRACKET_L); }
-")"                        { FILTER( BRACKET_R); }
+"("                        { FILTER( BRL); }
+")"                        { FILTER( BRR); }
+"{"                        { FILTER( BCL); }
+"}"                        { FILTER( BCR); }
+
 ","                        { FILTER( COMMA); }
 ";"                        { FILTER( SEMICOLON); }
 
@@ -57,9 +60,20 @@
 "true"                     { FILTER( TRUEVAL); }
 "false"                    { FILTER( FALSEVAL); }
 
-[A-Za-z][A-Za-z0-9_]*      { yylval.id = STRcpy(yytext);
+
+
+[A-Za-z_][A-Za-z0-9_]*     { yylval.id = STRcpy(yytext);
                              FILTER( ID);
                            }
+
+[0-9]+\.[0-9]*             { yylval.cfloat=atof(yytext);
+                             FILTER( FLOAT);
+                           }
+
+[0-9]*\.[0-9]+             { yylval.cfloat=atof(yytext);
+                             FILTER( FLOAT);
+                           }
+
 
 [0-9]+                     { yylval.cint=atoi(yytext);
                              FILTER( INT);
