@@ -59,7 +59,7 @@
     <nodeset name="Instr">
       <target>
         <node name="Assign" />
-        <node name="FunCall" />
+        <node name="FunState" />
         <node name="If" />
         <node name="While" />
         <node name="For" />
@@ -107,6 +107,16 @@
   	 			<targets>
   	 				<target mandatory="no">
   	 					<node name="VarDecs" />
+  	 					<phases>
+  	 						<all />
+  	 					</phases>
+  	 				</target>
+  	 			</targets>
+  	 		</son>
+  	 		<son name="FunDefs">
+  	 			<targets>
+  	 				<target mandatory="no">
+  	 					<node name="FunDefs" />
   	 					<phases>
   	 						<all />
   	 					</phases>
@@ -177,6 +187,31 @@
           <targets>
             <target mandatory="no">
               <node name="VarDecs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="FunDefs">
+      <sons>
+        <son name="FunDef">
+          <targets>
+            <target mandatory="yes">
+              <node name="FunDef" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="FunDefs" />
               <phases>
                 <all />
               </phases>
@@ -382,6 +417,20 @@
       </sons>
       <attributes />
     </node>
+    <node name="FunState">
+    	<sons>
+    		<son name="Call">
+    			<targets>
+    				<target mandatory="yes">
+    					<node name="FunCall" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
+    	</sons>
+    </node>
     <node name="Param">
       <sons>
         <son name="Dec">
@@ -551,6 +600,16 @@
     </node>
     <node name="For">
     	<sons>
+    		<son name="Iter">
+    			<targets>
+    				<target mandatory="yes">
+    					<node name="VarHead" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
     		<son name="From">
     			<targets>
     				<target mandatory="yes">
@@ -592,20 +651,7 @@
     			</targets>
     		</son>
     	</sons>
-    	<attributes>
-        <attribute name="Iter">
-          <type name="String">
-            <targets>
-              <target mandatory="yes">
-                <any />
-                <phases>
-                  <all />
-                </phases>
-              </target>
-            </targets>
-          </type>
-        </attribute>
-    	</attributes>
+    	<attributes />
     </node>    
     <node name="MonOp">
     	<sons>
