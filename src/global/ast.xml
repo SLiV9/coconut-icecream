@@ -551,6 +551,16 @@
     </node>
     <node name="For">
     	<sons>
+    		<son name="Iter">
+    			<targets>
+    				<target mandatory="yes">
+    					<node name="VarHead" />
+    					<phases>
+    						<all />
+    					</phases>
+    				</target>
+    			</targets>
+    		</son>
     		<son name="From">
     			<targets>
     				<target mandatory="yes">
@@ -592,20 +602,7 @@
     			</targets>
     		</son>
     	</sons>
-    	<attributes>
-        <attribute name="Iter">
-          <type name="String">
-            <targets>
-              <target mandatory="yes">
-                <any />
-                <phases>
-                  <all />
-                </phases>
-              </target>
-            </targets>
-          </type>
-        </attribute>
-    	</attributes>
+    	<attributes />
     </node>    
     <node name="MonOp">
     	<sons>
