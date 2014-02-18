@@ -30,11 +30,16 @@ static int yyerror( char *errname);
 }
 
 %token BRL BRR BCL BCR COMMA SEMICOLON
-%token MINUS PLUS STAR SLASH PERCENT LE LT GE GT EQ NE OR AND
+%token MINUS PLUS STAR SLASH PERCENT LE LT GE GT EQ NE OR AND NOT
 %token TRUEVAL FALSEVAL LET
 
-%token <cint> INT
-%token <cflt> FLOAT
+%token EXPORT EXTERN
+%token WHILE IF ELSE FOR DO RETURN
+%token INT FLOAT BOOL VOID
+
+
+%token <cint> INTVAL
+%token <cflt> FLOATVAL
 %token <id> ID
 
 %type <node> intval floatval boolval constant expr
@@ -108,13 +113,13 @@ constant: floatval
           }
         ;
 
-floatval: FLOAT
+floatval: FLOATVAL
            {
              $$ = TBmakeFloat( $1);
            }
          ;
 
-intval: INT
+intval: INTVAL
         {
           $$ = TBmakeInt( $1);
         }

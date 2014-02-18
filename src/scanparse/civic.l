@@ -46,6 +46,7 @@
 "/"                        { FILTER( SLASH);  } 
 "%"                        { FILTER( PERCENT);  } 
 
+
 "<="                       { FILTER( LE);    }
 "<"                        { FILTER( LT);    } 
 ">="                       { FILTER( GE);    }
@@ -56,9 +57,11 @@
 "||"                       { FILTER( OR);    }
 
 "="                        { FILTER( LET);    }
+"!"                        { FILTER( NOT);  } 
 
 "true"                     { FILTER( TRUEVAL); }
 "false"                    { FILTER( FALSEVAL); }
+
 
 
 
@@ -67,16 +70,16 @@
                            }
 
 [0-9]+\.[0-9]*             { yylval.cflt=atof(yytext);
-                             FILTER( FLOAT);
+                             FILTER( FLOATVAL);
                            }
 
 [0-9]*\.[0-9]+             { yylval.cflt=atof(yytext);
-                             FILTER( FLOAT);
+                             FILTER( FLOATVAL);
                            }
 
 
 [0-9]+                     { yylval.cint=atoi(yytext);
-                             FILTER( INT);
+                             FILTER( INTVAL);
                            }
 
 \n.*                       { global.line += 1;
