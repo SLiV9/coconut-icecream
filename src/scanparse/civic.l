@@ -82,10 +82,14 @@
                              FILTER( INTVAL);
                            }
 
-\n.*                       { global.line += 1;
+#.*\n                     {
+                            //do iets nuttigs;
+                          }
+
+(\r?\n)|(\n?\r)|(\n\r?)   { global.line += 1;
                              global.col = 0;
                              yyless(1);
                            }
 
-[ \t]                      { global.col += yyleng;
+[ \t]+                     { global.col += yyleng;
                            } 
