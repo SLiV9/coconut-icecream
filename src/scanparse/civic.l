@@ -36,6 +36,8 @@
 ")"                        { FILTER( BRR); }
 "{"                        { FILTER( BCL); }
 "}"                        { FILTER( BCR); }
+"["                        { FILTER( BSL); }
+"]"                        { FILTER( BSR); }
 
 ","                        { FILTER( COMMA); }
 ";"                        { FILTER( SEMICOLON); }

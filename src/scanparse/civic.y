@@ -30,7 +30,7 @@ static int yyerror( char *errname);
  node               *node;
 }
 
-%token BRL BRR BCL BCR COMMA SEMICOLON
+%token BRL BRR BCL BCR BSL BSR COMMA SEMICOLON
 %token MINUS PLUS STAR SLASH PERCENT LE LT GE GT EQ NE OR AND NOT
 %token TRUEVAL FALSEVAL LET
 
@@ -81,7 +81,7 @@ assign: varlet LET expr SEMICOLON
 
 varlet: ID
         {
-          $$ = TBmakeVarlet( STRcpy( $1));
+          $$ = TBmakeVarlet( STRcpy( $1), NULL);
         }
         ;
 
@@ -92,7 +92,7 @@ expr: constant
       }
     | ID
       {
-        $$ = TBmakeVarcall( STRcpy( $1));
+        $$ = TBmakeVarcall( STRcpy( $1), NULL);
       }
     | BRL expr binop expr BRR
       {

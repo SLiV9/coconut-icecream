@@ -57,6 +57,7 @@
         <node name="Float" />
         <node name="Bool" />
         <node name="Cast" />
+        <node name="ArrayLit" />
       </target>
     </nodeset>
     <nodeset name="Instr">
@@ -274,6 +275,81 @@
       </sons>
       <attributes />
     </node>
+    <node name="DimDecs">
+      <sons>
+        <son name="Dec">
+          <targets>
+            <target mandatory="yes">
+              <node name="VarHead" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="DimDecs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="DimDefs">
+      <sons>
+        <son name="Expr">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="DimDefs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="ArrayLit">
+      <sons>
+        <son name="Expr">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="ArrayLit" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
     <node name="FunDef">
       <sons>
       	<son name="Dec">
@@ -389,6 +465,16 @@
             </target>
           </targets>
         </son>
+        <son name="DimDefs">
+        	<targets>
+        		<target mandatory="no">
+        			<node name="DimDefs" />
+        			<phases>
+        				<all />
+        			</phases>
+        		</target>
+        	</targets>
+        </son>
       </sons>
       <attributes>
     		<attribute name="Export">
@@ -416,6 +502,16 @@
               </phases>
             </target>
           </targets>
+        </son>
+        <son name="DimDecs">
+        	<targets>
+        		<target mandatory="no">
+        			<node name="DimDecs" />
+        			<phases>
+        				<all />
+        			</phases>
+        		</target>
+        	</targets>
         </son>
       </sons>
       <attributes />
@@ -446,6 +542,16 @@
             </target>
           </targets>
         </son>
+        <son name="DimDecs">
+        	<targets>
+        		<target mandatory="no">
+        			<node name="DimDecs" />
+        			<phases>
+        				<all />
+        			</phases>
+        		</target>
+        	</targets>
+        </son>
       </sons>
       <attributes />
     </node>
@@ -470,6 +576,16 @@
               </phases>
             </target>
           </targets>
+        </son>
+        <son name="DimDefs">
+        	<targets>
+        		<target mandatory="no">
+        			<node name="DimDefs" />
+        			<phases>
+        				<all />
+        			</phases>
+        		</target>
+        	</targets>
         </son>
       </sons>
       <attributes />
@@ -724,6 +840,16 @@
     </node>
     <node name="VarLet">
       <sons>
+      	<son name="Args">
+          <targets>
+            <target mandatory="no">
+              <node name="Args" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
       </sons>
       <attributes>
         <attribute name="Name">
@@ -754,6 +880,16 @@
     </node>
     <node name="VarCall">
       <sons>
+      	<son name="Args">
+          <targets>
+            <target mandatory="no">
+              <node name="Args" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
       </sons>
       <attributes>
         <attribute name="Name">
