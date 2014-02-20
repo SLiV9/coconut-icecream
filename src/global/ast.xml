@@ -250,9 +250,9 @@
       </sons>
       <attributes />
     </node>
-    <node name="Args">
+    <node name="Exprs">
       <sons>
-        <son name="Arg">
+        <son name="Expr">
           <targets>
             <target mandatory="yes">
               <set name="Expr" />
@@ -265,7 +265,7 @@
         <son name="Next">
           <targets>
             <target mandatory="no">
-              <node name="Args" />
+              <node name="Exprs" />
               <phases>
                 <all />
               </phases>
@@ -327,20 +327,10 @@
     </node>
     <node name="ArrayLit">
       <sons>
-        <son name="Expr">
+        <son name="Exprs">
           <targets>
             <target mandatory="yes">
-              <set name="Expr" />
-              <phases>
-                <all />
-              </phases>
-            </target>
-          </targets>
-        </son>
-        <son name="Next">
-          <targets>
-            <target mandatory="no">
-              <node name="ArrayLit" />
+              <node name="Exprs" />
               <phases>
                 <all />
               </phases>
@@ -840,10 +830,10 @@
     </node>
     <node name="VarLet">
       <sons>
-      	<son name="Args">
+      	<son name="Indx">
           <targets>
             <target mandatory="no">
-              <node name="Args" />
+              <node name="Exprs" />
               <phases>
                 <all />
               </phases>
@@ -880,10 +870,10 @@
     </node>
     <node name="VarCall">
       <sons>
-      	<son name="Args">
+      	<son name="Indx">
           <targets>
             <target mandatory="no">
-              <node name="Args" />
+              <node name="Exprs" />
               <phases>
                 <all />
               </phases>
@@ -923,7 +913,7 @@
       	<son name="Args">
           <targets>
             <target mandatory="no">
-              <node name="Args" />
+              <node name="Exprs" />
               <phases>
                 <all />
               </phases>
