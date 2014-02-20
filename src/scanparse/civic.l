@@ -62,7 +62,20 @@
 "true"                     { FILTER( TRUEVAL); }
 "false"                    { FILTER( FALSEVAL); }
 
+"export"									 { FILTER( EXPORT); }
+"extern"									 { FILTER( EXTERN); }
 
+"while"										 { FILTER( WHILE); }
+"do"											 { FILTER( DO); }
+"for"											 { FILTER( FOR); }
+"if"											 { FILTER( IF); }
+"else"										 { FILTER( ELSE); }
+"return"									 { FILTER( RETURN); }
+
+"int"											 { FILTER( INT); }
+"float"										 { FILTER( FLOAT); }
+"bool"										 { FILTER( BOOL); }
+"void"										 { FILTER( VOID); }
 
 
 [A-Za-z_][A-Za-z0-9_]*     { yylval.id = STRcpy(yytext);
