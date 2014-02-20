@@ -13,6 +13,7 @@
 #include "ctinfo.h"
 #include "free.h"
 #include "globals.h"
+#include "myglobals.h"
 
 static node *parseresult = NULL;
 extern int yylex();
@@ -153,8 +154,8 @@ binop: PLUS      { $$ = BO_add; }
 
 static int yyerror( char *error)
 {
-  CTIabort( "line %d, col %d\nError parsing source code: %s\n", 
-            global.line, global.col, error);
+  CTIabort( "file %s, line %d, col %d\nError parsing source code: %s\n", 
+            myglobal.fn, global.line, global.col, error);
 
   return( 0);
 }

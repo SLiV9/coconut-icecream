@@ -12,15 +12,15 @@ PHASE( ld,
        "Loading CiviC program",
        ALWAYS)
 
-SUBPHASE( cpp,
+SUBPHASE( mycpp,
           "Running C preprocessor",
-          SPdoRunPreProcessor, 
-          NEVER,
+          MYCPPdoPreprocessing, 
+          ALWAYS,
           ld)
 
-SUBPHASE( scp,
+SUBPHASE( myscp,
           "Reading input file",
-          SPdoScanParse, 
+          MYSCPdoScanParse, 
           ALWAYS,
           ld)
 

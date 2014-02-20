@@ -1,6 +1,7 @@
 ### object files and source files
 *.o
 *.s
+*.cvc.cpp
 
 ### binaries
 bin/

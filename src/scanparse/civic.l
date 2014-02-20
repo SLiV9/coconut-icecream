@@ -82,7 +82,7 @@
                              FILTER( INTVAL);
                            }
 
-#[ ][0-9]+[ ]\"[A-Za-z0-9\._-]+\".*\n     {
+#[ ][0-9]+[ ]\"[^\"]+\".*\n     {
                             char* xxtxt = malloc(sizeof(char)*(strlen(yytext)+1));
                             char* txt = xxtxt + 2;
                             strcpy(xxtxt, yytext);
@@ -105,12 +105,12 @@
                             if(myglobal.fn!=NULL)
                             	free(myglobal.fn);
                             global.line = row;
+                            global.col = 0;
                             myglobal.fn = filename;
                           }
 
 (\r?\n)|(\n?\r)|(\n\r?)   { global.line += 1;
                              global.col = 0;
-                             yyless(1);
                            }
 
 [ \t]+                     { global.col += yyleng;

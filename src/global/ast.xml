@@ -24,6 +24,9 @@
          include the include file needed for the traversal
     -->
     <general>
+    	<traversal id="MYCPP" name="C Preprocessing" default="sons" include="mycpp.h" />
+    	<traversal id="MYSCP" name="Scanning and Parsing" default="sons" include="myscp.h" />
+    
       <traversal id="AS4IP" name="Identifier Prefixing" default="sons" include="as4ip.h">
       	<travuser>
       		<node name="VarCall" />
