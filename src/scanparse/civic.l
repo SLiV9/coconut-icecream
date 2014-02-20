@@ -96,33 +96,52 @@
                            }
 
 #[ ][0-9]+[ ]\"[^\"]+\".*\n     {
-                            char* xxtxt = malloc(sizeof(char)*(strlen(yytext)+1));
-                            char* txt = xxtxt + 2;
-                            strcpy(xxtxt, yytext);
-                            while(*txt!=' '){
-                            	txt++;
-                            }
-														*txt = 0;
-														int row = atoi(xxtxt+2);
-														char * fn = txt+2;
-                            txt+=2;
-                            while(*txt!='\"')
-                            {
-                            	txt++;
-                            }
-                            *txt = 0;
-                            char* filename = malloc(sizeof(char)*(txt-fn+1));
-                            strcpy(filename,fn);
-                            free(xxtxt);
-                            
-                            if(myglobal.fn!=NULL)
-                            	free(myglobal.fn);
-                            global.line = row;
-                            global.col = 0;
-                            myglobal.fn = filename;
-                          }
+									/* Interpret the Preprocessors hints.
+									 * They are formatted:
+									 * # row "filename" flags\n
+									 * The row is the number of the next line,
+									 * if it were a line in file filename. */
+									int row = 0;
+									char* filename;
+									
+									// xxtext is a local copy of yytext.
+                  char* xxtext = malloc(sizeof(char)*(strlen(yytext)+1));
+                  char* txt = xxtext + 2;
+                  
+									// The row can be read from rowstart to txt.
+                  char* rowstart = txt;
+                  strcpy(xxtext, yytext);
+                  while (*txt != ' ')
+                  {
+                  	txt++;
+                  }
+									*txt = 0;
+									row = atoi(rowstart);
+									
+                  // The filename can be read from fnstart to txt.
+                  txt += 2;
+									char* fnstart = txt;
+                  while (*txt != '\"')
+                  {
+                  	txt++;
+                  }
+                  *txt = 0;
+                  filename = malloc(sizeof(char)*(txt - fnstart + 1));
+                  strcpy(filename,fn);
+                  
+                  // Done.
+                  free(xxtext);
+                  
+                  if (myglobal.fn!=NULL)
+                  {
+                  	free(myglobal.fn);
+                  }
+                  myglobal.fn = filename;
+                  global.line = row;
+                  global.col = 0;
+                }
 
-(\r?\n)|(\n?\r)|(\n\r?)   { global.line += 1;
+(\r?\n)|(\n?\r)|(\n\r?)    { global.line += 1;
                              global.col = 0;
                            }
 
@@ -131,6 +150,7 @@
 
 %{
 
+// If necessary, free filenames malloc'd when interpreting [# row filename]'s.
 if (myglobal.fn != NULL)
 {
 	free(myglobal.fn);
