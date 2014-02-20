@@ -10,6 +10,7 @@
 #include "free.h"
 #include "civic.tab.h"
 #include "globals.h"
+#include "myglobals.h"
 #include "ctinfo.h"
 
 
@@ -20,7 +21,6 @@
 #define LINEBUF_SIZE 256
 #define YY_NO_UNPUT
 #define YY_NO_INPUT
-
 
 %}
 
@@ -82,8 +82,30 @@
                              FILTER( INTVAL);
                            }
 
-#.*\n                     {
-                            //do iets nuttigs;
+#[ ][0-9]+[ ]\"[A-Za-z0-9\._-]+\".*\n     {
+                            char* xxtxt = malloc(sizeof(char)*(strlen(yytext)+1));
+                            char* txt = xxtxt + 2;
+                            strcpy(xxtxt, yytext);
+                            while(*txt!=' '){
+                            	txt++;
+                            }
+														*txt = 0;
+														int row = atoi(xxtxt+2);
+														char * fn = txt+2;
+                            txt+=2;
+                            while(*txt!='\"')
+                            {
+                            	txt++;
+                            }
+                            *txt = 0;
+                            char* filename = malloc(sizeof(char)*(txt-fn+1));
+                            strcpy(filename,fn);
+                            free(xxtxt);
+                            
+                            if(myglobal.fn!=NULL)
+                            	free(myglobal.fn);
+                            global.line = row;
+                            myglobal.fn = filename;
                           }
 
 (\r?\n)|(\n?\r)|(\n\r?)   { global.line += 1;
@@ -93,3 +115,12 @@
 
 [ \t]+                     { global.col += yyleng;
                            } 
+
+%{
+
+if (myglobal.fn != NULL)
+{
+	free(myglobal.fn);
+}
+
+%}
