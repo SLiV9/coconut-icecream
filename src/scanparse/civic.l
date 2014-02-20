@@ -127,12 +127,12 @@
                   }
                   *txt = 0;
                   filename = malloc(sizeof(char)*(txt - fnstart + 1));
-                  strcpy(filename,fn);
+                  strcpy(filename, fnstart);
                   
                   // Done.
                   free(xxtext);
                   
-                  if (myglobal.fn!=NULL)
+                  if (myglobal.fn != NULL)
                   {
                   	free(myglobal.fn);
                   }
@@ -146,7 +146,7 @@
                            }
 
 [ \t]+                     { global.col += yyleng;
-                           } 
+                           }
 
 %{
 
