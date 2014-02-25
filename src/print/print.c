@@ -384,6 +384,9 @@ PRTcast (node * arg_node, info * arg_info)
   printf( "( ");
 
   switch (CAST_TYPE( arg_node)) {
+  	case VT_void:
+  		tmp = "void";
+  		break;
     case VT_int:
     	tmp = "int";
     	break;

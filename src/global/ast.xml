@@ -7,7 +7,6 @@
     <type name="Bool" ctype="bool" init="FALSE" copy="literal" />
     <type name="Float" ctype="float" init="0.0" copy="literal" />
     <type name="ValueType" ctype="vtype" init="VT_unknown" copy="literal" />
-    <type name="ReturnType" ctype="rtype" init="RT_unknown" copy="literal" />
     <type name="MonOp" ctype="monop" init="MO_unknown" copy="literal" />
     <type name="BinOp" ctype="binop" init="BO_unknown" copy="literal" />
     <type name="Link" ctype="node*" init="NULL" copy="lookup" />
@@ -420,9 +419,9 @@
           </type>
         </attribute>
         <attribute name="Type">
-        	<type name="ReturnType">
+        	<type name="ValueType">
         		<targets>
-        			<target mandatory="yes">
+        			<target mandatory="no">
 		      			<any />
 		      			<phases>
 		      				<all />
