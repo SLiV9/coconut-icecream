@@ -46,6 +46,20 @@ static int yyerror( char *errname);
 %type <node> intval floatval boolval constant expr
 %type <node> instrs instr assign varlet program
 %type <cbinop> binop
+%type <cmonop> monop
+
+%precedence OR
+%precedence AND
+%precedence EQ NE
+%precedence LE LT GE GT 
+%precedence MINUS PLUS
+%precedence STAR SLASH PERCENT
+
+
+
+
+
+
 
 %start program
 
@@ -148,6 +162,10 @@ binop: PLUS      { $$ = BO_add; }
      | EQ        { $$ = BO_eq; }
      | OR        { $$ = BO_or; }
      | AND       { $$ = BO_and; }
+     ;
+
+monop: MINUS     { $$ = MO_neg; }
+     | NOT       { $$ = MO_not; }
      ;
       
 %%
