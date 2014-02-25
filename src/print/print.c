@@ -52,19 +52,6 @@ static info *FreeInfo( info *info)
 }
 
 
-/** <!--******************************************************************-->
- *
- * @fn PRTbody
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node Body node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
-
 node *
 PRTbody (node * arg_node, info * arg_info)
 {
@@ -79,20 +66,6 @@ PRTbody (node * arg_node, info * arg_info)
   DBUG_RETURN (arg_node);
 }
 
-
-/** <!--******************************************************************-->
- *
- * @fn PRTvardecs
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node Vardecs node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
-
 node *
 PRTvardecs (node * arg_node, info * arg_info)
 {
@@ -105,20 +78,6 @@ PRTvardecs (node * arg_node, info * arg_info)
   DBUG_RETURN (arg_node);
 }
 
-
-/** <!--******************************************************************-->
- *
- * @fn PRTinstr
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node Instrs node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
-
 node *
 PRTinstrs (node * arg_node, info * arg_info)
 {
@@ -130,20 +89,6 @@ PRTinstrs (node * arg_node, info * arg_info)
   
   DBUG_RETURN (arg_node);
 }
-
-
-/** <!--******************************************************************-->
- *
- * @fn PRTassign
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node Assign node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
 
 node *
 PRTassign (node * arg_node, info * arg_info)
@@ -160,20 +105,6 @@ PRTassign (node * arg_node, info * arg_info)
   
   DBUG_RETURN (arg_node);
 }
-
-
-/** <!--******************************************************************-->
- *
- * @fn PRTmonop
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node MonOp node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
 
 node *
 PRTmonop (node * arg_node, info * arg_info)
@@ -203,20 +134,6 @@ PRTmonop (node * arg_node, info * arg_info)
 
   DBUG_RETURN (arg_node);
 }
-
-
-/** <!--******************************************************************-->
- *
- * @fn PRTbinop
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node BinOp node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
 
 node *
 PRTbinop (node * arg_node, info * arg_info)
@@ -282,20 +199,6 @@ PRTbinop (node * arg_node, info * arg_info)
   DBUG_RETURN (arg_node);
 }
 
-
-/** <!--******************************************************************-->
- *
- * @fn PRTfloat
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node Float node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
-
 node *
 PRTfloat (node * arg_node, info * arg_info)
 {
@@ -306,21 +209,6 @@ PRTfloat (node * arg_node, info * arg_info)
   DBUG_RETURN (arg_node);
 }
 
-
-
-/** <!--******************************************************************-->
- *
- * @fn PRTnum
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node Int node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
-
 node *
 PRTint (node * arg_node, info * arg_info)
 {
@@ -330,20 +218,6 @@ PRTint (node * arg_node, info * arg_info)
 
   DBUG_RETURN (arg_node);
 }
-
-
-/** <!--******************************************************************-->
- *
- * @fn PRTboolean
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node Boolean node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
 
 node *
 PRTbool (node * arg_node, info * arg_info)
@@ -359,20 +233,6 @@ PRTbool (node * arg_node, info * arg_info)
   
   DBUG_RETURN (arg_node);
 }
-
-
-/** <!--******************************************************************-->
- *
- * @fn PRTcast
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node Cast node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
 
 node *
 PRTcast (node * arg_node, info * arg_info)
@@ -409,20 +269,6 @@ PRTcast (node * arg_node, info * arg_info)
   DBUG_RETURN (arg_node);
 }
 
-
-/** <!--******************************************************************-->
- *
- * @fn PRTvarcall
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node letrec node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
-
 node *
 PRTvarcall (node * arg_node, info * arg_info)
 {
@@ -433,20 +279,6 @@ PRTvarcall (node * arg_node, info * arg_info)
   DBUG_RETURN (arg_node);
 }
 
-
-/** <!--******************************************************************-->
- *
- * @fn PRTvarlet
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node letrec node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
-
 node *
 PRTvarlet (node * arg_node, info * arg_info)
 {
@@ -456,20 +288,6 @@ PRTvarlet (node * arg_node, info * arg_info)
 
   DBUG_RETURN (arg_node);
 }
-
-
-/** <!--******************************************************************-->
- *
- * @fn PRTerror
- *
- * @brief Prints the node and its sons/attributes
- *
- * @param arg_node letrec node to process
- * @param arg_info pointer to info structure
- *
- * @return processed node
- *
- ***************************************************************************/
 
 node *
 PRTerror (node * arg_node, info * arg_info)
