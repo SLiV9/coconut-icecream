@@ -29,6 +29,7 @@ static int yyerror( char *errname);
  int                 cint;
  float               cflt;
  binop               cbinop;
+ monop							 cmonop;
  node               *node;
 }
 
@@ -117,6 +118,10 @@ expr: constant
       {
         $$ = TBmakeBinop( $2, $1, $3);
       }
+    | monop expr
+    	{
+    		$$ = TBmakeMonop( $1, $2 );
+    	}
     ;
 
 constant: floatval
