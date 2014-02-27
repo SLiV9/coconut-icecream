@@ -554,8 +554,6 @@ PRTparam (node * arg_node, info * arg_info)
   	PARAM_DIMDECS( arg_node) = TRAVdo( PARAM_DIMDECS( arg_node), arg_info);
   	printf(" ]");
   }
-  
-  printf(";\n");
 
   DBUG_RETURN (arg_node);
 }
