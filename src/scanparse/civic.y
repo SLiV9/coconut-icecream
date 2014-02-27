@@ -48,14 +48,13 @@ static int yyerror( char *errname);
 %type <cbinop> binop
 %type <cmonop> monop
 
-%precedence OR
-%precedence AND
-%precedence EQ NE
-%precedence LE LT GE GT 
-%precedence MINUS PLUS
-%precedence STAR SLASH PERCENT
 
-
+%nonassoc OR
+%nonassoc AND
+%nonassoc EQ NE
+%nonassoc LE LT GE GT 
+%nonassoc MINUS PLUS
+%nonassoc STAR SLASH PERCENT
 
 
 
@@ -108,9 +107,13 @@ expr: constant
       {
         $$ = TBmakeVarcall( STRcpy( $1), NULL);
       }
-    | BRL expr binop expr BRR
+    | BRL expr BRR
       {
-        $$ = TBmakeBinop( $3, $2, $4);
+        $$ =  $2;
+      }
+    |  expr binop expr
+      {
+        $$ = TBmakeBinop( $2, $1, $3);
       }
     ;
 
