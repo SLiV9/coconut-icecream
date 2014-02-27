@@ -139,7 +139,7 @@
                   	free(myglobal.fn);
                   }
                   myglobal.fn = filename;
-                  global.line = row;
+                  global.line = row + 1;
                   global.col = 0;
                 }
 
