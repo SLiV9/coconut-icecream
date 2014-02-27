@@ -359,9 +359,9 @@ PRTcast (node * arg_node, info * arg_info)
       DBUG_ASSERT( 0, "unknown vtype detected!");
   }
 
-  printf( " %s ", tmp);
+  printf( "%s", tmp);
   
-  printf( ")");
+  printf( " )");
 
   CAST_EXPR( arg_node) = TRAVdo( CAST_EXPR( arg_node), arg_info);
 
@@ -375,11 +375,11 @@ PRTfuncall (node * arg_node, info * arg_info)
 
   printf( "%s", FUNCALL_NAME( arg_node));
   
-  printf("(");
+  printf("( ");
  	
  	FUNCALL_ARGS( arg_node) = TRAVdo( FUNCALL_ARGS( arg_node), arg_info);
  	
-  printf(")");
+  printf(" )");
 
   DBUG_RETURN (arg_node);
 }

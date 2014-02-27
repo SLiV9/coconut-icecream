@@ -19,6 +19,8 @@ static node *parseresult = NULL;
 extern int yylex();
 static int yyerror( char *errname);
 
+//#define YYDEBUG 1
+
 %}
 
 %union {
@@ -185,6 +187,7 @@ node *YYparseTree( void)
 {
   DBUG_ENTER("YYparseTree");
 
+	//yydebug = 1;
   yyparse();
 
   DBUG_RETURN( parseresult);
