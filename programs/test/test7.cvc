@@ -1,0 +1,6 @@
+#include "test4.h"
+a = (42 + 
+(13
+                * tutu));
+b = a * - 1;
+c = a - b + 5 + (float) -a / 2;

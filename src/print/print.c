@@ -231,8 +231,6 @@ PRTmonop (node * arg_node, info * arg_info)
 
   DBUG_ENTER ("PRTmonop");
 
-  printf( "(");
-
   switch (MONOP_OP( arg_node)) {
     case MO_neg:
       tmp = "-";
@@ -247,8 +245,6 @@ PRTmonop (node * arg_node, info * arg_info)
   printf( "%s", tmp);
 
   MONOP_EXPR( arg_node) = TRAVdo( MONOP_EXPR( arg_node), arg_info);
-
-  printf( ")");
 
   DBUG_RETURN (arg_node);
 }

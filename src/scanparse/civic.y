@@ -28,6 +28,7 @@ static int yyerror( char *errname);
  char               *id;
  int                 cint;
  float               cflt;
+ vtype							 valuetype;
  node               *node;
 }
 
@@ -46,6 +47,7 @@ static int yyerror( char *errname);
 
 %type <node> intval floatval boolval constant expr
 %type <node> instrs instr assign varlet program
+%type <valuetype> cast
 
 
 %left OR
@@ -54,7 +56,7 @@ static int yyerror( char *errname);
 %left LE LT GE GT
 %left MINUS PLUS
 %left STAR SLASH PERCENT
-%right NOT NEG
+%right NOT NEG CAST
 
 
 
@@ -105,6 +107,10 @@ expr: constant
       {
         $$ = TBmakeVarcall( STRcpy( $1), NULL);
       }
+    | cast expr %prec CAST
+    	{
+    		$$ = TBmakeCast( $1, $2);
+    	}
     | MINUS expr %prec NEG
     	{
     		$$ = TBmakeMonop( MO_neg, $2);
@@ -170,6 +176,20 @@ expr: constant
         $$ = TBmakeBinop( BO_or, $1, $3);
       }
     ;
+    
+cast: BRL INT BRR
+			{
+				$$ = VT_int;
+			}
+		| BRL FLOAT BRR
+			{
+				$$ = VT_float;
+			}
+		| BRL BOOL BRR
+			{
+				$$ = VT_bool;
+			}
+			;
 
 constant: floatval
           {
