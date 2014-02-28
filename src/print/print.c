@@ -86,7 +86,12 @@ PRTbody (node * arg_node, info * arg_info)
   
   BODY_INSTRS( arg_node) = TRAVopt( BODY_INSTRS( arg_node), arg_info);
   
-  BODY_RETURN( arg_node) = TRAVopt( BODY_RETURN( arg_node), arg_info);
+  if (BODY_RETURN( arg_node) != NULL)
+  {
+  	printIndent( arg_info);
+  	printf("return ");
+	  BODY_RETURN( arg_node) = TRAVdo( BODY_RETURN( arg_node), arg_info);
+  }
   
   DBUG_RETURN (arg_node);
 }
@@ -205,6 +210,8 @@ node *
 PRTassign (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTassign");
+
+ 	printIndent( arg_info);
 
   ASSIGN_LET( arg_node) = TRAVdo( ASSIGN_LET( arg_node), arg_info);
   
@@ -488,6 +495,8 @@ node *
 PRTvardec (node * arg_node, info * arg_info)
 {	
   DBUG_ENTER ("PRTvardec");
+  
+  printIndent( arg_info);
 
   VARDEC_DEC( arg_node) = TRAVdo( VARDEC_DEC( arg_node), arg_info);
 
@@ -574,12 +583,19 @@ node *
 PRTfundef (node * arg_node, info * arg_info)
 {
 	DBUG_ENTER ("PRTfundef");
-
+	
+	printIndent( arg_info);
   FUNDEF_DEC( arg_node) = TRAVdo( FUNDEF_DEC( arg_node), arg_info);
-
 	printf("\n");
+	
+	printIndent( arg_info);
 	printf("{\n");
+	
+	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
 	FUNDEF_BODY( arg_node) = TRAVdo( FUNDEF_BODY( arg_node), arg_info);
+	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
+	
+	printIndent( arg_info);
 	printf("}\n");
 
   DBUG_RETURN (arg_node);
@@ -601,6 +617,8 @@ node *
 PRTfunstate (node * arg_node, info * arg_info)
 {
 	DBUG_ENTER ("PRTfunstate");
+	
+	printIndent( arg_info);
 
   FUNSTATE_CALL( arg_node) = TRAVdo( FUNSTATE_CALL( arg_node), arg_info);
   
@@ -613,22 +631,37 @@ node *
 PRTif (node * arg_node, info * arg_info)
 {
 	DBUG_ENTER ("PRTif");
-
+	
+	printIndent( arg_info);
   printf("if (");
   
 	IF_COND( arg_node) = TRAVdo( IF_COND( arg_node), arg_info);
 	
 	printf(")\n");
-
+	
+	printIndent( arg_info);
 	printf("{\n");
+	
+	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
 	IF_THEN( arg_node) = TRAVdo( IF_THEN( arg_node), arg_info);
+	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
+	
+	printIndent( arg_info);
 	printf("}\n");
 	
 	if (IF_ELSE( arg_node) != NULL)
 	{
+		printIndent( arg_info);
 		printf("else\n");
+		
+		printIndent( arg_info);
 		printf("{\n");
+		
+		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
 		IF_ELSE( arg_node) = TRAVdo( IF_ELSE( arg_node), arg_info);
+		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
+		
+		printIndent( arg_info);
 		printf("}\n");
 	}
 
@@ -642,21 +675,37 @@ PRTwhile (node * arg_node, info * arg_info)
   
   if (WHILE_DOFIRST( arg_node))
   {
-		printf("do\n{\n");
+  	printIndent( arg_info);
+		printf("do\n");
+		
+		printIndent( arg_info);
+		printf("{\n");
+		
+		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
 		WHILE_DO( arg_node) = TRAVdo( WHILE_DO( arg_node), arg_info);
+		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
+		
+		printIndent( arg_info);
 		printf("}\n");
   }
-
-  printf("while ( ");
+  
+	printIndent( arg_info);
+  printf("while (");
   
 	IF_COND( arg_node) = TRAVdo( IF_COND( arg_node), arg_info);
 	
-	printf(" )\n");
+	printf(")\n");
 	
 	if (!WHILE_DOFIRST( arg_node))
 	{
+		printIndent( arg_info);
 		printf("{\n");
+		
+		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
 		WHILE_DO( arg_node) = TRAVdo( WHILE_DO( arg_node), arg_info);
+		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
+		
+		printIndent( arg_info);
 		printf("}\n");
 	}
 
@@ -667,7 +716,8 @@ node *
 PRTfor (node * arg_node, info * arg_info)
 {
 	DBUG_ENTER ("PRTfor");
-
+	
+	printIndent( arg_info);
   printf("for (");
   
 	FOR_ITER( arg_node) = TRAVdo( FOR_ITER( arg_node), arg_info);
@@ -684,8 +734,14 @@ PRTfor (node * arg_node, info * arg_info)
 	
 	printf(")\n");
 	
+	printIndent( arg_info);
 	printf("{\n");
+	
+	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
 	FOR_DO( arg_node) = TRAVdo( FOR_DO( arg_node), arg_info);
+	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
+	
+	printIndent( arg_info);
 	printf("}\n");
 
   DBUG_RETURN (arg_node);
