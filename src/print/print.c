@@ -28,9 +28,11 @@
  */
 struct INFO {
   bool firsterror;
+  int indent;
 };
 
 #define INFO_FIRSTERROR(n) ((n)->firsterror)
+#define INFO_INDENT(n) ((n)->indent)
 
 static info *MakeInfo()
 {
@@ -39,6 +41,7 @@ static info *MakeInfo()
   result = MEMmalloc(sizeof(info));
 
   INFO_FIRSTERROR(result) = FALSE;
+  INFO_INDENT(result) = 0;
   
   return result;
 }
@@ -49,6 +52,15 @@ static info *FreeInfo( info *info)
   info = MEMfree( info);
 
   return info;
+}
+
+void printIndent(info *info)
+{
+	int i;
+	for (i = INFO_INDENT(info); i > 0; i--)
+	{
+		printf("\t");
+	}
 }
 
 node *
@@ -136,7 +148,7 @@ PRTexprs (node * arg_node, info * arg_info)
   
   if (EXPRS_NEXT( arg_node) != NULL)
   {
-  	printf(" , ");
+  	printf(", ");
   	EXPRS_NEXT( arg_node) = TRAVopt( EXPRS_NEXT( arg_node), arg_info);
   }
   
@@ -152,7 +164,7 @@ PRTdimdefs (node * arg_node, info * arg_info)
   
   if (DIMDEFS_NEXT( arg_node) != NULL)
   {
-  	printf(" , ");
+  	printf(", ");
   	DIMDEFS_NEXT( arg_node) = TRAVopt( DIMDEFS_NEXT( arg_node), arg_info);
   }
   
@@ -180,11 +192,11 @@ PRTarraylit (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTarraylit");
 
-	printf("[ ");
+	printf("[");
 	
   ARRAYLIT_EXPRS( arg_node) = TRAVdo( ARRAYLIT_EXPRS( arg_node), arg_info);
   
-  printf(" ]");
+  printf("]");
   
   DBUG_RETURN (arg_node);
 }
@@ -212,7 +224,7 @@ PRTmonop (node * arg_node, info * arg_info)
 
   DBUG_ENTER ("PRTmonop");
 
-  printf( "( ");
+  printf( "(");
 
   switch (MONOP_OP( arg_node)) {
     case MO_neg:
@@ -225,11 +237,11 @@ PRTmonop (node * arg_node, info * arg_info)
       DBUG_ASSERT( 0, "unknown monop detected!");
   }
 
-  printf( " %s ", tmp);
+  printf( "%s", tmp);
 
   MONOP_EXPR( arg_node) = TRAVdo( MONOP_EXPR( arg_node), arg_info);
 
-  printf( " )");
+  printf( ")");
 
   DBUG_RETURN (arg_node);
 }
@@ -241,7 +253,7 @@ PRTbinop (node * arg_node, info * arg_info)
 
   DBUG_ENTER ("PRTbinop");
 
-  printf( "( ");
+  printf( "(");
 
   BINOP_LEFT( arg_node) = TRAVdo( BINOP_LEFT( arg_node), arg_info);
 
@@ -293,7 +305,7 @@ PRTbinop (node * arg_node, info * arg_info)
 
   BINOP_RIGHT( arg_node) = TRAVdo( BINOP_RIGHT( arg_node), arg_info);
 
-  printf( " )");
+  printf( ")");
 
   DBUG_RETURN (arg_node);
 }
@@ -340,7 +352,7 @@ PRTcast (node * arg_node, info * arg_info)
 
   DBUG_ENTER ("PRTcast");
 
-  printf( "( ");
+  printf( "(");
 
   switch (CAST_TYPE( arg_node)) {
   	case VT_void:
@@ -361,7 +373,7 @@ PRTcast (node * arg_node, info * arg_info)
 
   printf( "%s", tmp);
   
-  printf( " )");
+  printf( ") ");
 
   CAST_EXPR( arg_node) = TRAVdo( CAST_EXPR( arg_node), arg_info);
 
@@ -375,11 +387,11 @@ PRTfuncall (node * arg_node, info * arg_info)
 
   printf( "%s", FUNCALL_NAME( arg_node));
   
-  printf("( ");
+  printf("(");
  	
  	FUNCALL_ARGS( arg_node) = TRAVdo( FUNCALL_ARGS( arg_node), arg_info);
  	
-  printf(" )");
+  printf(")");
 
   DBUG_RETURN (arg_node);
 }
@@ -463,11 +475,11 @@ PRTfunhead (node * arg_node, info * arg_info)
 
   printf( "%s", VARLET_NAME( arg_node));
   
-  printf("( ");
+  printf("(");
   
   FUNHEAD_PARAMS( arg_node) = TRAVdo( FUNHEAD_PARAMS( arg_node), arg_info);
   
-  printf(" )");
+  printf(")");
 
   DBUG_RETURN (arg_node);
 }
@@ -481,9 +493,9 @@ PRTvardec (node * arg_node, info * arg_info)
 
   if (VARDEC_DIMDEFS( arg_node) != NULL)
   {
-  	printf("[ ");
+  	printf("[");
   	VARDEC_DIMDEFS( arg_node) = TRAVdo( VARDEC_DIMDEFS( arg_node), arg_info);
-  	printf(" ]");
+  	printf("]");
   }
   
   if (VARDEC_EXPR( arg_node) != NULL)
@@ -531,9 +543,9 @@ PRTglobdec (node * arg_node, info * arg_info)
 
   if (GLOBDEC_DIMDECS( arg_node) != NULL)
   {
-  	printf("[ ");
+  	printf("[");
   	GLOBDEC_DIMDECS( arg_node) = TRAVdo( GLOBDEC_DIMDECS( arg_node), arg_info);
-  	printf(" ]");
+  	printf("]");
   }
   
   printf(";\n");
@@ -565,7 +577,8 @@ PRTfundef (node * arg_node, info * arg_info)
 
   FUNDEF_DEC( arg_node) = TRAVdo( FUNDEF_DEC( arg_node), arg_info);
 
-	printf("\n{\n");
+	printf("\n");
+	printf("{\n");
 	FUNDEF_BODY( arg_node) = TRAVdo( FUNDEF_BODY( arg_node), arg_info);
 	printf("}\n");
 
@@ -601,11 +614,11 @@ PRTif (node * arg_node, info * arg_info)
 {
 	DBUG_ENTER ("PRTif");
 
-  printf("if ( ");
+  printf("if (");
   
 	IF_COND( arg_node) = TRAVdo( IF_COND( arg_node), arg_info);
 	
-	printf(" )\n");
+	printf(")\n");
 
 	printf("{\n");
 	IF_THEN( arg_node) = TRAVdo( IF_THEN( arg_node), arg_info);
@@ -613,7 +626,8 @@ PRTif (node * arg_node, info * arg_info)
 	
 	if (IF_ELSE( arg_node) != NULL)
 	{
-		printf("else\n{\n");
+		printf("else\n");
+		printf("{\n");
 		IF_ELSE( arg_node) = TRAVdo( IF_ELSE( arg_node), arg_info);
 		printf("}\n");
 	}
@@ -654,21 +668,21 @@ PRTfor (node * arg_node, info * arg_info)
 {
 	DBUG_ENTER ("PRTfor");
 
-  printf("for ( ");
+  printf("for (");
   
 	FOR_ITER( arg_node) = TRAVdo( FOR_ITER( arg_node), arg_info);
 	printf(" = ");
 	FOR_FROM( arg_node) = TRAVdo( FOR_FROM( arg_node), arg_info);
-	printf(" , ");
+	printf(", ");
 	FOR_TO( arg_node) = TRAVdo( FOR_TO( arg_node), arg_info);
 	
 	if (FOR_INCR( arg_node) != NULL)
 	{
-		printf(" , ");
+		printf(", ");
 		FOR_INCR( arg_node) = TRAVdo( FOR_INCR( arg_node), arg_info);
 	}
 	
-	printf(" )\n");
+	printf(")\n");
 	
 	printf("{\n");
 	FOR_DO( arg_node) = TRAVdo( FOR_DO( arg_node), arg_info);
