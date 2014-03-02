@@ -45,7 +45,7 @@ static int yyerror( char *errname);
 %token <cflt> FLOATVAL
 %token <id> ID
 
-%type <node> intval floatval boolval constant expr
+%type <node> intval floatval boolval constant expr exprs
 %type <node> instrs instr assign varlet program
 %type <valuetype> cast
 
@@ -98,6 +98,15 @@ varlet: ID
         }
         ;
 
+exprs: expr
+			{
+				$$ = TBmakeExprs( $1, NULL);
+			}
+		| expr COMMA exprs
+			{
+				$$ = TBmakeExprs( $1, $3);
+			}
+		;
 
 expr: constant
       {
@@ -107,6 +116,10 @@ expr: constant
       {
         $$ = TBmakeVarcall( STRcpy( $1), NULL);
       }
+    | ID BRL exprs BRR
+    	{
+    		$$ = TBmakeFuncall( STRcpy( $1), $3);
+    	}
     | cast expr %prec CAST
     	{
     		$$ = TBmakeCast( $1, $2);

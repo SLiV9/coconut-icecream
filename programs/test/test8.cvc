@@ -1,0 +1,3 @@
+#include "test4.h"
+a = 4 * (- (float) ! true);
+b = foo(a, 2.0 * a, false);
