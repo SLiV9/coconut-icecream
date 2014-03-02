@@ -405,6 +405,15 @@ PRTvarcall (node * arg_node, info * arg_info)
   DBUG_ENTER ("PRTvarcall");
 
   printf( "%s", VARCALL_NAME( arg_node));
+  
+  if (VARCALL_INDX( arg_node) != NULL)
+  {
+  	printf("[");
+  	
+  	VARCALL_INDX( arg_node) = TRAVdo( VARCALL_INDX( arg_node), arg_info);
+  	
+  	printf("]");
+  }
 
   DBUG_RETURN (arg_node);
 }

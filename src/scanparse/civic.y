@@ -116,6 +116,10 @@ expr: constant
       {
         $$ = TBmakeVarcall( STRcpy( $1), NULL);
       }
+    | ID BSL exprs BSR
+    	{
+    		$$ = TBmakeVarcall( STRcpy( $1), $3);
+    	}
     | ID BRL BRR
     	{
     		$$ = TBmakeFuncall( STRcpy( $1), NULL);
@@ -192,6 +196,10 @@ expr: constant
       {
         $$ = TBmakeBinop( BO_or, $1, $3);
       }
+    | BSL exprs BSR
+    	{
+    		$$ = TBmakeArraylit( $2);
+    	}
     ;
     
 cast: BRL INT BRR
