@@ -116,6 +116,10 @@ expr: constant
       {
         $$ = TBmakeVarcall( STRcpy( $1), NULL);
       }
+    | ID BRL BRR
+    	{
+    		$$ = TBmakeFuncall( STRcpy( $1), NULL);
+    	}
     | ID BRL exprs BRR
     	{
     		$$ = TBmakeFuncall( STRcpy( $1), $3);

@@ -392,7 +392,7 @@ PRTfuncall (node * arg_node, info * arg_info)
   
   printf("(");
  	
- 	FUNCALL_ARGS( arg_node) = TRAVdo( FUNCALL_ARGS( arg_node), arg_info);
+ 	FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
  	
   printf(")");
 
