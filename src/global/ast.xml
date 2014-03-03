@@ -299,31 +299,6 @@
       </sons>
       <attributes />
     </node>
-    <node name="DimDefs">
-      <sons>
-        <son name="Expr">
-          <targets>
-            <target mandatory="yes">
-              <set name="Expr" />
-              <phases>
-                <all />
-              </phases>
-            </target>
-          </targets>
-        </son>
-        <son name="Next">
-          <targets>
-            <target mandatory="no">
-              <node name="DimDefs" />
-              <phases>
-                <all />
-              </phases>
-            </target>
-          </targets>
-        </son>
-      </sons>
-      <attributes />
-    </node>
     <node name="ArrayLit">
       <sons>
         <son name="Exprs">
@@ -457,7 +432,7 @@
         <son name="DimDefs">
         	<targets>
         		<target mandatory="no">
-        			<node name="DimDefs" />
+        			<node name="Exprs" />
         			<phases>
         				<all />
         			</phases>
@@ -569,7 +544,7 @@
         <son name="DimDefs">
         	<targets>
         		<target mandatory="no">
-        			<node name="DimDefs" />
+        			<node name="Exprs" />
         			<phases>
         				<all />
         			</phases>

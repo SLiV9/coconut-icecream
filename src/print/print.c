@@ -161,22 +161,6 @@ PRTexprs (node * arg_node, info * arg_info)
 }
 
 node *
-PRTdimdefs (node * arg_node, info * arg_info)
-{
-  DBUG_ENTER ("PRTdimdefs");
-
-  DIMDEFS_EXPR( arg_node) = TRAVdo( DIMDEFS_EXPR( arg_node), arg_info);
-  
-  if (DIMDEFS_NEXT( arg_node) != NULL)
-  {
-  	printf(", ");
-  	DIMDEFS_NEXT( arg_node) = TRAVopt( DIMDEFS_NEXT( arg_node), arg_info);
-  }
-  
-  DBUG_RETURN (arg_node);
-}
-
-node *
 PRTdimdecs (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTdimdecs");
