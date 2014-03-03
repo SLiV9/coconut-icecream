@@ -424,6 +424,15 @@ PRTvarlet (node * arg_node, info * arg_info)
   DBUG_ENTER ("PRTvarlet");
 
   printf( "%s", VARLET_NAME( arg_node));
+  
+  if (VARLET_INDX( arg_node) != NULL)
+  {
+  	printf("[");
+  	
+  	VARLET_INDX( arg_node) = TRAVdo( VARLET_INDX( arg_node), arg_info);
+  	
+  	printf("]");
+  }
 
   DBUG_RETURN (arg_node);
 }

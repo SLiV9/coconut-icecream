@@ -96,6 +96,10 @@ varlet: ID
         {
           $$ = TBmakeVarlet( STRcpy( $1), NULL);
         }
+      | ID BSL exprs BSR
+        {
+        	$$ = TBmakeVarlet( STRcpy( $1), $3);
+        }
         ;
 
 exprs: expr
