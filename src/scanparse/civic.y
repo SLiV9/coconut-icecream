@@ -46,7 +46,8 @@ static int yyerror( char *errname);
 %token <id> ID
 
 %type <node> intval floatval boolval constant expr exprs
-%type <node> instrs instr assign varlet program
+%type <node> varlet varcall funcall funstate
+%type <node> instrs instr assign program
 %type <valuetype> cast
 
 
@@ -84,7 +85,17 @@ instr: assign
        {
          $$ = $1;
        }
+     | funstate
+       {
+       	 $$ = $1;
+       }
        ;
+
+funstate: funcall SEMICOLON
+					{
+						$$ = TBmakeFunstate( $1);
+					}
+				;
 
 assign: varlet LET expr SEMICOLON
         {
@@ -102,6 +113,26 @@ varlet: ID
         }
         ;
 
+varcall: ID
+         {
+           $$ = TBmakeVarcall( STRcpy( $1), NULL);
+         }
+       | ID BSL exprs BSR
+         {
+        	 $$ = TBmakeVarcall( STRcpy( $1), $3);
+         }
+       ;
+        
+funcall: ID BRL BRR
+				 {
+					 $$ = TBmakeFuncall( STRcpy( $1), NULL);
+				 }
+			 | ID BRL exprs BRR
+				 {
+					 $$ = TBmakeFuncall( STRcpy( $1), $3);
+				 }
+			 ;
+
 exprs: expr
 			{
 				$$ = TBmakeExprs( $1, NULL);
@@ -116,21 +147,13 @@ expr: constant
       {
         $$ = $1;
       }
-    | ID
-      {
-        $$ = TBmakeVarcall( STRcpy( $1), NULL);
-      }
-    | ID BSL exprs BSR
+    | varcall
     	{
-    		$$ = TBmakeVarcall( STRcpy( $1), $3);
+    		$$ = $1;
     	}
-    | ID BRL BRR
+    | funcall
     	{
-    		$$ = TBmakeFuncall( STRcpy( $1), NULL);
-    	}
-    | ID BRL exprs BRR
-    	{
-    		$$ = TBmakeFuncall( STRcpy( $1), $3);
+    		$$ = $1;
     	}
     | cast expr %prec CAST
     	{
