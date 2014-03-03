@@ -487,7 +487,7 @@ PRTfunhead (node * arg_node, info * arg_info)
   
   printf("(");
   
-  FUNHEAD_PARAMS( arg_node) = TRAVdo( FUNHEAD_PARAMS( arg_node), arg_info);
+  FUNHEAD_PARAMS( arg_node) = TRAVopt( FUNHEAD_PARAMS( arg_node), arg_info);
   
   printf(")");
 

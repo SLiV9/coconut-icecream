@@ -48,11 +48,11 @@ static int yyerror( char *errname);
 %type <node> intval floatval boolval constant expr exprs
 %type <node> params param dimdecs
 %type <node> varlet varcall vardec
-%type <node> funhead funcall funstate fundef
-%type <node> instrs instr assign program
+%type <node> funhead funcall funstate globalfundef localfundef fundec
+%type <node> instrs instr assign
 %type <node> vardecs fundefs retexp body
+%type <node> globdef globdec declar declars program
 %type <valuetype> basictype cast
-
 
 %left OR
 %left AND
@@ -69,7 +69,19 @@ static int yyerror( char *errname);
 %%
 
 program:
-	body { parseresult = $1; }
+	declars { parseresult = $1; }
+;
+
+declars:
+	declars declar								{ $$ = TBmakeDeclars( $2, $1); }
+|	declar												{ $$ = TBmakeDeclars( $1, NULL); }
+;
+
+declar:
+	globdef								{ $$ = $1; }
+| globdec								{ $$ = $1; }
+| globalfundef					{ $$ = $1; }
+| fundec								{ $$ = $1; }
 ;
 
 body:
@@ -101,16 +113,32 @@ vardecs:
 ;
 
 fundefs:
-	fundefs fundef				{ $$ = TBmakeFundefs( $1, $2); }
-| fundef 								{ $$ = TBmakeFundefs( $1, NULL); }
+	fundefs localfundef					{ $$ = TBmakeFundefs( $1, $2); }
+| localfundef 								{ $$ = TBmakeFundefs( $1, NULL); }
 ;
 
-fundef:
-	funhead BCL body BCR	{ $$ = TBmakeFundef( FALSE, $1, $3); }
+globalfundef:
+	funhead BCL body BCR						{ $$ = TBmakeFundef( FALSE, $1, $3); }
+| EXPORT funhead BCL body BCR			{ $$ = TBmakeFundef( TRUE, $2, $4); }
+;
+
+localfundef:
+	funhead BCL body BCR						{ $$ = TBmakeFundef( FALSE, $1, $3); }
+;
+
+fundec:
+	EXTERN funhead SEMICOLON	{ $$ = TBmakeFundec( $2); }
+;
+
+globdec:
+	EXTERN basictype ID
+			{ $$ = TBmakeGlobdec( TBmakeVarhead( STRcpy( $3), $2), NULL); }
+| EXTERN basictype ID BSL dimdecs BSR
+			{ $$ = TBmakeGlobdec( TBmakeVarhead( STRcpy( $3), $2), $5); }
 ;
 
 instrs:
-	instrs instr 					{ $$ = TBmakeInstrs( $1, $2); }
+	instrs instr 					{ $$ = TBmakeInstrs( $2, $1); }
 | instr 								{ $$ = TBmakeInstrs( $1, NULL); }
 ;
 
@@ -140,6 +168,25 @@ varcall:
 funcall:
 	ID BRL BRR 						{ $$ = TBmakeFuncall( STRcpy( $1), NULL); }
 | ID BRL exprs BRR 			{ $$ = TBmakeFuncall( STRcpy( $1), $3); }
+;
+
+globdef:
+	basictype ID SEMICOLON
+			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $2), $1), NULL, NULL); }
+| basictype ID LET expr SEMICOLON
+			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $2), $1), $4, NULL); }
+| basictype ID BSL exprs BSR SEMICOLON
+			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $2), $1), NULL, $4); }
+| basictype ID BSL exprs BSR LET expr SEMICOLON
+			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $2), $1), $7, $4); }
+|	EXPORT basictype ID SEMICOLON
+			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $3), $2), NULL, NULL); }
+| EXPORT basictype ID LET expr SEMICOLON
+			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $3), $2), $5, NULL); }
+| EXPORT basictype ID BSL exprs BSR SEMICOLON
+			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $3), $2), NULL, $5); }
+| EXPORT basictype ID BSL exprs BSR LET expr SEMICOLON
+			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $3), $2), $8, $5); }
 ;
 
 vardec:
