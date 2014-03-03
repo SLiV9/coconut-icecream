@@ -428,7 +428,7 @@ PRTvarhead (node * arg_node, info * arg_info)
 	
   DBUG_ENTER ("PRTvarhead");
 
-  switch (CAST_TYPE( arg_node)) {
+  switch (VARHEAD_TYPE( arg_node)) {
   	case VT_void:
   		tmp = "void";
   		break;
@@ -447,7 +447,7 @@ PRTvarhead (node * arg_node, info * arg_info)
 
   printf( "%s ", tmp);
 
-  printf( "%s", VARLET_NAME( arg_node));
+  printf( "%s", VARHEAD_NAME( arg_node));
 
   DBUG_RETURN (arg_node);
 }
@@ -459,7 +459,7 @@ PRTfunhead (node * arg_node, info * arg_info)
 	
   DBUG_ENTER ("PRTfunhead");
 
-  switch (CAST_TYPE( arg_node)) {
+  switch (FUNHEAD_TYPE( arg_node)) {
   	case VT_void:
   		tmp = "void";
   		break;
@@ -478,7 +478,7 @@ PRTfunhead (node * arg_node, info * arg_info)
 
   printf( "%s ", tmp);
 
-  printf( "%s", VARLET_NAME( arg_node));
+  printf( "%s", FUNHEAD_NAME( arg_node));
   
   printf("(");
   

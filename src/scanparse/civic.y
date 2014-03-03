@@ -49,6 +49,7 @@ static int yyerror( char *errname);
 %type <node> varlet varcall vardec
 %type <node> funcall funstate
 %type <node> instrs instr assign program
+%type <node> vardecs body
 %type <valuetype> basictype cast
 
 
@@ -66,11 +67,39 @@ static int yyerror( char *errname);
 
 %%
 
-program: instrs 
+program: body 
          {
            parseresult = $1;
          }
          ;
+
+body: vardecs instrs
+			{
+				$$ = TBmakeBody( $1, NULL, $2, NULL);
+			}
+		| instrs
+			{
+				$$ = TBmakeBody( NULL, NULL, $1, NULL);
+			}
+		| vardecs
+			{
+				$$ = TBmakeBody( $1, NULL, NULL, NULL);
+			}
+		| /* empty */
+			{
+				$$ = TBmakeBody( NULL, NULL, NULL, NULL);
+			}
+		;
+
+vardecs: vardec vardecs
+        {
+          $$ = TBmakeVardecs( $1, $2);
+        }
+      | vardec
+        {
+          $$ = TBmakeVardecs( $1, NULL);
+        }
+        ;
 
 instrs: instr instrs
         {
@@ -134,19 +163,19 @@ funcall: ID BRL BRR
 				 }
 			 ;
 
-vardec:	basictype ID
+vardec:	basictype ID SEMICOLON
 				{
 					$$ = TBmakeVardec( TBmakeVarhead( $2, $1), NULL, NULL);
 				}
-			| basictype ID LET expr
+			| basictype ID LET expr SEMICOLON
 				{
 					$$ = TBmakeVardec( TBmakeVarhead( $2, $1), $4, NULL);
 				}
-			| basictype ID BSL exprs BSR
+			| basictype ID BSL exprs BSR SEMICOLON
 				{
 					$$ = TBmakeVardec( TBmakeVarhead( $2, $1), NULL, $4);
 				}
-			| basictype ID BSL exprs BSR LET expr
+			| basictype ID BSL exprs BSR LET expr SEMICOLON
 				{
 					$$ = TBmakeVardec( TBmakeVarhead( $2, $1), $7, $4);
 				}
