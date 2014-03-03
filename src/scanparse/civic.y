@@ -46,9 +46,10 @@ static int yyerror( char *errname);
 %token <id> ID
 
 %type <node> intval floatval boolval constant expr exprs
-%type <node> varlet varcall funcall funstate
+%type <node> varlet varcall vardec
+%type <node> funcall funstate
 %type <node> instrs instr assign program
-%type <valuetype> cast
+%type <valuetype> basictype cast
 
 
 %left OR
@@ -132,6 +133,25 @@ funcall: ID BRL BRR
 					 $$ = TBmakeFuncall( STRcpy( $1), $3);
 				 }
 			 ;
+
+vardec:	basictype ID
+				{
+					$$ = TBmakeVardec( TBmakeVarhead( $2, $1), NULL, NULL);
+				}
+			| basictype ID LET expr
+				{
+					$$ = TBmakeVardec( TBmakeVarhead( $2, $1), $4, NULL);
+				}
+			| basictype ID BSL exprs BSR
+				{
+					$$ = TBmakeVardec( TBmakeVarhead( $2, $1), NULL, $4);
+				}
+			| basictype ID BSL exprs BSR LET expr
+				{
+					$$ = TBmakeVardec( TBmakeVarhead( $2, $1), $7, $4);
+				}
+			;
+			 
 
 exprs: expr
 			{
@@ -229,19 +249,25 @@ expr: constant
     	}
     ;
     
-cast: BRL INT BRR
+cast: BRL basictype BRR
 			{
-				$$ = VT_int;
-			}
-		| BRL FLOAT BRR
-			{
-				$$ = VT_float;
-			}
-		| BRL BOOL BRR
-			{
-				$$ = VT_bool;
+				$$ = $2;
 			}
 			;
+    
+basictype:	INT
+						{
+							$$ = VT_int;
+						}
+				 |	FLOAT
+						{
+							$$ = VT_float;
+						}
+				 |	BOOL
+						{
+							$$ = VT_bool;
+						}
+				 ;
 
 constant: floatval
           {
