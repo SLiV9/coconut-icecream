@@ -49,7 +49,7 @@ static int yyerror( char *errname);
 %type <node> varlet varcall vardec
 %type <node> funcall funstate
 %type <node> instrs instr assign program
-%type <node> vardecs body
+%type <node> vardecs retexp body
 %type <valuetype> basictype cast
 
 
@@ -89,7 +89,29 @@ body: vardecs instrs
 			{
 				$$ = TBmakeBody( NULL, NULL, NULL, NULL);
 			}
+		| vardecs instrs retexp
+			{
+				$$ = TBmakeBody( $1, NULL, $2, $3);
+			}
+		| instrs retexp
+			{
+				$$ = TBmakeBody( NULL, NULL, $1, $2);
+			}
+		| vardecs retexp
+			{
+				$$ = TBmakeBody( $1, NULL, NULL, $2);
+			}
+		| retexp
+			{
+				$$ = TBmakeBody( NULL, NULL, NULL, $1);
+			}
 		;
+
+retexp: RETURN expr SEMICOLON
+				{
+					$$ = $2;
+				}
+			;
 
 vardecs: vardec vardecs
         {

@@ -91,6 +91,7 @@ PRTbody (node * arg_node, info * arg_info)
   	printIndent( arg_info);
   	printf("return ");
 	  BODY_RETURN( arg_node) = TRAVdo( BODY_RETURN( arg_node), arg_info);
+	  printf(";\n");
   }
   
   DBUG_RETURN (arg_node);
