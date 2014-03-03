@@ -46,10 +46,11 @@ static int yyerror( char *errname);
 %token <id> ID
 
 %type <node> intval floatval boolval constant expr exprs
+%type <node> params param dimdecs
 %type <node> varlet varcall vardec
-%type <node> funcall funstate
+%type <node> funhead funcall funstate fundef
 %type <node> instrs instr assign program
-%type <node> vardecs retexp body
+%type <node> vardecs fundefs retexp body
 %type <valuetype> basictype cast
 
 
@@ -72,14 +73,22 @@ program:
 ;
 
 body:
-	vardecs instrs retexp 		{ $$ = TBmakeBody( $1, NULL, $2, $3); }
-| vardecs instrs 						{ $$ = TBmakeBody( $1, NULL, $2, NULL); }
-| vardecs retexp 						{	$$ = TBmakeBody( $1, NULL, NULL, $2); }
-| vardecs 									{ $$ = TBmakeBody( $1, NULL, NULL, NULL); }
-| instrs retexp							{ $$ = TBmakeBody( NULL, NULL, $1, $2); }
-| instrs 										{ $$ = TBmakeBody( NULL, NULL, $1, NULL); }
-| retexp										{	$$ = TBmakeBody( NULL, NULL, NULL, $1); }
-| /* empty */ 							{ $$ = TBmakeBody( NULL, NULL, NULL, NULL); }
+	vardecs fundefs instrs retexp 	{ $$ = TBmakeBody( $1, $2, $3, $4); }
+| vardecs fundefs instrs 					{ $$ = TBmakeBody( $1, $2, $3, NULL); }
+| vardecs fundefs retexp 					{	$$ = TBmakeBody( $1, $2, NULL, $3); }
+| vardecs fundefs									{ $$ = TBmakeBody( $1, $2, NULL, NULL); }
+| vardecs instrs retexp 					{ $$ = TBmakeBody( $1, NULL, $2, $3); }
+| vardecs instrs 									{ $$ = TBmakeBody( $1, NULL, $2, NULL); }
+| vardecs retexp 									{	$$ = TBmakeBody( $1, NULL, NULL, $2); }
+| vardecs 												{ $$ = TBmakeBody( $1, NULL, NULL, NULL); }
+| fundefs instrs retexp						{ $$ = TBmakeBody( NULL, $1, $2, $3); }
+| fundefs instrs 									{ $$ = TBmakeBody( NULL, $1, $2, NULL); }
+| fundefs retexp									{	$$ = TBmakeBody( NULL, $1, NULL, $2); }
+| fundefs													{ $$ = TBmakeBody( NULL, $1, NULL, NULL); }
+| instrs retexp										{ $$ = TBmakeBody( NULL, NULL, $1, $2); }
+| instrs 													{ $$ = TBmakeBody( NULL, NULL, $1, NULL); }
+| retexp													{	$$ = TBmakeBody( NULL, NULL, NULL, $1); }
+| /* empty */ 										{ $$ = TBmakeBody( NULL, NULL, NULL, NULL); }
 ;
 
 retexp:
@@ -87,12 +96,21 @@ retexp:
 ;
 
 vardecs:
-	vardec vardecs 				{ $$ = TBmakeVardecs( $1, $2); }
+	vardecs vardec 				{ $$ = TBmakeVardecs( $2, $1); }
 | vardec 								{ $$ = TBmakeVardecs( $1, NULL); }
 ;
 
+fundefs:
+	fundefs fundef				{ $$ = TBmakeFundefs( $1, $2); }
+| fundef 								{ $$ = TBmakeFundefs( $1, NULL); }
+;
+
+fundef:
+	funhead BCL body BCR	{ $$ = TBmakeFundef( FALSE, $1, $3); }
+;
+
 instrs:
-	instr instrs 					{ $$ = TBmakeInstrs( $1, $2); }
+	instrs instr 					{ $$ = TBmakeInstrs( $1, $2); }
 | instr 								{ $$ = TBmakeInstrs( $1, NULL); }
 ;
 
@@ -126,15 +144,44 @@ funcall:
 
 vardec:
 	basictype ID SEMICOLON
-			{ $$ = TBmakeVardec( TBmakeVarhead( $2, $1), NULL, NULL); }
+			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $2), $1), NULL, NULL); }
 | basictype ID LET expr SEMICOLON
-			{ $$ = TBmakeVardec( TBmakeVarhead( $2, $1), $4, NULL); }
+			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $2), $1), $4, NULL); }
 | basictype ID BSL exprs BSR SEMICOLON
-			{ $$ = TBmakeVardec( TBmakeVarhead( $2, $1), NULL, $4); }
+			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $2), $1), NULL, $4); }
 | basictype ID BSL exprs BSR LET expr SEMICOLON
-			{ $$ = TBmakeVardec( TBmakeVarhead( $2, $1), $7, $4); }
+			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $2), $1), $7, $4); }
 ;
-			 
+
+funhead:
+	basictype ID BRL BRR
+			{ $$ = TBmakeFunhead( STRcpy( $2), $1, NULL); }
+| basictype ID BRL params BRR
+			{ $$ = TBmakeFunhead( STRcpy( $2), $1, $4); }
+| VOID ID BRL BRR
+			{ $$ = TBmakeFunhead( STRcpy( $2), VT_void, NULL); }
+| VOID ID BRL params BRR
+			{ $$ = TBmakeFunhead( STRcpy( $2), VT_void, $4); }
+;
+
+params:
+	param COMMA params		{ $$ = TBmakeParams( $1, $3); }
+| param									{ $$ = TBmakeParams( $1, NULL); }
+;
+
+param:
+	basictype ID
+			{ $$ = TBmakeParam( TBmakeVarhead( STRcpy( $2), $1), NULL); }
+| basictype ID BSL dimdecs BSR
+			{ $$ = TBmakeParam( TBmakeVarhead( STRcpy( $2), $1), $4); }
+;
+
+dimdecs:
+	ID COMMA dimdecs
+			{ $$ = TBmakeDimdecs( TBmakeVarhead( STRcpy( $1), VT_int), $3); }
+| ID
+			{ $$ = TBmakeDimdecs( TBmakeVarhead( STRcpy( $1), VT_int), NULL); }
+;
 
 exprs:
 	expr									{ $$ = TBmakeExprs( $1, NULL); }

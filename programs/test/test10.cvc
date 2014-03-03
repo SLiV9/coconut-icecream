@@ -1,4 +1,8 @@
 int a = 2;
-//bool isTwo();
+bool isX(int a, int x)
+{
+	a = x;
+	return true;
+}
 a = a + 1;
 return 15;

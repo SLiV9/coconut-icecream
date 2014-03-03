@@ -104,7 +104,11 @@ PRTparams (node * arg_node, info * arg_info)
 
   PARAMS_PARAM( arg_node) = TRAVdo( PARAMS_PARAM( arg_node), arg_info);
   
-  PARAMS_NEXT( arg_node) = TRAVopt( PARAMS_NEXT( arg_node), arg_info);
+ 	if (PARAMS_NEXT( arg_node) != NULL)
+ 	{
+ 		printf(", ");
+  	PARAMS_NEXT( arg_node) = TRAVdo( PARAMS_NEXT( arg_node), arg_info);
+  }
   
   DBUG_RETURN (arg_node);
 }

@@ -396,7 +396,7 @@
         <attribute name="Type">
         	<type name="ValueType">
         		<targets>
-        			<target mandatory="no">
+        			<target mandatory="yes">
 		      			<any />
 		      			<phases>
 		      				<all />
