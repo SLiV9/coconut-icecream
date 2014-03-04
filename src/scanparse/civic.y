@@ -164,8 +164,8 @@ fundec:
 globdec:
 	EXTERN basictype ID
 			{ $$ = TBmakeGlobdec( TBmakeVarhead( STRcpy( $3), $2), NULL); }
-| EXTERN basictype ID BSL dimdecs BSR
-			{ $$ = TBmakeGlobdec( TBmakeVarhead( STRcpy( $3), $2), $5); }
+| EXTERN basictype BSL dimdecs BSR ID
+			{ $$ = TBmakeGlobdec( TBmakeVarhead( STRcpy( $6), $2), $4); }
 ;
 
 block:
@@ -232,18 +232,18 @@ globdef:
 			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $2), $1), NULL, NULL); }
 | basictype ID LET expr SEMICOLON
 			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $2), $1), $4, NULL); }
-| basictype ID BSL exprs BSR SEMICOLON
-			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $2), $1), NULL, $4); }
-| basictype ID BSL exprs BSR LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $2), $1), $7, $4); }
+| basictype BSL exprs BSR ID SEMICOLON
+			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $5), $1), NULL, $3); }
+| basictype BSL exprs BSR ID LET expr SEMICOLON
+			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $5), $1), $7, $3); }
 |	EXPORT basictype ID SEMICOLON
 			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $3), $2), NULL, NULL); }
 | EXPORT basictype ID LET expr SEMICOLON
 			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $3), $2), $5, NULL); }
-| EXPORT basictype ID BSL exprs BSR SEMICOLON
-			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $3), $2), NULL, $5); }
-| EXPORT basictype ID BSL exprs BSR LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $3), $2), $8, $5); }
+| EXPORT basictype BSL exprs BSR ID SEMICOLON
+			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $6), $2), NULL, $4); }
+| EXPORT basictype BSL exprs BSR ID LET expr SEMICOLON
+			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $6), $2), $8, $4); }
 ;
 
 vardec:
@@ -251,10 +251,10 @@ vardec:
 			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $2), $1), NULL, NULL); }
 | basictype ID LET expr SEMICOLON
 			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $2), $1), $4, NULL); }
-| basictype ID BSL exprs BSR SEMICOLON
-			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $2), $1), NULL, $4); }
-| basictype ID BSL exprs BSR LET expr SEMICOLON
-			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $2), $1), $7, $4); }
+| basictype BSL exprs BSR ID SEMICOLON
+			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $5), $1), NULL, $3); }
+| basictype BSL exprs BSR ID LET expr SEMICOLON
+			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $5), $1), $7, $3); }
 ;
 
 funhead:
@@ -276,8 +276,8 @@ params:
 param:
 	basictype ID
 			{ $$ = TBmakeParam( TBmakeVarhead( STRcpy( $2), $1), NULL); }
-| basictype ID BSL dimdecs BSR
-			{ $$ = TBmakeParam( TBmakeVarhead( STRcpy( $2), $1), $4); }
+| basictype BSL dimdecs BSR ID
+			{ $$ = TBmakeParam( TBmakeVarhead( STRcpy( $5), $1), $3); }
 ;
 
 dimdecs:
