@@ -85,6 +85,7 @@ declars:
 					N = DECLARS_NEXT( N);
 				}
 				DECLARS_NEXT( N) = TBmakeDeclars( $2, NULL); 
+				$$ = $1;
 			}
 |	declar								{ $$ = TBmakeDeclars( $1, NULL); }
 ;
@@ -128,6 +129,7 @@ vardecs:
 					N = VARDECS_NEXT( N);
 				}
 				VARDECS_NEXT( N) = TBmakeVardecs( $2, NULL); 
+				$$ = $1;
 			}
 | vardec 								{ $$ = TBmakeVardecs( $1, NULL); }
 ;
@@ -141,6 +143,7 @@ fundefs:
 					N = FUNDEFS_NEXT( N);
 				}
 				FUNDEFS_NEXT( N) = TBmakeFundefs( $2, NULL); 
+				$$ = $1;
 			}
 | localfundef 								{ $$ = TBmakeFundefs( $1, NULL); }
 ;
@@ -179,6 +182,7 @@ instrs:
 					N = INSTRS_NEXT( N);
 				}
 				INSTRS_NEXT( N) = TBmakeInstrs( $2, NULL); 
+				$$ = $1;
 			}
 | instr 								{ $$ = TBmakeInstrs( $1, NULL); }
 ;
