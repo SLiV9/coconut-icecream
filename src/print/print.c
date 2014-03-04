@@ -588,6 +588,10 @@ PRTfundef (node * arg_node, info * arg_info)
 	DBUG_ENTER ("PRTfundef");
 	
 	printIndent( arg_info);
+	if (FUNDEF_EXPORT( arg_node))
+	{
+		printf("export ");
+	}
   FUNDEF_DEC( arg_node) = TRAVdo( FUNDEF_DEC( arg_node), arg_info);
 	printf("\n");
 	
@@ -608,6 +612,8 @@ node *
 PRTfundec (node * arg_node, info * arg_info)
 {
 	DBUG_ENTER ("PRTfundec");
+
+	printf("extern ");
 
   FUNDEC_DEC( arg_node) = TRAVdo( FUNDEC_DEC( arg_node), arg_info);
 
