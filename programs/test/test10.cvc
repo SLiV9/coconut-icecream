@@ -1,8 +1,22 @@
-int a = 2;
-bool isX(int a, int x)
+export int main()
 {
-	a = x;
-	return true;
+	int a;
+	int r;
+	
+	a = scanInt();
+	
+	if (a < 1)
+		a = 1;
+	else{
+		a = 2;
+		r = 1;
+	}
+
+	for(int k = 0,20){
+		c = 9;
+	}
+
+	printNewlines(2);
+	
+	return 0;
 }
-a = a + 1;
-return 15;

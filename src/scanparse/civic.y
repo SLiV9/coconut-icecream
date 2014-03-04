@@ -85,7 +85,7 @@ declar:
 ;
 
 body:
-	vardecs fundefs instrs retexp 	{ $$ = TBmakeBody( $1, $2, $3, $4); }
+vardecs fundefs instrs retexp 	{ $$ = TBmakeBody( $1, $2, $3, $4); }
 | vardecs fundefs instrs 					{ $$ = TBmakeBody( $1, $2, $3, NULL); }
 | vardecs fundefs retexp 					{	$$ = TBmakeBody( $1, $2, NULL, $3); }
 | vardecs fundefs									{ $$ = TBmakeBody( $1, $2, NULL, NULL); }
@@ -145,6 +145,13 @@ instrs:
 instr:
 	assign 								{ $$ = $1; }
 | funstate 							{ $$ = $1; }
+| IF BRL expr BRR instr { $$ = TBmakeIf($3,$5,NULL);}
+| IF BRL expr BRR instr ELSE instr { $$ = TBmakeIf($3,$5,$7);}
+| WHILE  BRL expr BRR instr {$$ = TBmakeWhile(FALSE,$3,$5);} 
+| DO  instr WHILE  BRL expr BRR SEMICOLON {$$ = TBmakeWhile(TRUE,$5,$2);} 
+| FOR  BRL INT ID LET expr COMMA expr BRR instr {$$ = TBmakeFor( TBmakeVarhead(STRcpy($4),INT),$6,$8,NULL,$10);} 
+| FOR  BRL INT ID LET expr COMMA expr COMMA expr BRR instr {$$ = TBmakeFor( TBmakeVarhead(STRcpy($4),INT),$6,$8,$10,$12);} 
+| BCL instrs BCR {$$ = $2;}
 ;
 
 funstate:
