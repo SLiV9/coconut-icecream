@@ -160,9 +160,9 @@ instr:
 | DO  block WHILE  BRL expr BRR SEMICOLON 
 			{$$ = TBmakeWhile(TRUE,$5,$2);} 
 | FOR  BRL INT ID LET expr COMMA expr BRR block 
-			{$$ = TBmakeFor( TBmakeVarhead(STRcpy($4),INT),$6,$8,NULL,$10);} 
+			{$$ = TBmakeFor( TBmakeVarhead(STRcpy($4), VT_int),$6,$8,NULL,$10);} 
 | FOR  BRL INT ID LET expr COMMA expr COMMA expr BRR block 
-			{$$ = TBmakeFor( TBmakeVarhead(STRcpy($4),INT),$6,$8,$10,$12);} 
+			{$$ = TBmakeFor( TBmakeVarhead(STRcpy($4), VT_int),$6,$8,$10,$12);} 
 ;
 
 funstate:
