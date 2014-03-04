@@ -50,7 +50,7 @@ static int yyerror( char *errname);
 %type <node> varlet varcall vardec
 %type <node> funhead funcall funstate globalfundef localfundef fundec
 %type <node> instrs instr assign
-%type <node> while block
+%type <node> block
 %type <node> vardecs fundefs retexp body
 %type <node> globdef globdec declar declars program
 %type <valuetype> basictype cast
@@ -138,11 +138,6 @@ globdec:
 			{ $$ = TBmakeGlobdec( TBmakeVarhead( STRcpy( $3), $2), $5); }
 ;
 
-while:
-	WHILE BRL expr BRR block			{ $$ = TBmakeWhile( FALSE, $3, $5); }
-| DO block WHILE BRL expr BRR		{ $$ = TBmakeWhile( TRUE, $5, $2); }
-;
-
 block:
 	instr									{ $$ = TBmakeInstrs( $1, NULL); }
 | BCL instrs BCR				{ $$ = $2; }
@@ -156,7 +151,18 @@ instrs:
 instr:
 	assign 								{ $$ = $1; }
 | funstate 							{ $$ = $1; }
-| while									{ $$ = $1; }
+| IF BRL expr BRR block 
+			{ $$ = TBmakeIf($3,$5,NULL);}
+| IF BRL expr BRR block ELSE block 
+			{ $$ = TBmakeIf($3,$5,$7);}
+| WHILE  BRL expr BRR block 
+			{$$ = TBmakeWhile(FALSE,$3,$5);} 
+| DO  block WHILE  BRL expr BRR SEMICOLON 
+			{$$ = TBmakeWhile(TRUE,$5,$2);} 
+| FOR  BRL INT ID LET expr COMMA expr BRR block 
+			{$$ = TBmakeFor( TBmakeVarhead(STRcpy($4),INT),$6,$8,NULL,$10);} 
+| FOR  BRL INT ID LET expr COMMA expr COMMA expr BRR block 
+			{$$ = TBmakeFor( TBmakeVarhead(STRcpy($4),INT),$6,$8,$10,$12);} 
 ;
 
 funstate:
