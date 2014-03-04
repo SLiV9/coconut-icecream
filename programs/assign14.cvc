@@ -28,12 +28,20 @@ bool isOld(int age, int thresh)
 {
 	// 7: The local variable printIfOld shadows the function printIfOld().
 	bool printIfOld = true;
+	
+	// 1: The local variable diff never leaves this scope, thus is non-escaped.
+	int diff;
+	
+	// 2: The local variable thr is used by subfunction thresh(), thus escaped.
+	int thr = 25;
 
 	// 5: The local function thresh() shadows isOld()'s parameter thresh. 
 	int thresh()
 	{
-		return 25;
+		return thr;
 	}
 	
-	return (age > thresh());
+	diff = age - thresh();
+	
+	return (diff > 0);
 }

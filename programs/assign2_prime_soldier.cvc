@@ -1,0 +1,54 @@
+
+
+extern void printInt(int val);
+extern void printSpaces(int num);
+extern void printNewlines(int num);
+extern int scanInt();
+export int main()
+{
+	int n = scanPositiveInt();
+	int nprimes = 1;
+	int x;
+	void findprime()
+	{
+		bool isprime = true;
+		int d = 2;
+		x = (x + 1);
+		while ((isprime && ((d * d) <= x)))
+		{
+			if (((x % d) == 0))
+			{
+				isprime = false;
+			}
+			d = (d + 1);
+		}
+		if (isprime)
+		{
+			printSpaces(1);
+			printInt(x);
+			nprimes = (nprimes + 1);
+		}
+	}
+	printInt(n);
+	printNewlines(2);
+	x = 2;
+	printInt(x);
+	while ((nprimes < n))
+	{
+		findprime();
+	}
+	printNewlines(1);
+	return 0;
+}
+int scanPositiveInt()
+{
+	int n = scanInt();
+	if ((n < 1))
+	{
+		n = 1;
+	}
+	return n;
+}
+
+
+
