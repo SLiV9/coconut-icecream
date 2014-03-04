@@ -701,7 +701,7 @@ PRTwhile (node * arg_node, info * arg_info)
 	printIndent( arg_info);
   printf("while (");
   
-	IF_COND( arg_node) = TRAVdo( IF_COND( arg_node), arg_info);
+	WHILE_COND( arg_node) = TRAVdo( WHILE_COND( arg_node), arg_info);
 	
 	printf(")\n");
 	

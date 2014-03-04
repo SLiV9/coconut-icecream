@@ -50,6 +50,7 @@ static int yyerror( char *errname);
 %type <node> varlet varcall vardec
 %type <node> funhead funcall funstate globalfundef localfundef fundec
 %type <node> instrs instr assign
+%type <node> while block
 %type <node> vardecs fundefs retexp body
 %type <node> globdef globdec declar declars program
 %type <valuetype> basictype cast
@@ -137,6 +138,16 @@ globdec:
 			{ $$ = TBmakeGlobdec( TBmakeVarhead( STRcpy( $3), $2), $5); }
 ;
 
+while:
+	WHILE BRL expr BRR block			{ $$ = TBmakeWhile( FALSE, $3, $5); }
+| DO block WHILE BRL expr BRR		{ $$ = TBmakeWhile( TRUE, $5, $2); }
+;
+
+block:
+	instr									{ $$ = TBmakeInstrs( $1, NULL); }
+| BCL instrs BCR				{ $$ = $2; }
+;
+
 instrs:
 	instrs instr 					{ $$ = TBmakeInstrs( $2, $1); }
 | instr 								{ $$ = TBmakeInstrs( $1, NULL); }
@@ -145,6 +156,7 @@ instrs:
 instr:
 	assign 								{ $$ = $1; }
 | funstate 							{ $$ = $1; }
+| while									{ $$ = $1; }
 ;
 
 funstate:
