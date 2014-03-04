@@ -1,4 +1,13 @@
-#include "test4.h"
-a[3] = list[3];
-D = [[1, 3], [3, 7]];
-e = D[1, 1];
+
+
+export int main()
+{
+	int x = 0;
+	bool[n, m] D;
+	
+	a[3] = list[3];
+	D = [[1, 3], [3, 7]];
+	e = D[1, 1];
+	
+	return 0;
+}
