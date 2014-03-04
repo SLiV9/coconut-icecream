@@ -55,6 +55,9 @@ static int yyerror( char *errname);
 %type <node> globdef globdec declar declars program
 %type <valuetype> basictype cast
 
+%nonassoc THEN
+%nonassoc ELSE
+
 %left OR
 %left AND
 %left EQ NE
@@ -151,9 +154,9 @@ instrs:
 instr:
 	assign 								{ $$ = $1; }
 | funstate 							{ $$ = $1; }
-| IF BRL expr BRR block 
+| IF BRL expr BRR block %prec THEN
 			{ $$ = TBmakeIf($3,$5,NULL);}
-| IF BRL expr BRR block ELSE block 
+| IF BRL expr BRR block ELSE block %prec ELSE
 			{ $$ = TBmakeIf($3,$5,$7);}
 | WHILE  BRL expr BRR block 
 			{$$ = TBmakeWhile(FALSE,$3,$5);} 

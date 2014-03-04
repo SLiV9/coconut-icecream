@@ -14,5 +14,12 @@ export int main()
 		x = x + 1;
 	}
 	
+	// else pairt met meest recente if
+	if (a)
+		if (b)
+			x = 2 * x;
+		else
+			x = 3;
+	
 	return 0;
 }
