@@ -39,7 +39,7 @@ extern node *PRTglobdef (node * arg_node, info * arg_info);
 extern node *PRTfundef (node * arg_node, info * arg_info);
 extern node *PRTvarcall (node * arg_node, info * arg_info);
 extern node *PRTfuncall (node * arg_node, info * arg_info);
-extern node *PRTfunhead (node * arg_node, info * arg_info);
+extern node *PRTheader (node * arg_node, info * arg_info);
 
 extern node *PRTmonop (node * arg_node, info * arg_info);
 extern node *PRTbinop (node * arg_node, info * arg_info);

@@ -333,10 +333,10 @@
     </node>
     <node name="FunDef">
       <sons>
-      	<son name="Dec">
+      	<son name="Head">
       		<targets>
 		    		<target mandatory="yes">
-		    			<node name="FunHead" />
+		    			<node name="Header" />
 		    			<phases>
 		    				<all />
 		    			</phases>
@@ -371,10 +371,10 @@
     </node>
     <node name="FunDec">
       <sons>
-      	<son name="Dec">
+      	<son name="Head">
       		<targets>
 		    		<target mandatory="yes">
-		    			<node name="FunHead" />
+		    			<node name="Header" />
 		    			<phases>
 		    				<all />
 		    			</phases>
@@ -384,7 +384,7 @@
       </sons>
       <attributes />
     </node>
-    <node name="FunHead">
+    <node name="Header">
       <sons>
       	<son name="Params">
       		<targets>

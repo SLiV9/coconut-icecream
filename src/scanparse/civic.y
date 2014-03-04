@@ -48,7 +48,7 @@ static int yyerror( char *errname);
 %type <node> intval floatval boolval constant expr exprs
 %type <node> params param dimdecs
 %type <node> varlet varcall vardec
-%type <node> funhead funcall funstate globalfundef localfundef fundec
+%type <node> header funcall funstate globalfundef localfundef fundec
 %type <node> instrs instr assign
 %type <node> block
 %type <node> vardecs fundefs retexp body
@@ -149,16 +149,16 @@ fundefs:
 ;
 
 globalfundef:
-	funhead BCL body BCR						{ $$ = TBmakeFundef( FALSE, $1, $3); }
-| EXPORT funhead BCL body BCR			{ $$ = TBmakeFundef( TRUE, $2, $4); }
+	header BCL body BCR						{ $$ = TBmakeFundef( FALSE, $1, $3); }
+| EXPORT header BCL body BCR			{ $$ = TBmakeFundef( TRUE, $2, $4); }
 ;
 
 localfundef:
-	funhead BCL body BCR						{ $$ = TBmakeFundef( FALSE, $1, $3); }
+	header BCL body BCR						{ $$ = TBmakeFundef( FALSE, $1, $3); }
 ;
 
 fundec:
-	EXTERN funhead SEMICOLON	{ $$ = TBmakeFundec( $2); }
+	EXTERN header SEMICOLON	{ $$ = TBmakeFundec( $2); }
 ;
 
 globdec:
@@ -257,15 +257,15 @@ vardec:
 			{ $$ = TBmakeVardec( STRcpy( $5), $1, $7, $3); }
 ;
 
-funhead:
+header:
 	basictype ID BRL BRR
-			{ $$ = TBmakeFunhead( STRcpy( $2), $1, NULL); }
+			{ $$ = TBmakeHeader( STRcpy( $2), $1, NULL); }
 | basictype ID BRL params BRR
-			{ $$ = TBmakeFunhead( STRcpy( $2), $1, $4); }
+			{ $$ = TBmakeHeader( STRcpy( $2), $1, $4); }
 | VOID ID BRL BRR
-			{ $$ = TBmakeFunhead( STRcpy( $2), VT_void, NULL); }
+			{ $$ = TBmakeHeader( STRcpy( $2), VT_void, NULL); }
 | VOID ID BRL params BRR
-			{ $$ = TBmakeFunhead( STRcpy( $2), VT_void, $4); }
+			{ $$ = TBmakeHeader( STRcpy( $2), VT_void, $4); }
 ;
 
 params:

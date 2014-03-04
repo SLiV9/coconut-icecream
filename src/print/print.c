@@ -445,17 +445,17 @@ PRTvarlet (node * arg_node, info * arg_info)
 }
 
 node *
-PRTfunhead (node * arg_node, info * arg_info)
+PRTheader (node * arg_node, info * arg_info)
 {
-  DBUG_ENTER ("PRTfunhead");
+  DBUG_ENTER ("PRTheader");
 
-  printType(FUNHEAD_TYPE( arg_node));
+  printType(HEADER_TYPE( arg_node));
 
-  printf( " %s", FUNHEAD_NAME( arg_node));
+  printf( " %s", HEADER_NAME( arg_node));
   
   printf("(");
   
-  FUNHEAD_PARAMS( arg_node) = TRAVopt( FUNHEAD_PARAMS( arg_node), arg_info);
+  HEADER_PARAMS( arg_node) = TRAVopt( HEADER_PARAMS( arg_node), arg_info);
   
   printf(")");
 
@@ -568,7 +568,7 @@ PRTfundef (node * arg_node, info * arg_info)
 	{
 		printf("export ");
 	}
-  FUNDEF_DEC( arg_node) = TRAVdo( FUNDEF_DEC( arg_node), arg_info);
+  FUNDEF_HEAD( arg_node) = TRAVdo( FUNDEF_HEAD( arg_node), arg_info);
 	printf("\n");
 	
 	printIndent( arg_info);
@@ -591,7 +591,7 @@ PRTfundec (node * arg_node, info * arg_info)
 
 	printf("extern ");
 
-  FUNDEC_DEC( arg_node) = TRAVdo( FUNDEC_DEC( arg_node), arg_info);
+  FUNDEC_HEAD( arg_node) = TRAVdo( FUNDEC_HEAD( arg_node), arg_info);
 
   printf(";\n");
 
