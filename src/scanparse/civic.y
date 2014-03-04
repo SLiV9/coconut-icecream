@@ -77,8 +77,16 @@ program:
 ;
 
 declars:
-	declars declar								{ $$ = TBmakeDeclars( $2, $1); }
-|	declar												{ $$ = TBmakeDeclars( $1, NULL); }
+	declars declar			
+			{ 
+				node* N = $1;
+				while (DECLARS_NEXT( N) != NULL)
+				{
+					N = DECLARS_NEXT( N);
+				}
+				DECLARS_NEXT( N) = TBmakeDeclars( $2, NULL); 
+			}
+|	declar								{ $$ = TBmakeDeclars( $1, NULL); }
 ;
 
 declar:
@@ -112,12 +120,28 @@ retexp:
 ;
 
 vardecs:
-	vardecs vardec 				{ $$ = TBmakeVardecs( $2, $1); }
+	vardecs vardec			
+			{ 
+				node* N = $1;
+				while (VARDECS_NEXT( N) != NULL)
+				{
+					N = VARDECS_NEXT( N);
+				}
+				VARDECS_NEXT( N) = TBmakeVardecs( $2, NULL); 
+			}
 | vardec 								{ $$ = TBmakeVardecs( $1, NULL); }
 ;
 
 fundefs:
-	fundefs localfundef					{ $$ = TBmakeFundefs( $1, $2); }
+	fundefs localfundef			
+			{ 
+				node* N = $1;
+				while (FUNDEFS_NEXT( N) != NULL)
+				{
+					N = FUNDEFS_NEXT( N);
+				}
+				FUNDEFS_NEXT( N) = TBmakeFundefs( $2, NULL); 
+			}
 | localfundef 								{ $$ = TBmakeFundefs( $1, NULL); }
 ;
 
@@ -147,7 +171,15 @@ block:
 ;
 
 instrs:
-	instrs instr 					{ $$ = TBmakeInstrs( $2, $1); }
+	instrs instr			
+			{ 
+				node* N = $1;
+				while (INSTRS_NEXT( N) != NULL)
+				{
+					N = INSTRS_NEXT( N);
+				}
+				INSTRS_NEXT( N) = TBmakeInstrs( $2, NULL); 
+			}
 | instr 								{ $$ = TBmakeInstrs( $1, NULL); }
 ;
 
