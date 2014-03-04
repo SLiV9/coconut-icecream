@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <libgen.h>
 
 #include "mycpp.h"
 #include "types.h"
@@ -23,7 +24,7 @@ extern node *YYparseTree();
 node *MYSCPdoScanParse(node *syntaxtree)
 {  
 	node *result = NULL;
-  char *filename;
+  char *dirnm, *basenm, *filename;
   
   DBUG_ENTER("MYSCPdoScanParse");
 
@@ -31,9 +32,13 @@ node *MYSCPdoScanParse(node *syntaxtree)
                "MYSCPdoScapParse() called with existing syntax tree.");
   
   if (global.cpp) {
-    filename = STRcatn( 3,
-    										"",
-                        global.infile,
+  	dirnm = dirname( STRcpy(global.infile));
+  	basenm = basename( STRcpy(global.infile));
+  
+    filename = STRcatn( 4,
+                        dirnm,
+                        "/.",
+                        basenm,
                         ".cpp");
   }
   else {

@@ -1,3 +1,5 @@
+#include <libgen.h>
+
 #include "mycpp.h"
 #include "types.h"
 #include "tree_basic.h"
@@ -12,14 +14,20 @@ node *MYCPPdoPreprocessing(node *syntaxtree)
 {
 	int  err;
   char *cppcallstr;
+  char *dirnm, *basenm;
   
   DBUG_ENTER("MYCPPdoPreprocessing");
 
-  cppcallstr = STRcatn( 5, 
+	dirnm = dirname( STRcpy(global.infile));
+	basenm = basename( STRcpy(global.infile));
+
+  cppcallstr = STRcatn( 7, 
                         "cpp ",
                         global.infile,
                         " > ",
-                        global.infile,
+                        dirnm,
+                        "/.",
+                        basenm,
                         ".cpp");
   
   err = system( cppcallstr);
