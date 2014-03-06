@@ -48,7 +48,7 @@ static int yyerror( char *errname);
 %type <node> intval floatval boolval constant expr exprs
 %type <node> params param dimdecs
 %type <node> varlet varcall vardec
-%type <node> funhead funcall funstate globalfundef localfundef fundec
+%type <node> header funcall funstate globalfundef localfundef fundec
 %type <node> instrs instr assign
 %type <node> block
 %type <node> vardecs fundefs retexp body
@@ -149,23 +149,23 @@ fundefs:
 ;
 
 globalfundef:
-	funhead BCL body BCR						{ $$ = TBmakeFundef( FALSE, $1, $3); }
-| EXPORT funhead BCL body BCR			{ $$ = TBmakeFundef( TRUE, $2, $4); }
+	header BCL body BCR						{ $$ = TBmakeFundef( FALSE, $1, $3); }
+| EXPORT header BCL body BCR			{ $$ = TBmakeFundef( TRUE, $2, $4); }
 ;
 
 localfundef:
-	funhead BCL body BCR						{ $$ = TBmakeFundef( FALSE, $1, $3); }
+	header BCL body BCR						{ $$ = TBmakeFundef( FALSE, $1, $3); }
 ;
 
 fundec:
-	EXTERN funhead SEMICOLON	{ $$ = TBmakeFundec( $2); }
+	EXTERN header SEMICOLON	{ $$ = TBmakeFundec( $2); }
 ;
 
 globdec:
 	EXTERN basictype ID
-			{ $$ = TBmakeGlobdec( TBmakeVarhead( STRcpy( $3), $2), NULL); }
+			{ $$ = TBmakeGlobdec( STRcpy( $3), $2, NULL); }
 | EXTERN basictype BSL dimdecs BSR ID
-			{ $$ = TBmakeGlobdec( TBmakeVarhead( STRcpy( $6), $2), $4); }
+			{ $$ = TBmakeGlobdec( STRcpy( $6), $2, $4); }
 ;
 
 block:
@@ -199,9 +199,9 @@ instr:
 | DO  block WHILE  BRL expr BRR SEMICOLON 
 			{$$ = TBmakeWhile(TRUE,$5,$2);} 
 | FOR  BRL INT ID LET expr COMMA expr BRR block 
-			{$$ = TBmakeFor( TBmakeVarhead(STRcpy($4), VT_int),$6,$8,NULL,$10);} 
+			{$$ = TBmakeFor( TBmakeIter(STRcpy($4)),$6,$8,NULL,$10);}
 | FOR  BRL INT ID LET expr COMMA expr COMMA expr BRR block 
-			{$$ = TBmakeFor( TBmakeVarhead(STRcpy($4), VT_int),$6,$8,$10,$12);} 
+			{$$ = TBmakeFor( TBmakeIter(STRcpy($4)),$6,$8,$10,$12);}
 ;
 
 funstate:
@@ -229,43 +229,43 @@ funcall:
 
 globdef:
 	basictype ID SEMICOLON
-			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $2), $1), NULL, NULL); }
+			{ $$ = TBmakeGlobdef( STRcpy( $2), $1, FALSE, NULL, NULL); }
 | basictype ID LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $2), $1), $4, NULL); }
+			{ $$ = TBmakeGlobdef( STRcpy( $2), $1, FALSE, $4, NULL); }
 | basictype BSL exprs BSR ID SEMICOLON
-			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $5), $1), NULL, $3); }
+			{ $$ = TBmakeGlobdef( STRcpy( $5), $1, FALSE, NULL, $3); }
 | basictype BSL exprs BSR ID LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( FALSE, TBmakeVarhead( STRcpy( $5), $1), $7, $3); }
+			{ $$ = TBmakeGlobdef( STRcpy( $5), $1, FALSE, $7, $3); }
 |	EXPORT basictype ID SEMICOLON
-			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $3), $2), NULL, NULL); }
+			{ $$ = TBmakeGlobdef( STRcpy( $3), $2, TRUE, NULL, NULL); }
 | EXPORT basictype ID LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $3), $2), $5, NULL); }
+			{ $$ = TBmakeGlobdef( STRcpy( $3), $2, TRUE, $5, NULL); }
 | EXPORT basictype BSL exprs BSR ID SEMICOLON
-			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $6), $2), NULL, $4); }
+			{ $$ = TBmakeGlobdef( STRcpy( $6), $2, TRUE, NULL, $4); }
 | EXPORT basictype BSL exprs BSR ID LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( TRUE, TBmakeVarhead( STRcpy( $6), $2), $8, $4); }
+			{ $$ = TBmakeGlobdef( STRcpy( $6), $2, TRUE, $8, $4); }
 ;
 
 vardec:
 	basictype ID SEMICOLON
-			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $2), $1), NULL, NULL); }
+			{ $$ = TBmakeVardec( STRcpy( $2), $1, NULL, NULL); }
 | basictype ID LET expr SEMICOLON
-			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $2), $1), $4, NULL); }
+			{ $$ = TBmakeVardec( STRcpy( $2), $1, $4, NULL); }
 | basictype BSL exprs BSR ID SEMICOLON
-			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $5), $1), NULL, $3); }
+			{ $$ = TBmakeVardec( STRcpy( $5), $1, NULL, $3); }
 | basictype BSL exprs BSR ID LET expr SEMICOLON
-			{ $$ = TBmakeVardec( TBmakeVarhead( STRcpy( $5), $1), $7, $3); }
+			{ $$ = TBmakeVardec( STRcpy( $5), $1, $7, $3); }
 ;
 
-funhead:
+header:
 	basictype ID BRL BRR
-			{ $$ = TBmakeFunhead( STRcpy( $2), $1, NULL); }
+			{ $$ = TBmakeHeader( STRcpy( $2), $1, NULL); }
 | basictype ID BRL params BRR
-			{ $$ = TBmakeFunhead( STRcpy( $2), $1, $4); }
+			{ $$ = TBmakeHeader( STRcpy( $2), $1, $4); }
 | VOID ID BRL BRR
-			{ $$ = TBmakeFunhead( STRcpy( $2), VT_void, NULL); }
+			{ $$ = TBmakeHeader( STRcpy( $2), VT_void, NULL); }
 | VOID ID BRL params BRR
-			{ $$ = TBmakeFunhead( STRcpy( $2), VT_void, $4); }
+			{ $$ = TBmakeHeader( STRcpy( $2), VT_void, $4); }
 ;
 
 params:
@@ -275,16 +275,16 @@ params:
 
 param:
 	basictype ID
-			{ $$ = TBmakeParam( TBmakeVarhead( STRcpy( $2), $1), NULL); }
+			{ $$ = TBmakeParam( STRcpy( $2), $1, NULL); }
 | basictype BSL dimdecs BSR ID
-			{ $$ = TBmakeParam( TBmakeVarhead( STRcpy( $5), $1), $3); }
+			{ $$ = TBmakeParam( STRcpy( $5), $1, $3); }
 ;
 
 dimdecs:
 	ID COMMA dimdecs
-			{ $$ = TBmakeDimdecs( TBmakeVarhead( STRcpy( $1), VT_int), $3); }
+			{ $$ = TBmakeDimdecs( TBmakeDim( STRcpy( $1)), $3); }
 | ID
-			{ $$ = TBmakeDimdecs( TBmakeVarhead( STRcpy( $1), VT_int), NULL); }
+			{ $$ = TBmakeDimdecs( TBmakeDim( STRcpy( $1)), NULL); }
 ;
 
 exprs:

@@ -63,6 +63,33 @@ void printIndent(info *info)
 	}
 }
 
+void printType(vtype t)
+{
+	char *tmp;
+
+  switch (t) {
+  	case VT_void:
+  		tmp = "void";
+  		break;
+    case VT_int:
+    	tmp = "int";
+    	break;
+    case VT_float:
+    	tmp = "float";
+    	break;
+    case VT_bool:
+    	tmp = "bool";
+    	break;
+    case VT_unknown:
+      DBUG_ASSERT( 0, "unknown vtype detected!");
+      break;
+    default:
+      DBUG_ASSERT( 0, "invalid vtype detected!");
+  }
+
+  printf( "%s", tmp);
+}
+
 node *
 PRTdeclars (node * arg_node, info * arg_info)
 {
@@ -170,7 +197,7 @@ PRTdimdecs (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTdimdecs");
 
-  DIMDECS_DEC( arg_node) = TRAVdo( DIMDECS_DEC( arg_node), arg_info);
+  DIMDECS_DIM( arg_node) = TRAVdo( DIMDECS_DIM( arg_node), arg_info);
   
   if (DIMDECS_NEXT( arg_node) != NULL)
   {
@@ -178,6 +205,16 @@ PRTdimdecs (node * arg_node, info * arg_info)
   	DIMDECS_NEXT( arg_node) = TRAVopt( DIMDECS_NEXT( arg_node), arg_info);
   }
   
+  DBUG_RETURN (arg_node);
+}
+
+node *
+PRTdim (node * arg_node, info * arg_info)
+{	
+  DBUG_ENTER ("PRTdim");
+
+  printf( "%s", DIM_NAME( arg_node));
+
   DBUG_RETURN (arg_node);
 }
 
@@ -340,30 +377,11 @@ PRTbool (node * arg_node, info * arg_info)
 node *
 PRTcast (node * arg_node, info * arg_info)
 {
-  char *tmp;
-
   DBUG_ENTER ("PRTcast");
 
   printf( "(");
 
-  switch (CAST_TYPE( arg_node)) {
-  	case VT_void:
-  		tmp = "void";
-  		break;
-    case VT_int:
-    	tmp = "int";
-    	break;
-    case VT_float:
-    	tmp = "float";
-    	break;
-    case VT_bool:
-    	tmp = "bool";
-    	break;
-    case VT_unknown:
-      DBUG_ASSERT( 0, "unknown vtype detected!");
-  }
-
-  printf( "%s", tmp);
+  printType(CAST_TYPE( arg_node));
   
   printf( ") ");
 
@@ -427,67 +445,17 @@ PRTvarlet (node * arg_node, info * arg_info)
 }
 
 node *
-PRTvarhead (node * arg_node, info * arg_info)
+PRTheader (node * arg_node, info * arg_info)
 {
-	char *tmp;
-	
-  DBUG_ENTER ("PRTvarhead");
+  DBUG_ENTER ("PRTheader");
 
-  switch (VARHEAD_TYPE( arg_node)) {
-  	case VT_void:
-  		tmp = "void";
-  		break;
-    case VT_int:
-    	tmp = "int";
-    	break;
-    case VT_float:
-    	tmp = "float";
-    	break;
-    case VT_bool:
-    	tmp = "bool";
-    	break;
-    case VT_unknown:
-      DBUG_ASSERT( 0, "unknown vtype detected!");
-  }
+  printType(HEADER_TYPE( arg_node));
 
-  printf( "%s ", tmp);
-
-  printf( "%s", VARHEAD_NAME( arg_node));
-
-  DBUG_RETURN (arg_node);
-}
-
-node *
-PRTfunhead (node * arg_node, info * arg_info)
-{
-	char *tmp;
-	
-  DBUG_ENTER ("PRTfunhead");
-
-  switch (FUNHEAD_TYPE( arg_node)) {
-  	case VT_void:
-  		tmp = "void";
-  		break;
-    case VT_int:
-    	tmp = "int";
-    	break;
-    case VT_float:
-    	tmp = "float";
-    	break;
-    case VT_bool:
-    	tmp = "bool";
-    	break;
-    case VT_unknown:
-      DBUG_ASSERT( 0, "unknown vtype detected!");
-  }
-
-  printf( "%s ", tmp);
-
-  printf( "%s", FUNHEAD_NAME( arg_node));
+  printf( " %s", HEADER_NAME( arg_node));
   
   printf("(");
   
-  FUNHEAD_PARAMS( arg_node) = TRAVopt( FUNHEAD_PARAMS( arg_node), arg_info);
+  HEADER_PARAMS( arg_node) = TRAVopt( HEADER_PARAMS( arg_node), arg_info);
   
   printf(")");
 
@@ -501,7 +469,7 @@ PRTvardec (node * arg_node, info * arg_info)
   
   printIndent( arg_info);
 
-  VARDEC_DEC( arg_node) = TRAVdo( VARDEC_DEC( arg_node), arg_info);
+  printType(VARDEC_TYPE( arg_node));
 
   if (VARDEC_DIMDEFS( arg_node) != NULL)
   {
@@ -509,6 +477,8 @@ PRTvardec (node * arg_node, info * arg_info)
   	VARDEC_DIMDEFS( arg_node) = TRAVdo( VARDEC_DIMDEFS( arg_node), arg_info);
   	printf("]");
   }
+
+  printf( " %s", VARDEC_NAME( arg_node));
   
   if (VARDEC_EXPR( arg_node) != NULL)
   {
@@ -526,7 +496,7 @@ PRTglobdef (node * arg_node, info * arg_info)
 {	
   DBUG_ENTER ("PRTglobdef");
 
-  GLOBDEF_DEC( arg_node) = TRAVdo( GLOBDEF_DEC( arg_node), arg_info);
+  printType(GLOBDEF_TYPE( arg_node));
 
   if (GLOBDEF_DIMDEFS( arg_node) != NULL)
   {
@@ -534,6 +504,8 @@ PRTglobdef (node * arg_node, info * arg_info)
   	GLOBDEF_DIMDEFS( arg_node) = TRAVdo( GLOBDEF_DIMDEFS( arg_node), arg_info);
   	printf(" ]");
   }
+
+  printf( " %s", GLOBDEF_NAME( arg_node));
   
   if (GLOBDEF_EXPR( arg_node) != NULL)
   {
@@ -551,7 +523,7 @@ PRTglobdec (node * arg_node, info * arg_info)
 {	
   DBUG_ENTER ("PRTglobdec");
 
-  GLOBDEC_DEC( arg_node) = TRAVdo( GLOBDEC_DEC( arg_node), arg_info);
+  printType(GLOBDEC_TYPE( arg_node));
 
   if (GLOBDEC_DIMDECS( arg_node) != NULL)
   {
@@ -559,6 +531,8 @@ PRTglobdec (node * arg_node, info * arg_info)
   	GLOBDEC_DIMDECS( arg_node) = TRAVdo( GLOBDEC_DIMDECS( arg_node), arg_info);
   	printf("]");
   }
+
+  printf( " %s", GLOBDEC_NAME( arg_node));
   
   printf(";\n");
 
@@ -570,14 +544,16 @@ PRTparam (node * arg_node, info * arg_info)
 {
 	DBUG_ENTER ("PRTparam");
 
-  PARAM_DEC( arg_node) = TRAVdo( PARAM_DEC( arg_node), arg_info);
+  printType(PARAM_TYPE( arg_node));
 
   if (PARAM_DIMDECS( arg_node) != NULL)
   {
-  	printf("[ ");
+  	printf("[");
   	PARAM_DIMDECS( arg_node) = TRAVdo( PARAM_DIMDECS( arg_node), arg_info);
-  	printf(" ]");
+  	printf("]");
   }
+
+  printf( " %s", PARAM_NAME( arg_node));
 
   DBUG_RETURN (arg_node);
 }
@@ -592,7 +568,7 @@ PRTfundef (node * arg_node, info * arg_info)
 	{
 		printf("export ");
 	}
-  FUNDEF_DEC( arg_node) = TRAVdo( FUNDEF_DEC( arg_node), arg_info);
+  FUNDEF_HEAD( arg_node) = TRAVdo( FUNDEF_HEAD( arg_node), arg_info);
 	printf("\n");
 	
 	printIndent( arg_info);
@@ -615,7 +591,7 @@ PRTfundec (node * arg_node, info * arg_info)
 
 	printf("extern ");
 
-  FUNDEC_DEC( arg_node) = TRAVdo( FUNDEC_DEC( arg_node), arg_info);
+  FUNDEC_HEAD( arg_node) = TRAVdo( FUNDEC_HEAD( arg_node), arg_info);
 
   printf(";\n");
 
@@ -727,7 +703,7 @@ PRTfor (node * arg_node, info * arg_info)
 	DBUG_ENTER ("PRTfor");
 	
 	printIndent( arg_info);
-  printf("for (");
+  printf("for (int ");
   
 	FOR_ITER( arg_node) = TRAVdo( FOR_ITER( arg_node), arg_info);
 	printf(" = ");
@@ -752,6 +728,16 @@ PRTfor (node * arg_node, info * arg_info)
 	
 	printIndent( arg_info);
 	printf("}\n");
+
+  DBUG_RETURN (arg_node);
+}
+
+node *
+PRTiter (node * arg_node, info * arg_info)
+{	
+  DBUG_ENTER ("PRTiter");
+
+  printf( "%s", ITER_NAME( arg_node));
 
   DBUG_RETURN (arg_node);
 }
