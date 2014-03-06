@@ -28,23 +28,17 @@ ENDPHASE( ld)
 
 /******************************************************************************/
 
-PHASE( as4,
+PHASE( ca,
 			 "Assignment 4",
-			 NEVER)
+			 ALWAYS)
 
-SUBPHASE( as4ip,
+SUBPHASE( idpre,
 					"Identifier Prefixing",
-					AS4IPdoIdPrefix,
+					IDPREdoIdPrefix,
 					ALWAYS,
-					as4)
+					ca)
 
-SUBPHASE( as4ac,
-					"Arithmetic Operator Counting",
-					AS4ACdoCount,
-					ALWAYS,
-					as4)
-
-ENDPHASE( as4)
+ENDPHASE( ca)
 
 /******************************************************************************/
 
