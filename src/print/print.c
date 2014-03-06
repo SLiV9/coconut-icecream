@@ -90,6 +90,44 @@ void printType(vtype t)
   printf( "%s", tmp);
 }
 
+void printLink(node* dec)
+{
+	if (dec == NULL)
+	{
+		printf("{null}");
+	}
+	
+	switch (NODE_TYPE(dec))
+	{
+		case N_vardec:
+			printf("{loc %s:%d}", VARDEC_NAME(dec), NODE_LINE(dec));
+			break;
+		case N_globdef:
+			printf("{glb %s:%d}", GLOBDEF_NAME(dec), NODE_LINE(dec));
+			break;
+		case N_globdec:
+			printf("{glb %s:%d}", GLOBDEF_NAME(dec), NODE_LINE(dec));
+			break;
+		case N_fundef:
+			printf("{fun %s:%d}", HEADER_NAME(FUNDEF_HEAD(dec)), NODE_LINE(dec));
+			break;
+		case N_fundec:
+			printf("{fun %s:%d}", HEADER_NAME(FUNDEC_HEAD(dec)), NODE_LINE(dec));
+			break;
+		case N_param:
+			printf("{prm %s:%d}", PARAM_NAME(dec), NODE_LINE(dec));
+			break;
+		case N_iter:
+			printf("{itr %s:%d}", ITER_NAME(dec), NODE_LINE(dec));
+			break;
+		case N_dim:
+			printf("{dim %s:%d}", DIM_NAME(dec), NODE_LINE(dec));
+			break;
+		default:
+			printf("{unknown}");
+	}
+}
+
 node *
 PRTdeclars (node * arg_node, info * arg_info)
 {
@@ -193,6 +231,22 @@ PRTexprs (node * arg_node, info * arg_info)
 }
 
 node *
+PRTnamedecs (node * arg_node, info * arg_info)
+{
+  DBUG_ENTER ("PRTnamedecs");
+
+  NAMEDECS_DEC( arg_node) = TRAVdo( NAMEDECS_DEC( arg_node), arg_info);
+  
+  if (NAMEDECS_NEXT( arg_node) != NULL)
+  {
+  	printf("; ");
+  	NAMEDECS_NEXT( arg_node) = TRAVopt( NAMEDECS_NEXT( arg_node), arg_info);
+  }
+  
+  DBUG_RETURN (arg_node);
+}
+
+node *
 PRTdimdecs (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTdimdecs");
@@ -201,7 +255,7 @@ PRTdimdecs (node * arg_node, info * arg_info)
   
   if (DIMDECS_NEXT( arg_node) != NULL)
   {
-  	printf(" , ");
+  	printf(", ");
   	DIMDECS_NEXT( arg_node) = TRAVopt( DIMDECS_NEXT( arg_node), arg_info);
   }
   
@@ -395,7 +449,14 @@ PRTfuncall (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTfuncall");
 
-  printf( "%s", FUNCALL_NAME( arg_node));
+  if (FUNCALL_DEC( arg_node) != NULL)
+	{
+		printLink( FUNCALL_DEC( arg_node));
+	}
+	else
+	{
+  	printf( "%s", FUNCALL_NAME( arg_node));
+  }
   
   printf("(");
  	
@@ -411,7 +472,14 @@ PRTvarcall (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTvarcall");
 
-  printf( "%s", VARCALL_NAME( arg_node));
+  if (VARCALL_DEC( arg_node) != NULL)
+	{
+		printLink( VARCALL_DEC( arg_node));
+	}
+	else
+	{
+  	printf( "%s", VARCALL_NAME( arg_node));
+  }
   
   if (VARCALL_INDX( arg_node) != NULL)
   {
@@ -430,7 +498,14 @@ PRTvarlet (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTvarlet");
 
-  printf( "%s", VARLET_NAME( arg_node));
+	if (VARLET_DEC( arg_node) != NULL)
+	{
+		printLink( VARLET_DEC( arg_node));
+	}
+	else
+	{
+  	printf( "%s", VARLET_NAME( arg_node));
+  }
   
   if (VARLET_INDX( arg_node) != NULL)
   {

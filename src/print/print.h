@@ -18,6 +18,7 @@ extern node *PRTfundefs (node * arg_node, info * arg_info);
 extern node *PRTinstrs (node * arg_node, info * arg_info);
 extern node *PRTexprs (node * arg_node, info * arg_info);
 extern node *PRTargs (node * arg_node, info * arg_info);
+extern node *PRTnamedecs (node * arg_node, info * arg_info);
 extern node *PRTdimdecs (node * arg_node, info * arg_info);
 extern node *PRTdim (node * arg_node, info * arg_info);
 
