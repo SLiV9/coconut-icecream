@@ -286,6 +286,31 @@
       </sons>
       <attributes />
     </node>
+    <node name="NameDecs">
+      <sons>
+        <son name="Dec">
+          <targets>
+            <target mandatory="yes">
+              <set name="NameDec" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="NameDecs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
     <node name="DimDecs">
       <sons>
         <son name="Dim">

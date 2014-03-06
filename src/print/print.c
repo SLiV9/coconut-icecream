@@ -193,6 +193,22 @@ PRTexprs (node * arg_node, info * arg_info)
 }
 
 node *
+PRTnamedecs (node * arg_node, info * arg_info)
+{
+  DBUG_ENTER ("PRTnamedecs");
+
+  NAMEDECS_DEC( arg_node) = TRAVdo( NAMEDECS_DEC( arg_node), arg_info);
+  
+  if (NAMEDECS_NEXT( arg_node) != NULL)
+  {
+  	printf("; ");
+  	NAMEDECS_NEXT( arg_node) = TRAVopt( NAMEDECS_NEXT( arg_node), arg_info);
+  }
+  
+  DBUG_RETURN (arg_node);
+}
+
+node *
 PRTdimdecs (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTdimdecs");
@@ -201,7 +217,7 @@ PRTdimdecs (node * arg_node, info * arg_info)
   
   if (DIMDECS_NEXT( arg_node) != NULL)
   {
-  	printf(" , ");
+  	printf(", ");
   	DIMDECS_NEXT( arg_node) = TRAVopt( DIMDECS_NEXT( arg_node), arg_info);
   }
   
