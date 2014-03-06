@@ -76,6 +76,22 @@
     		<node name="GlobDec" />
     	</target>
     </nodeset>
+    <nodeset name="VarOrigin">
+    	<target>
+    		<node name="VarDec" />
+    		<node name="GlobDef" />
+    		<node name="GlobDec" />
+    		<node name="Param" />
+    		<node name="Iter" />
+    		<node name="Dim" />
+    	</target>
+    </nodeset>
+    <nodeset name="FunOrigin">
+    	<target>
+    		<node name="FunDef" />
+    		<node name="FunDec" />
+    	</target>
+    </nodeset>
   </nodesets>
 
   <syntaxtree>
