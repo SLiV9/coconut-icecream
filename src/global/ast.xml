@@ -37,6 +37,17 @@
       	</travuser>
       </traversal>
       
+      <traversal id="SPLIT" name="Split" default="sons" include="split.h">
+      	<travuser>
+      		<node name="VarDec" />
+      		<node name="Declars" />
+                <node name="Body" />
+                <node name="GlobalDef" />
+      	</travuser>
+      </traversal>
+
+
+
       <traversal id="PRT" name="Print Syntax Tree" default="sons" include="print.h" />
       <traversal id="COPY" name="Copy Syntax Tree" default="user" include="copy_node.h" />
       <traversal id="FREE" name="Free Syntax Tree" default="user" include="free_node.h" />
