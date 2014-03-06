@@ -16,6 +16,7 @@ extern node* NAMELINKfundef(node *arg_node, info *arg_info);
 extern node* NAMELINKfundec(node *arg_node, info *arg_info);
 
 extern node* NAMELINKfor(node *arg_node, info *arg_info);
+extern node* NAMELINKbody(node *arg_node, info *arg_info);
 
 extern node *NAMELINKdoLinkNames( node *syntaxtree);
 

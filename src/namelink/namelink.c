@@ -1,11 +1,14 @@
-#include "idpre.h"
+#include <string.h>
+
+#include "namelink.h"
+#include "funhead.h"
+
 #include "types.h"
 #include "tree_basic.h"
 #include "traverse.h"
 #include "dbug.h"
 #include "memory.h"
 #include "str.h"
-#include <string.h>
 
 /*
  * INFO structure
@@ -254,6 +257,24 @@ node* NAMELINKfor(node *arg_node, info *arg_info)
   DBUG_RETURN (arg_node);
 }
 
+node* NAMELINKbody(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("NAMELINKbody");
+
+  TRAVpush( TR_namelinkfunhead);
+
+  BODY_FUNDEFS( arg_node) = TRAVopt( BODY_FUNDEFS( arg_node), arg_info);
+
+  TRAVpop();
+  
+  BODY_VARDECS( arg_node) = TRAVopt( BODY_VARDECS( arg_node), arg_info);
+  BODY_FUNDEFS( arg_node) = TRAVopt( BODY_FUNDEFS( arg_node), arg_info);
+  BODY_INSTRS( arg_node) = TRAVopt( BODY_INSTRS( arg_node), arg_info);
+  BODY_RETURN( arg_node) = TRAVopt( BODY_RETURN( arg_node), arg_info);
+
+  DBUG_RETURN (arg_node);
+}
+
 
 node *NAMELINKdoLinkNames(node *syntaxtree)
 {
@@ -262,6 +283,12 @@ node *NAMELINKdoLinkNames(node *syntaxtree)
 	DBUG_ENTER("NAMELINKdoLinkNames");
 	
 	info = MakeInfo();
+
+  TRAVpush( TR_namelinkfunhead);
+
+  syntaxtree = TRAVdo( syntaxtree, info);
+
+  TRAVpop();
 
   TRAVpush( TR_namelink);
 

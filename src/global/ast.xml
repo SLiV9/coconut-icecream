@@ -55,6 +55,14 @@
 		  		<node name="FunDef" />
 		  		<node name="FunDec" />
 		  		<node name="For" />
+		  		<node name="Body" />
+      	</travuser>
+      </traversal>
+    
+      <traversal id="NAMELINKFUNHEAD" name="Linking funheads" default="sons" include="funhead.h">
+      	<travuser>
+		  		<node name="FunDef" />
+		  		<node name="FunDec" />
       	</travuser>
       </traversal>
       

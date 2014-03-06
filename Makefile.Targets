@@ -86,5 +86,5 @@ as4ip				= as4ip.o
 as4ac				= as4ac.o
 
 idpre				= idpre.o
-namelink 		= namelink.o
+namelink 		= namelink.o funhead.o
 
