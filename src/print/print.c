@@ -90,6 +90,44 @@ void printType(vtype t)
   printf( "%s", tmp);
 }
 
+void printLink(node* dec)
+{
+	if (dec == NULL)
+	{
+		printf("{null}");
+	}
+	
+	switch (NODE_TYPE(dec))
+	{
+		case N_vardec:
+			printf("{vardec %s at %d}", VARDEC_NAME(dec), NODE_LINE(dec));
+			break;
+		case N_globdef:
+			printf("{globdef %s at %d}", GLOBDEF_NAME(dec), NODE_LINE(dec));
+			break;
+		case N_globdec:
+			printf("{globdec %s at %d}", GLOBDEF_NAME(dec), NODE_LINE(dec));
+			break;
+		case N_fundef:
+			printf("{fundef %s at %d}", HEADER_NAME(FUNDEF_HEAD(dec)), NODE_LINE(dec));
+			break;
+		case N_fundec:
+			printf("{fundec %s at %d}", HEADER_NAME(FUNDEC_HEAD(dec)), NODE_LINE(dec));
+			break;
+		case N_param:
+			printf("{param %s at %d}", PARAM_NAME(dec), NODE_LINE(dec));
+			break;
+		case N_iter:
+			printf("{iter %s at %d}", ITER_NAME(dec), NODE_LINE(dec));
+			break;
+		case N_dim:
+			printf("{dim %s at %d}", DIM_NAME(dec), NODE_LINE(dec));
+			break;
+		default:
+			printf("{unknown}");
+	}
+}
+
 node *
 PRTdeclars (node * arg_node, info * arg_info)
 {
@@ -411,7 +449,14 @@ PRTfuncall (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTfuncall");
 
-  printf( "%s", FUNCALL_NAME( arg_node));
+  if (FUNCALL_DEC( arg_node) != NULL)
+	{
+		printLink( FUNCALL_DEC( arg_node));
+	}
+	else
+	{
+  	printf( "%s", FUNCALL_NAME( arg_node));
+  }
   
   printf("(");
  	
@@ -427,7 +472,14 @@ PRTvarcall (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTvarcall");
 
-  printf( "%s", VARCALL_NAME( arg_node));
+  if (VARCALL_DEC( arg_node) != NULL)
+	{
+		printLink( VARCALL_DEC( arg_node));
+	}
+	else
+	{
+  	printf( "%s", VARCALL_NAME( arg_node));
+  }
   
   if (VARCALL_INDX( arg_node) != NULL)
   {
@@ -446,7 +498,14 @@ PRTvarlet (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTvarlet");
 
-  printf( "%s", VARLET_NAME( arg_node));
+	if (VARLET_DEC( arg_node) != NULL)
+	{
+		printLink( VARLET_DEC( arg_node));
+	}
+	else
+	{
+  	printf( "%s", VARLET_NAME( arg_node));
+  }
   
   if (VARLET_INDX( arg_node) != NULL)
   {
