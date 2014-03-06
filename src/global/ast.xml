@@ -7,7 +7,6 @@
     <type name="Bool" ctype="bool" init="FALSE" copy="literal" />
     <type name="Float" ctype="float" init="0.0" copy="literal" />
     <type name="ValueType" ctype="vtype" init="VT_unknown" copy="literal" />
-    <type name="ReturnType" ctype="rtype" init="RT_unknown" copy="literal" />
     <type name="MonOp" ctype="monop" init="MO_unknown" copy="literal" />
     <type name="BinOp" ctype="binop" init="BO_unknown" copy="literal" />
     <type name="Link" ctype="node*" init="NULL" copy="lookup" />
@@ -24,19 +23,25 @@
          include the include file needed for the traversal
     -->
     <general>
-      <traversal id="AS4IP" name="Identifier Prefixing" default="sons" include="as4ip.h">
+    	<traversal id="MYCPP" name="C Preprocessing" default="sons" include="mycpp.h" />
+    	<traversal id="MYSCP" name="Scanning and Parsing" default="sons" include="myscp.h" />
+    
+      <traversal id="IDPRE" name="Identifier Prefixing" default="sons" include="idpre.h">
       	<travuser>
-      		<node name="VarCall" />
       		<node name="VarLet" />
-      	</travuser>
-      </traversal>
-    	
-      <traversal id="AS4AC" name="Arithmetic Operator Counting" default="sons" include="as4ac.h">
-      	<travuser>
-      		<node name="BinOp" />
+      		<node name="VarCall" />
+		  		<node name="VarDec" />
+		  		<node name="GlobDef" />
+		  		<node name="GlobDec" />
+		  		<node name="Param" />
+		  		<node name="Iter" />
+		  		<node name="Dim" />
+		  		<node name="Header" />
+		  		<node name="FunCall" />
       	</travuser>
       </traversal>
       
+
       <traversal id="SPLIT" name="Split" default="sons" include="split.h">
       	<travuser>
       		<node name="VarDec" />
@@ -48,7 +53,9 @@
 
 
 
-      <traversal id="PRT" name="Print Syntax Tree" default="sons" include="print.h" />
+
+      <traversal id="PRT" name="Print Syntax Tree" default="user" include="print.h" />
+
       <traversal id="COPY" name="Copy Syntax Tree" default="user" include="copy_node.h" />
       <traversal id="FREE" name="Free Syntax Tree" default="user" include="free_node.h" />
       <traversal id="CHK" name="Check the Tree" default="user" include="check.h" />
@@ -65,6 +72,7 @@
         <node name="Float" />
         <node name="Bool" />
         <node name="Cast" />
+        <node name="ArrayLit" />
       </target>
     </nodeset>
     <nodeset name="Instr">
@@ -82,6 +90,18 @@
     		<node name="FunDec" />
     		<node name="GlobDef" />
     		<node name="GlobDec" />
+    	</target>
+    </nodeset>
+    <nodeset name="NameDec">
+    	<target>
+    		<node name="VarDec" />
+    		<node name="GlobDef" />
+    		<node name="GlobDec" />
+    		<node name="Param" />
+    		<node name="Iter" />
+    		<node name="Dim" />
+    		<node name="FunDef" />
+    		<node name="FunDec" />
     	</target>
     </nodeset>
   </nodesets>
@@ -257,9 +277,9 @@
       </sons>
       <attributes />
     </node>
-    <node name="Args">
+    <node name="Exprs">
       <sons>
-        <son name="Arg">
+        <son name="Expr">
           <targets>
             <target mandatory="yes">
               <set name="Expr" />
@@ -272,7 +292,64 @@
         <son name="Next">
           <targets>
             <target mandatory="no">
-              <node name="Args" />
+              <node name="Exprs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="DimDecs">
+      <sons>
+        <son name="Dim">
+          <targets>
+            <target mandatory="yes">
+              <node name="Dim" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="DimDecs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="Dim">
+    	<sons />
+    	<attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+    	</attributes>
+    </node>
+    <node name="ArrayLit">
+      <sons>
+        <son name="Exprs">
+          <targets>
+            <target mandatory="yes">
+              <node name="Exprs" />
               <phases>
                 <all />
               </phases>
@@ -284,10 +361,10 @@
     </node>
     <node name="FunDef">
       <sons>
-      	<son name="Dec">
+      	<son name="Head">
       		<targets>
 		    		<target mandatory="yes">
-		    			<node name="FunHead" />
+		    			<node name="Header" />
 		    			<phases>
 		    				<all />
 		    			</phases>
@@ -322,10 +399,10 @@
     </node>
     <node name="FunDec">
       <sons>
-      	<son name="Dec">
+      	<son name="Head">
       		<targets>
 		    		<target mandatory="yes">
-		    			<node name="FunHead" />
+		    			<node name="Header" />
 		    			<phases>
 		    				<all />
 		    			</phases>
@@ -335,7 +412,7 @@
       </sons>
       <attributes />
     </node>
-    <node name="FunHead">
+    <node name="Header">
       <sons>
       	<son name="Params">
       		<targets>
@@ -362,7 +439,7 @@
           </type>
         </attribute>
         <attribute name="Type">
-        	<type name="ReturnType">
+        	<type name="ValueType">
         		<targets>
         			<target mandatory="yes">
 		      			<any />
@@ -377,16 +454,6 @@
     </node>
     <node name="GlobDef">
       <sons>
-        <son name="Dec">
-          <targets>
-            <target mandatory="yes">
-              <node name="VarHead" />
-              <phases>
-                <all />
-              </phases>
-            </target>
-          </targets>
-        </son>
         <son name="Expr">
           <targets>
             <target mandatory="no">
@@ -397,8 +464,42 @@
             </target>
           </targets>
         </son>
+        <son name="DimDefs">
+        	<targets>
+        		<target mandatory="no">
+        			<node name="Exprs" />
+        			<phases>
+        				<all />
+        			</phases>
+        		</target>
+        	</targets>
+        </son>
       </sons>
       <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="yes">
+		      			<any />
+		      			<phases>
+		      				<all />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
     		<attribute name="Export">
     			<type name="Bool">
     				<targets>
@@ -415,18 +516,43 @@
     </node>
     <node name="GlobDec">
       <sons>
-        <son name="Dec">
-          <targets>
-            <target mandatory="yes">
-              <node name="VarHead" />
-              <phases>
-                <all />
-              </phases>
-            </target>
-          </targets>
+        <son name="DimDecs">
+        	<targets>
+        		<target mandatory="no">
+        			<node name="DimDecs" />
+        			<phases>
+        				<all />
+        			</phases>
+        		</target>
+        	</targets>
         </son>
       </sons>
-      <attributes />
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="yes">
+		      			<any />
+		      			<phases>
+		      				<all />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
+      </attributes>
     </node>
     <node name="FunState">
     	<sons>
@@ -444,31 +570,46 @@
     </node>
     <node name="Param">
       <sons>
-        <son name="Dec">
-          <targets>
-            <target mandatory="yes">
-              <node name="VarHead" />
-              <phases>
-                <all />
-              </phases>
-            </target>
-          </targets>
+        <son name="DimDecs">
+        	<targets>
+        		<target mandatory="no">
+        			<node name="DimDecs" />
+        			<phases>
+        				<all />
+        			</phases>
+        		</target>
+        	</targets>
         </son>
       </sons>
-      <attributes />
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="yes">
+		      			<any />
+		      			<phases>
+		      				<all />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
+      </attributes>
     </node>
     <node name="VarDec">
       <sons>
-        <son name="Dec">
-          <targets>
-            <target mandatory="yes">
-              <node name="VarHead" />
-              <phases>
-                <all />
-              </phases>
-            </target>
-          </targets>
-        </son>
         <son name="Expr">
           <targets>
             <target mandatory="no">
@@ -479,11 +620,17 @@
             </target>
           </targets>
         </son>
+        <son name="DimDefs">
+        	<targets>
+        		<target mandatory="no">
+        			<node name="Exprs" />
+        			<phases>
+        				<all />
+        			</phases>
+        		</target>
+        	</targets>
+        </son>
       </sons>
-      <attributes />
-    </node>
-    <node name="VarHead">
-      <sons />
       <attributes>
         <attribute name="Name">
           <type name="String">
@@ -614,7 +761,7 @@
     		<son name="Iter">
     			<targets>
     				<target mandatory="yes">
-    					<node name="VarHead" />
+    					<node name="Iter" />
     					<phases>
     						<all />
     					</phases>
@@ -664,6 +811,23 @@
     	</sons>
     	<attributes />
     </node>    
+    <node name="Iter">
+    	<sons />
+    	<attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+    	</attributes>
+    </node>
     <node name="MonOp">
     	<sons>
     		<son name="Expr">
@@ -732,6 +896,16 @@
     </node>
     <node name="VarLet">
       <sons>
+      	<son name="Indx">
+          <targets>
+            <target mandatory="no">
+              <node name="Exprs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
       </sons>
       <attributes>
         <attribute name="Name">
@@ -762,6 +936,16 @@
     </node>
     <node name="VarCall">
       <sons>
+      	<son name="Indx">
+          <targets>
+            <target mandatory="no">
+              <node name="Exprs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
       </sons>
       <attributes>
         <attribute name="Name">
@@ -795,7 +979,7 @@
       	<son name="Args">
           <targets>
             <target mandatory="no">
-              <node name="Args" />
+              <node name="Exprs" />
               <phases>
                 <all />
               </phases>

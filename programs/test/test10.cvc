@@ -1,0 +1,22 @@
+export int main()
+{
+	int a;
+	int r;
+	
+	a = scanInt();
+	
+	if (a < 1)
+		a = 1;
+	else{
+		a = 2;
+		r = 1;
+	}
+
+	for(int k = 0,20){
+		c = 9;
+	}
+
+	printNewlines(2);
+	
+	return 0;
+}

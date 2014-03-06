@@ -22,6 +22,9 @@
 GLOBAL( type, name, init)
 #endif
 
+GLOBAL( char *, fn, NULL)
+
+
 #undef GLOBALtype
 #undef GLOBALname
 #undef GLOBALinit

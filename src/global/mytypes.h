@@ -2,16 +2,9 @@
 #define _CIVCC_MYTYPES_H_
 
 /*
- * This enumeration defines all value types
- * (Can be extended to arrays etc.)
+ * This enumeration defines all value and return types.
  */
-typedef enum { VT_int, VT_float, VT_bool, VT_unknown } vtype;
-
-/*
- * This enumeration defines all return types
- * (Cannot be extended: only basic types.)
- */
-typedef enum { RT_void, RT_int, RT_float, RT_bool, RT_unknown } rtype;
+typedef enum { VT_void, VT_int, VT_float, VT_bool, VT_unknown } vtype;
 
 /*
  * This enumeration defines all monops

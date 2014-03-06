@@ -1,0 +1,24 @@
+extern void printInt(int val);
+extern void printSpaces(int num);
+extern void printNewlines(int num);
+
+extern int scanInt();
+
+export int main()
+{
+	bool[2, 3] B = [[1, 2], [3, 4]];
+	int a = 1;
+	int r;
+	
+	int foo(int a, int b, int c)
+	{
+		a = 1;
+		b = 2;
+		c = 3;
+	}
+	
+	a = 1;
+	r = 2;
+	
+	return 0;
+}

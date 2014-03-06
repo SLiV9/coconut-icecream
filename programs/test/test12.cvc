@@ -1,0 +1,25 @@
+extern void printInt(int val);
+extern void printSpaces(int num);
+extern void printNewlines(int num);
+
+extern int scanInt();
+
+export int main()
+{
+	int x = 0;
+	
+	while (true)
+	{
+		printInt(x);
+		x = x + 1;
+	}
+	
+	// else pairt met meest recente if
+	if (a)
+		if (b)
+			x = 2 * x;
+		else
+			x = 3;
+	
+	return 0;
+}

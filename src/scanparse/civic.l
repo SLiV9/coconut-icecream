@@ -10,6 +10,7 @@
 #include "free.h"
 #include "civic.tab.h"
 #include "globals.h"
+#include "myglobals.h"
 #include "ctinfo.h"
 
 
@@ -20,7 +21,6 @@
 #define LINEBUF_SIZE 256
 #define YY_NO_UNPUT
 #define YY_NO_INPUT
-
 
 %}
 
@@ -36,6 +36,8 @@
 ")"                        { FILTER( BRR); }
 "{"                        { FILTER( BCL); }
 "}"                        { FILTER( BCR); }
+"["                        { FILTER( BSL); }
+"]"                        { FILTER( BSR); }
 
 ","                        { FILTER( COMMA); }
 ";"                        { FILTER( SEMICOLON); }
@@ -62,10 +64,23 @@
 "true"                     { FILTER( TRUEVAL); }
 "false"                    { FILTER( FALSEVAL); }
 
+"export"									 { FILTER( EXPORT); }
+"extern"									 { FILTER( EXTERN); }
+
+"while"										 { FILTER( WHILE); }
+"do"											 { FILTER( DO); }
+"for"											 { FILTER( FOR); }
+"if"											 { FILTER( IF); }
+"else"										 { FILTER( ELSE); }
+"return"									 { FILTER( RETURN); }
+
+"int"											 { FILTER( INT); }
+"float"										 { FILTER( FLOAT); }
+"bool"										 { FILTER( BOOL); }
+"void"										 { FILTER( VOID); }
 
 
-
-[A-Za-z_][A-Za-z0-9_]*     { yylval.id = STRcpy(yytext);
+_*[A-Za-z][A-Za-z0-9_]*    { yylval.id = STRcpy(yytext);
                              FILTER( ID);
                            }
 
@@ -82,14 +97,65 @@
                              FILTER( INTVAL);
                            }
 
-#.*\n                     {
-                            //do iets nuttigs;
-                          }
+#[ ][0-9]+[ ]\"[^\"]+\".*\n     {
+									/* Interpret the Preprocessors hints.
+									 * They are formatted:
+									 * # row "filename" flags\n
+									 * The row is the number of the next line,
+									 * if it were a line in file filename. */
+									int row = 0;
+									char* filename;
+									
+									// xxtext is a local copy of yytext.
+                  char* xxtext = malloc(sizeof(char)*(strlen(yytext)+1));
+                  char* txt = xxtext + 2;
+                  
+									// The row can be read from rowstart to txt.
+                  char* rowstart = txt;
+                  strcpy(xxtext, yytext);
+                  while (*txt != ' ')
+                  {
+                  	txt++;
+                  }
+									*txt = 0;
+									row = atoi(rowstart);
+									
+                  // The filename can be read from fnstart to txt.
+                  txt += 2;
+									char* fnstart = txt;
+                  while (*txt != '\"')
+                  {
+                  	txt++;
+                  }
+                  *txt = 0;
+                  filename = malloc(sizeof(char)*(txt - fnstart + 1));
+                  strcpy(filename, fnstart);
+                  
+                  // Done.
+                  free(xxtext);
+                  
+                  if (myglobal.fn != NULL)
+                  {
+                  	free(myglobal.fn);
+                  }
+                  myglobal.fn = filename;
+                  global.line = row;
+                  global.col = 0;
+                }
 
-(\r?\n)|(\n?\r)|(\n\r?)   { global.line += 1;
+(\r?\n)|(\n?\r)|(\n\r?)    { global.line += 1;
                              global.col = 0;
-                             yyless(1);
                            }
 
 [ \t]+                     { global.col += yyleng;
-                           } 
+                           }
+
+%{
+
+// If necessary, free filenames malloc'd when interpreting [# row filename]'s.
+if (myglobal.fn != NULL)
+{
+	free(myglobal.fn);
+}
+
+%}

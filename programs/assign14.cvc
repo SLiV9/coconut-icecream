@@ -1,0 +1,47 @@
+extern void printBool();
+
+int age = 27;
+int thresh = 40;
+
+export void main()
+{
+	printIfOld(isOld(age, thresh)); 
+}
+
+void printIfOld(bool old)
+{
+	// 4: The local variable old shadows printIfOld()'s parameter old.
+	bool old;
+	
+	// 6: The local variable age is initialised by the global variable age.
+	int age = age;
+	
+	age = 2 * age;
+	
+	old = isOld(age, thresh);
+	
+	printBool(old);
+}
+
+// 3: isOld()'s parameter age shadows the global variable age.
+bool isOld(int age, int thresh)
+{
+	// 7: The local variable printIfOld shadows the function printIfOld().
+	bool printIfOld = true;
+	
+	// 1: The local variable diff never leaves this scope, thus is non-escaped.
+	int diff;
+	
+	// 2: The local variable thr is used by subfunction thresh(), thus escaped.
+	int thr = 25;
+
+	// 5: The local function thresh() shadows isOld()'s parameter thresh. 
+	int thresh()
+	{
+		return thr;
+	}
+	
+	diff = age - thresh();
+	
+	return (diff > 0);
+}
