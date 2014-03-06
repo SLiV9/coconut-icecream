@@ -40,6 +40,22 @@
 		  		<node name="FunCall" />
       	</travuser>
       </traversal>
+    
+      <traversal id="NAMELINK" name="Linking calls to names" default="sons" include="namelink.h">
+      	<travuser>
+      		<node name="VarLet" />
+      		<node name="VarCall" />
+		  		<node name="FunCall" />
+		  		<node name="VarDec" />
+		  		<node name="GlobDef" />
+		  		<node name="GlobDec" />
+		  		<node name="Param" />
+		  		<node name="Iter" />
+		  		<node name="Dim" />
+		  		<node name="FunDef" />
+		  		<node name="FunDec" />
+      	</travuser>
+      </traversal>
       
       <traversal id="PRT" name="Print Syntax Tree" default="user" include="print.h" />
       <traversal id="COPY" name="Copy Syntax Tree" default="user" include="copy_node.h" />
@@ -311,7 +327,20 @@
           </targets>
         </son>
       </sons>
-      <attributes />
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
     </node>
     <node name="DimDecs">
       <sons>
