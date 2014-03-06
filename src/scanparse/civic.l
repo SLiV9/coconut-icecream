@@ -80,7 +80,7 @@
 "void"										 { FILTER( VOID); }
 
 
-[A-Za-z_][A-Za-z0-9_]*     { yylval.id = STRcpy(yytext);
+_*[A-Za-z][A-Za-z0-9_]*    { yylval.id = STRcpy(yytext);
                              FILTER( ID);
                            }
 
