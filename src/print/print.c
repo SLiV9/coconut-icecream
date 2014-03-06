@@ -100,28 +100,28 @@ void printLink(node* dec)
 	switch (NODE_TYPE(dec))
 	{
 		case N_vardec:
-			printf("{vardec %s at %d}", VARDEC_NAME(dec), NODE_LINE(dec));
+			printf("{loc %s:%d}", VARDEC_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_globdef:
-			printf("{globdef %s at %d}", GLOBDEF_NAME(dec), NODE_LINE(dec));
+			printf("{glb %s:%d}", GLOBDEF_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_globdec:
-			printf("{globdec %s at %d}", GLOBDEF_NAME(dec), NODE_LINE(dec));
+			printf("{glb %s:%d}", GLOBDEF_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_fundef:
-			printf("{fundef %s at %d}", HEADER_NAME(FUNDEF_HEAD(dec)), NODE_LINE(dec));
+			printf("{fun %s:%d}", HEADER_NAME(FUNDEF_HEAD(dec)), NODE_LINE(dec));
 			break;
 		case N_fundec:
-			printf("{fundec %s at %d}", HEADER_NAME(FUNDEC_HEAD(dec)), NODE_LINE(dec));
+			printf("{fun %s:%d}", HEADER_NAME(FUNDEC_HEAD(dec)), NODE_LINE(dec));
 			break;
 		case N_param:
-			printf("{param %s at %d}", PARAM_NAME(dec), NODE_LINE(dec));
+			printf("{prm %s:%d}", PARAM_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_iter:
-			printf("{iter %s at %d}", ITER_NAME(dec), NODE_LINE(dec));
+			printf("{itr %s:%d}", ITER_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_dim:
-			printf("{dim %s at %d}", DIM_NAME(dec), NODE_LINE(dec));
+			printf("{dim %s:%d}", DIM_NAME(dec), NODE_LINE(dec));
 			break;
 		default:
 			printf("{unknown}");
