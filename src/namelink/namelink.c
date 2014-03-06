@@ -212,9 +212,13 @@ node* NAMELINKfundef(node *arg_node, info *arg_info)
 
 	INFO_STACK( arg_info) = TBmakeNamedecs( HEADER_NAME(FUNDEF_HEAD(arg_node)), \
 			arg_node, INFO_STACK( arg_info));
+			
+	node* old = INFO_STACK( arg_info);
   
   FUNDEF_HEAD( arg_node) = TRAVopt( FUNDEF_HEAD( arg_node), arg_info);
   FUNDEF_BODY( arg_node) = TRAVopt( FUNDEF_BODY( arg_node), arg_info);
+  
+  INFO_STACK( arg_info) = old;
 
   DBUG_RETURN (arg_node);
 }
@@ -230,6 +234,26 @@ node* NAMELINKfundec(node *arg_node, info *arg_info)
 
   DBUG_RETURN (arg_node);
 }
+
+node* NAMELINKfor(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("NAMELINKfor");
+
+	node* old = INFO_STACK( arg_info);
+	
+	FOR_FROM( arg_node) = TRAVdo( FOR_FROM( arg_node), arg_info);
+	FOR_TO( arg_node) = TRAVdo( FOR_TO( arg_node), arg_info);
+	FOR_INCR( arg_node) = TRAVopt( FOR_INCR( arg_node), arg_info);
+	
+	FOR_ITER( arg_node) = TRAVdo( FOR_ITER( arg_node), arg_info);
+	
+	FOR_DO( arg_node) = TRAVopt( FOR_DO( arg_node), arg_info);
+	
+	INFO_STACK( arg_info) = old;
+
+  DBUG_RETURN (arg_node);
+}
+
 
 node *NAMELINKdoLinkNames(node *syntaxtree)
 {

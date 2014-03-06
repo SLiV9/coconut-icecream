@@ -54,6 +54,7 @@
 		  		<node name="Dim" />
 		  		<node name="FunDef" />
 		  		<node name="FunDec" />
+		  		<node name="For" />
       	</travuser>
       </traversal>
       
