@@ -8,7 +8,9 @@
 #include "traverse.h"
 #include "dbug.h"
 #include "memory.h"
+#include "ctinfo.h"
 #include "str.h"
+#include "myglobals.h"
 
 /*
  * INFO structure
@@ -53,6 +55,12 @@ static info *FreeInfo( info *info)
   return info;
 }
 
+static void putUndeclaredError(int line, const char* name)
+{
+	CTIerror("file %s, line %d\nundeclared identifier '%s'", \
+  				myglobal.fn, line, name);
+}
+
 node* NAMELINKvarcall(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("NAMELINKvarcall");
@@ -73,7 +81,7 @@ node* NAMELINKvarcall(node *arg_node, info *arg_info)
   }
   if (nd == NULL)
   {
-  		printf("Unknown call to variable %s.\n", VARCALL_NAME( arg_node));
+  		putUndeclaredError(NODE_LINE( arg_node), VARCALL_NAME( arg_node));
   }
   
   VARCALL_INDX( arg_node) = TRAVopt( VARCALL_INDX( arg_node), arg_info);
@@ -101,7 +109,7 @@ node* NAMELINKvarlet(node *arg_node, info *arg_info)
   }
   if (nd == NULL)
   {
-  		printf("Unknown let to variable %s.\n", VARLET_NAME( arg_node));
+  		putUndeclaredError(NODE_LINE( arg_node), VARLET_NAME( arg_node));
   }
   
   VARLET_INDX( arg_node) = TRAVopt( VARLET_INDX( arg_node), arg_info);
@@ -129,7 +137,7 @@ node* NAMELINKfuncall(node *arg_node, info *arg_info)
   }
   if (nd == NULL)
   {
-  		printf("Unknown call to function %s.\n", FUNCALL_NAME( arg_node));
+  		putUndeclaredError(NODE_LINE( arg_node), FUNCALL_NAME( arg_node));
   }
   
   FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
