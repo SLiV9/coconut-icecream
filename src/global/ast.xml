@@ -45,9 +45,7 @@
       <traversal id="SPLIT" name="Split" default="sons" include="split.h">
       	<travuser>
       		<node name="VarDec" />
-      		<node name="Declars" />
                 <node name="Body" />
-                <node name="GlobalDef" />
       	</travuser>
       </traversal>
 

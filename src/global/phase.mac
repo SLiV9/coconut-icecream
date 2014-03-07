@@ -38,6 +38,13 @@ SUBPHASE( idpre,
 					ALWAYS,
 					ca)
 
+
+SUBPHASE( split,
+					"Splitting",
+					SPLITdoSplit,
+					ALWAYS,
+					ca)
+
 ENDPHASE( ca)
 
 /******************************************************************************/

@@ -1,34 +1,98 @@
 %PDF-1.4
 %“Œ‹ž ReportLab Generated PDF document http://www.reportlab.com
+% 'BasicFonts': class PDFDictionary 
 1 0 obj
-<< /F1 2 0 R /F2 3 0 R >>
+% The standard fonts dictionary
+<< /F1 2 0 R
+ /F2 3 0 R >>
 endobj
+% 'F1': class PDFType1Font 
 2 0 obj
-<< /BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font >>
+% Font Helvetica
+<< /BaseFont /Helvetica
+ /Encoding /WinAnsiEncoding
+ /Name /F1
+ /Subtype /Type1
+ /Type /Font >>
 endobj
+% 'F2': class PDFType1Font 
 3 0 obj
-<< /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font >>
+% Font Helvetica-Bold
+<< /BaseFont /Helvetica-Bold
+ /Encoding /WinAnsiEncoding
+ /Name /F2
+ /Subtype /Type1
+ /Type /Font >>
 endobj
+% 'Page1': class PDFPage 
 4 0 obj
-<< /Contents 9 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 8 0 R /Resources << /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ] >> /Rotate 0 /Trans <<  >> 
-  /Type /Page >>
+% Page dictionary
+<< /Contents 9 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 8 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
 endobj
+% 'Page2': class PDFPage 
 5 0 obj
-<< /Contents 10 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 8 0 R /Resources << /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ] >> /Rotate 0 /Trans <<  >> 
-  /Type /Page >>
+% Page dictionary
+<< /Contents 10 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 8 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
 endobj
+% 'R6': class PDFCatalog 
 6 0 obj
-<< /Outlines 11 0 R /PageLabels 12 0 R /PageMode /UseNone /Pages 8 0 R /Type /Catalog >>
+% Document Root
+<< /Outlines 11 0 R
+ /PageLabels 12 0 R
+ /PageMode /UseNone
+ /Pages 8 0 R
+ /Type /Catalog >>
 endobj
+% 'R7': class PDFInfo 
 7 0 obj
-<< /Author () /CreationDate (D:20140304173153-01'00') /Creator (\(unspecified\)) /Keywords () /Producer (ReportLab PDF Library - www.reportlab.com) /Subject (\(unspecified\)) 
-  /Title () >>
+<< /Author ()
+ /CreationDate (D:20140307194030-01'00')
+ /Creator (\(unspecified\))
+ /Keywords ()
+ /Producer (ReportLab PDF Library - www.reportlab.com)
+ /Subject (\(unspecified\))
+ /Title () >>
 endobj
+% 'R8': class PDFPages 
 8 0 obj
-<< /Count 2 /Kids [ 4 0 R 5 0 R ] /Type /Pages >>
+% page tree
+<< /Count 2
+ /Kids [ 4 0 R
+ 5 0 R ]
+ /Type /Pages >>
 endobj
+% 'R9': class PDFStream 
 9 0 obj
-<< /Length 13033 >>
+% page stream
+<< /Length 12986 >>
 stream
 1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
@@ -66,7 +130,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (leeg) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0) Tj T* ET
 Q
 Q
 q
@@ -87,7 +151,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (CINT\(2\)) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (num\(2\)) Tj T* ET
 Q
 Q
 q
@@ -129,7 +193,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Shift) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (s5) Tj T* ET
 Q
 Q
 q
@@ -170,7 +234,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (CINT\(2\)) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 num\(2\) 5) Tj T* ET
 Q
 Q
 q
@@ -191,7 +255,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (+) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (ADD) Tj T* ET
 Q
 Q
 q
@@ -232,7 +296,8 @@ Q
 q
 1 0 0 1 91.03937 3 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Reduce \(CINT\(2\) -) Tj (> Getal\)) Tj T* ET
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (r9) Tj T* ET
 Q
 Q
 q
@@ -273,7 +338,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Getal) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 Factor 3) Tj T* ET
 Q
 Q
 q
@@ -294,7 +359,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (+) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (ADD) Tj T* ET
 Q
 Q
 q
@@ -335,7 +400,8 @@ Q
 q
 1 0 0 1 91.03937 3 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Reduce \(Getal -) Tj (> Factor\)) Tj T* ET
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (r7) Tj T* ET
 Q
 Q
 q
@@ -376,7 +442,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Factor) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 Term 2) Tj T* ET
 Q
 Q
 q
@@ -397,7 +463,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (+) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (ADD) Tj T* ET
 Q
 Q
 q
@@ -438,7 +504,8 @@ Q
 q
 1 0 0 1 91.03937 3 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Reduce \(Factor -) Tj (> Term\)) Tj T* ET
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (r4) Tj T* ET
 Q
 Q
 q
@@ -479,7 +546,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 Expr 1) Tj T* ET
 Q
 Q
 q
@@ -500,7 +567,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (+) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (ADD) Tj T* ET
 Q
 Q
 q
@@ -542,7 +609,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Shift) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (s7) Tj T* ET
 Q
 Q
 q
@@ -583,7 +650,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term +) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 Expr 1 ADD 7) Tj T* ET
 Q
 Q
 q
@@ -624,7 +691,8 @@ Q
 q
 1 0 0 1 91.03937 3 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 1 0 0 rg (*) Tj 0 0 0 rg (3) Tj T* ET
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (*3) Tj T* ET
 Q
 Q
 q
@@ -644,7 +712,8 @@ Q
 q
 1 0 0 1 91.03937 3 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Shift) Tj T* ET
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (s6) Tj T* ET
 Q
 Q
 q
@@ -685,7 +754,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term + ID\(X\)) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 Expr 1 ADD 7 ID\(x\) 6) Tj T* ET
 Q
 Q
 q
@@ -706,7 +775,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (*) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (MUL) Tj T* ET
 Q
 Q
 q
@@ -747,7 +816,8 @@ Q
 q
 1 0 0 1 91.03937 3 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Reduce \(ID\(x\) -) Tj (> Getal\)) Tj T* ET
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (r10) Tj T* ET
 Q
 Q
 q
@@ -788,7 +858,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term + Getal) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 Expr 1 ADD 7 Factor 3) Tj T* ET
 Q
 Q
 q
@@ -809,7 +879,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (*) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (MUL) Tj T* ET
 Q
 Q
 q
@@ -850,7 +920,8 @@ Q
 q
 1 0 0 1 91.03937 3 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Reduce \(Getal -) Tj (> Factor\)) Tj T* ET
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (r7) Tj T* ET
 Q
 Q
 q
@@ -891,7 +962,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term + Factor) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 Expr 1 ADD 7 Term 18) Tj T* ET
 Q
 Q
 q
@@ -912,7 +983,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (*) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (MUL) Tj T* ET
 Q
 Q
 q
@@ -954,7 +1025,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Shift) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (s9) Tj T* ET
 Q
 Q
 q
@@ -995,7 +1066,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term + Factor *) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 Expr 1 ADD 7 Term 18 mul 9) Tj T* ET
 Q
 Q
 q
@@ -1007,8 +1078,10 @@ Q
  
 endstream
 endobj
+% 'R10': class PDFStream 
 10 0 obj
-<< /Length 10591 >>
+% page stream
+<< /Length 5698 >>
 stream
 1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
@@ -1031,7 +1104,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (CINT\(3\)) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (3) Tj T* ET
 Q
 Q
 q
@@ -1066,7 +1139,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Shift) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (s5) Tj T* ET
 Q
 Q
 q
@@ -1107,7 +1180,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term + Factor * CINT\(3\)) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 Expr 1 ADD 7 Term 18 mul 9 num\(6\) 5) Tj T* ET
 Q
 Q
 q
@@ -1155,7 +1228,8 @@ Q
 q
 1 0 0 1 91.03937 3 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Reduce \(CINT\(3\)-) Tj (>) Tj (Getal\)) Tj T* ET
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (r9) Tj T* ET
 Q
 Q
 q
@@ -1196,7 +1270,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term + Factor * Getal) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 Expr 1 ADD 7 Term 18 mul 9 Factor 3) Tj T* ET
 Q
 Q
 q
@@ -1244,7 +1318,8 @@ Q
 q
 1 0 0 1 91.03937 3 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Reduce \(Getal-) Tj (>) Tj (Factor\)) Tj T* ET
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (r5) Tj T* ET
 Q
 Q
 q
@@ -1285,7 +1360,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term + Factor * Factor) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 Expr 1 ADD 7 Term 18) Tj T* ET
 Q
 Q
 q
@@ -1333,7 +1408,8 @@ Q
 q
 1 0 0 1 91.03937 3 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Reduce \(Factor*Factor-) Tj (>) Tj (Factor\)) Tj T* ET
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (r3) Tj T* ET
 Q
 Q
 q
@@ -1374,7 +1450,7 @@ q
 1 0 0 1 91.03937 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term + Factor) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (NILL 0 Expr 1) Tj T* ET
 Q
 Q
 q
@@ -1422,364 +1498,8 @@ Q
 q
 1 0 0 1 91.03937 3 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Reduce \(Factor-) Tj (>) Tj (Term\)) Tj T* ET
-Q
-Q
-q
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 62.69291 426.0236 cm
-Q
-q
-1 0 0 1 62.69291 360.0236 cm
 0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 51 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL .1 0 Td (15.) Tj T* -0.1 0 Td ET
-Q
-Q
-q
-1 0 0 1 23 57 cm
-Q
-q
-1 0 0 1 23 42 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 44.13937 0 Td (stack:) Tj T* -44.13937 0 Td ET
-Q
-Q
-q
-1 0 0 1 91.03937 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term + Term) Tj T* ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 23 27 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 24.69937 0 Td (Volgende:) Tj T* -24.69937 0 Td ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 23 12 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 48.03937 0 Td (Rest:) Tj T* -48.03937 0 Td ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 23 -3 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 45.25937 0 Td (Actie:) Tj T* -45.25937 0 Td ET
-Q
-Q
-q
-1 0 0 1 91.03937 3 cm
-q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Reduce \(Factor-) Tj (>) Tj (Term\)) Tj T* ET
-Q
-Q
-q
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 62.69291 354.0236 cm
-Q
-q
-1 0 0 1 62.69291 288.0236 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 51 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL .1 0 Td (16.) Tj T* -0.1 0 Td ET
-Q
-Q
-q
-1 0 0 1 23 57 cm
-Q
-q
-1 0 0 1 23 42 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 44.13937 0 Td (stack:) Tj T* -44.13937 0 Td ET
-Q
-Q
-q
-1 0 0 1 91.03937 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term + Term) Tj T* ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 23 27 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 24.69937 0 Td (Volgende:) Tj T* -24.69937 0 Td ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 23 12 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 48.03937 0 Td (Rest:) Tj T* -48.03937 0 Td ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 23 -3 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 45.25937 0 Td (Actie:) Tj T* -45.25937 0 Td ET
-Q
-Q
-q
-1 0 0 1 91.03937 3 cm
-q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Reduce \(Term+Term-) Tj (>) Tj (Term\)) Tj T* ET
-Q
-Q
-q
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 62.69291 282.0236 cm
-Q
-q
-1 0 0 1 62.69291 216.0236 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 51 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL .1 0 Td (17.) Tj T* -0.1 0 Td ET
-Q
-Q
-q
-1 0 0 1 23 57 cm
-Q
-q
-1 0 0 1 23 42 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 44.13937 0 Td (stack:) Tj T* -44.13937 0 Td ET
-Q
-Q
-q
-1 0 0 1 91.03937 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Term) Tj T* ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 23 27 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 24.69937 0 Td (Volgende:) Tj T* -24.69937 0 Td ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 23 12 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 48.03937 0 Td (Rest:) Tj T* -48.03937 0 Td ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 23 -3 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 45.25937 0 Td (Actie:) Tj T* -45.25937 0 Td ET
-Q
-Q
-q
-1 0 0 1 91.03937 3 cm
-q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Reduce \(Term-) Tj (>) Tj (Expression\)) Tj T* ET
-Q
-Q
-q
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 62.69291 210.0236 cm
-Q
-q
-1 0 0 1 62.69291 144.0236 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 51 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL .1 0 Td (18.) Tj T* -0.1 0 Td ET
-Q
-Q
-q
-1 0 0 1 23 57 cm
-Q
-q
-1 0 0 1 23 42 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 44.13937 0 Td (stack:) Tj T* -44.13937 0 Td ET
-Q
-Q
-q
-1 0 0 1 91.03937 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Expression) Tj T* ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 23 27 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 24.69937 0 Td (Volgende:) Tj T* -24.69937 0 Td ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 23 12 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 48.03937 0 Td (Rest:) Tj T* -48.03937 0 Td ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 23 -3 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL 45.25937 0 Td (Actie:) Tj T* -45.25937 0 Td ET
-Q
-Q
-q
-1 0 0 1 91.03937 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Done) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Accept) Tj T* ET
 Q
 Q
 q
@@ -1789,45 +1509,61 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 144.0236 cm
+1 0 0 1 62.69291 432.0236 cm
 Q
  
 endstream
 endobj
+% 'R11': class PDFOutlines 
 11 0 obj
-<< /Count 0 /Type /Outlines >>
+<< /Count 0
+ /Type /Outlines >>
 endobj
+% 'R12': class PDFPageLabels 
 12 0 obj
-<< /Nums [ 0 13 0 R 1 14 0 R ] >>
+% Document Root
+<< /Nums [ 0
+ 13 0 R
+ 1
+ 14 0 R ] >>
 endobj
+% 'R13': class PDFPageLabel 
 13 0 obj
-<< /S /D /St 1 >>
+% None
+<< /S /D
+ /St 1 >>
 endobj
+% 'R14': class PDFPageLabel 
 14 0 obj
-<< /S /D /St 2 >>
+% None
+<< /S /D
+ /St 2 >>
 endobj
 xref
 0 15
 0000000000 65535 f
-0000000075 00000 n
-0000000119 00000 n
-0000000229 00000 n
-0000000344 00000 n
-0000000551 00000 n
-0000000759 00000 n
-0000000866 00000 n
-0000001076 00000 n
-0000001144 00000 n
-0000014234 00000 n
-0000024883 00000 n
-0000024933 00000 n
-0000024986 00000 n
-0000025023 00000 n
+0000000113 00000 n
+0000000221 00000 n
+0000000386 00000 n
+0000000559 00000 n
+0000000836 00000 n
+0000001114 00000 n
+0000001270 00000 n
+0000001513 00000 n
+0000001626 00000 n
+0000014711 00000 n
+0000020510 00000 n
+0000020593 00000 n
+0000020699 00000 n
+0000020776 00000 n
 trailer
 << /ID 
- % ReportLab generated PDF document -- digest (http://www.reportlab.com)
- [(\020\264\277}\245i\312\254\204B*%$\363\353\371) (\020\264\277}\245i\312\254\204B*%$\363\353\371)]
- /Info 7 0 R /Root 6 0 R /Size 15 >>
+ % ReportLab generated PDF document -- digest (http://www.reportlab.com) 
+ [( f\343\036\222;\303\017\270\322\215\303\325T\031\313) ( f\343\036\222;\303\017\270\322\215\303\325T\031\313)] 
+
+ /Info 7 0 R
+ /Root 6 0 R
+ /Size 15 >>
 startxref
-25060
+20823
 %%EOF
