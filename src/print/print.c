@@ -561,7 +561,14 @@ PRTvardec (node * arg_node, info * arg_info)
   	VARDEC_EXPR( arg_node) = TRAVdo( VARDEC_EXPR( arg_node), arg_info);
   }
   
-  printf(";\n");
+  printf(";");
+  
+  if (VARDEC_ESCAPING( arg_node))
+  {
+  	printf(" !esc");
+  }
+  
+  printf("\n");
 
   DBUG_RETURN (arg_node);
 }
@@ -629,6 +636,11 @@ PRTparam (node * arg_node, info * arg_info)
   }
 
   printf( " %s", PARAM_NAME( arg_node));
+  
+  if (PARAM_ESCAPING( arg_node))
+  {
+  	printf(" !esc");
+  }
 
   DBUG_RETURN (arg_node);
 }

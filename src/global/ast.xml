@@ -349,6 +349,18 @@
             </targets>
           </type>
         </attribute>
+        <attribute name="Depth">
+        	<type name="Int">
+        		<targets>
+        			<target mandatory="yes">
+        				<any />
+        				<phases>
+        					<all />
+        				</phases>
+        			</target>
+        		</targets>
+        	</type>
+        </attribute>
       </attributes>
     </node>
     <node name="DimDecs">
@@ -655,6 +667,19 @@
         		</targets>
         	</type>
         </attribute>
+        <attribute name="Escaping">
+        	<type name="Bool">
+        		<targets>
+        			<target mandatory="no">
+        				<any />
+        				<phases>
+        					<phase name="ca" />
+        					<phase name="cg" />
+        				</phases>
+        			</target>
+        		</targets>
+        	</type>
+        </attribute>
       </attributes>
     </node>
     <node name="VarDec">
@@ -702,6 +727,19 @@
 		      				<all />
 		      			</phases>
 		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
+        <attribute name="Escaping">
+        	<type name="Bool">
+        		<targets>
+        			<target mandatory="no">
+        				<any />
+        				<phases>
+        					<phase name="ca" />
+        					<phase name="cg" />
+        				</phases>
+        			</target>
         		</targets>
         	</type>
         </attribute>

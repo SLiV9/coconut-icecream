@@ -34,9 +34,19 @@ export int main()
 		return r;
 	}
 	
+	int addI(int x)
+	{
+		int paramPlusI()
+		{
+			return x + i;
+		}
+		
+		return paramPlusI();
+	}
+	
 	for (int i = 0, 10, i)
 	{
-		e = isTrue(e && isEven(x + i)); 
+		e = isTrue(e && isEven(addI(x) + i)); 
 	}
 	
 	x = i;
