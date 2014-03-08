@@ -32,24 +32,8 @@ static info *MakeInfo()
   return result;
 }
 
-static node* FreeNameDecs( node *nd)
-{
-	if (nd == NULL)
-	{
-		return NULL;
-	}
-	
-	NAMEDECS_NEXT( nd) = FreeNameDecs( NAMEDECS_NEXT( nd));
-	
-	nd = MEMfree( nd);
-	
-	return nd;
-}
-
 static info *FreeInfo( info *info)
 {
-  FreeNameDecs( INFO_STACK( info));
-  
   info = MEMfree( info);
 
   return info;
@@ -61,28 +45,30 @@ static void putUndeclaredError(int line, const char* name)
   				myglobal.fn, line, name);
 }
 
+static node* findNameDec(node *arg_node, info *arg_info, const char* name)
+{
+	node* nd = INFO_STACK( arg_info);
+	while (nd != NULL)
+	{
+		if (STReq( NAMEDECS_NAME( nd), name))
+		{
+			return NAMEDECS_DEC( nd);
+		}
+		
+		nd = NAMEDECS_NEXT( nd);
+	}
+	
+	putUndeclaredError(NODE_LINE( arg_node), name);
+	
+	return NULL;
+}
+
 node* NAMELINKvarcall(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("NAMELINKvarcall");
   
-  node* nd = INFO_STACK( arg_info);
-  while (nd != NULL)
-  {
-  	if (STReq( NAMEDECS_NAME( nd), VARCALL_NAME( arg_node)))
-  	{
-  		VARCALL_DEC( arg_node) = NAMEDECS_DEC( nd);
-  		VARCALL_NAME( arg_node) = NULL;
-  		break;
-  	}
-  	else
-  	{
-  		nd = NAMEDECS_NEXT( nd);
-  	}
-  }
-  if (nd == NULL)
-  {
-  		putUndeclaredError(NODE_LINE( arg_node), VARCALL_NAME( arg_node));
-  }
+  VARCALL_DEC( arg_node) = findNameDec( arg_node, arg_info, \
+  		VARCALL_NAME( arg_node));
   
   VARCALL_INDX( arg_node) = TRAVopt( VARCALL_INDX( arg_node), arg_info);
 
@@ -93,24 +79,8 @@ node* NAMELINKvarlet(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("NAMELINKvarlet");
   
-  node* nd = INFO_STACK( arg_info);
-  while (nd != NULL)
-  {
-  	if (STReq( NAMEDECS_NAME( nd), VARLET_NAME( arg_node)))
-  	{
-  		VARLET_DEC( arg_node) = NAMEDECS_DEC( nd);
-  		VARLET_NAME( arg_node) = NULL;
-  		break;
-  	}
-  	else
-  	{
-  		nd = NAMEDECS_NEXT( nd);
-  	}
-  }
-  if (nd == NULL)
-  {
-  		putUndeclaredError(NODE_LINE( arg_node), VARLET_NAME( arg_node));
-  }
+  VARLET_DEC( arg_node) = findNameDec( arg_node, arg_info, \
+  		VARLET_NAME( arg_node));
   
   VARLET_INDX( arg_node) = TRAVopt( VARLET_INDX( arg_node), arg_info);
 
@@ -121,24 +91,8 @@ node* NAMELINKfuncall(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("NAMELINKfuncall");
   
-  node* nd = INFO_STACK( arg_info);
-  while (nd != NULL)
-  {
-  	if (STReq( NAMEDECS_NAME( nd), FUNCALL_NAME( arg_node)))
-  	{
-  		FUNCALL_DEC( arg_node) = NAMEDECS_DEC( nd);
-  		FUNCALL_NAME( arg_node) = NULL;
-  		break;
-  	}
-  	else
-  	{
-  		nd = NAMEDECS_NEXT( nd);
-  	}
-  }
-  if (nd == NULL)
-  {
-  		putUndeclaredError(NODE_LINE( arg_node), FUNCALL_NAME( arg_node));
-  }
+  FUNCALL_DEC( arg_node) = findNameDec( arg_node, arg_info, \
+  		FUNCALL_NAME( arg_node));
   
   FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
 
