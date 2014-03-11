@@ -1,13 +1,16 @@
-
-
 export int main()
 {
-	int x = 0;
-	bool[n, m] D;
+	int x = 2;
+	bool b = 2 + false;
 	
-	a[3] = list[3];
-	D = [[1, 3], [3, 7]];
-	e = D[1, 1];
+	void foo()
+	{
+		//hoi
+	}
+	
+	foo();
+	b = !2 + foo();
+	x = (float) (3 * x + !b);
 	
 	return 0;
 }

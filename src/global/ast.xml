@@ -65,6 +65,21 @@
 		  		<node name="FunDec" />
       	</travuser>
       </traversal>
+    
+      <traversal id="TPINF" name="Type inference" default="sons" include="tpinf.h">
+      	<travuser>
+      	<node name="MonOp" />
+        <node name="BinOp" />
+    		<node name="VarLet" />
+        <node name="VarCall" />
+        <node name="FunCall" />
+      	</travuser>
+      </traversal>
+    
+      <traversal id="TPMAT" name="Type matching" default="sons" include="tpmat.h">
+      	<travuser>
+      	</travuser>
+      </traversal>
       
 
       <traversal id="SPLIT" name="Split" default="sons" include="split.h">
@@ -469,6 +484,19 @@
             </targets>
     			</type>
     		</attribute>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<phase name="tc" />
+		      				<phase name="cg" />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
       </attributes>
     </node>
     <node name="FunDec">
@@ -484,7 +512,21 @@
 		    	</targets>
       	</son>
       </sons>
-      <attributes />
+      <attributes>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<phase name="tc" />
+		      				<phase name="cg" />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
+      </attributes>
     </node>
     <node name="Header">
       <sons>
@@ -954,6 +996,19 @@
 		  			</targets>
 		  		</type>
     		</attribute>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<phase name="tc" />
+		      				<phase name="cg" />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
     	</attributes>
     </node>
     <node name="BinOp">
@@ -991,6 +1046,19 @@
               </target>
             </targets>
           </type>
+        </attribute>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<phase name="tc" />
+		      				<phase name="cg" />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
         </attribute>
       </attributes>
     </node>
@@ -1032,6 +1100,19 @@
             </targets>
           </type>
         </attribute>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<phase name="tc" />
+		      				<phase name="cg" />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
       </attributes>
     </node>
     <node name="VarCall">
@@ -1072,6 +1153,19 @@
             </targets>
           </type>
         </attribute>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<phase name="tc" />
+		      				<phase name="cg" />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
       </attributes>
     </node>
     <node name="FunCall">
@@ -1111,6 +1205,19 @@
               </target>
             </targets>
           </type>
+        </attribute>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<phase name="tc" />
+		      				<phase name="cg" />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
         </attribute>
       </attributes>
     </node>

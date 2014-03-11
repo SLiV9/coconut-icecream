@@ -21,6 +21,14 @@
 #include "dbug.h"
 #include "memory.h"
 #include "globals.h"
+#include "mytypes.h"
+
+/* mytype_name's. */
+const char* vtype_name[5] =   { "void", "int", "float", "bool", "unknown" };
+const char* monop_name[3] =   { "!", "-", "unknown" };
+const char* binop_name[14] =  { "+", "-", "*", "/", "%",
+               									"<", "<=", ">", ">=", "==", "!=",
+               									"&&", "||", "unknown" };
 
 
 /*
@@ -65,21 +73,15 @@ void printIndent(info *info)
 
 void printType(vtype t)
 {
-	char *tmp;
+	const char *tmp;
 
   switch (t) {
   	case VT_void:
-  		tmp = "void";
-  		break;
     case VT_int:
-    	tmp = "int";
-    	break;
     case VT_float:
-    	tmp = "float";
-    	break;
     case VT_bool:
-    	tmp = "bool";
-    	break;
+   		tmp = vtype_name[t];
+   		break;
     case VT_unknown:
       DBUG_ASSERT( 0, "unknown vtype detected!");
       break;
@@ -307,16 +309,16 @@ PRTassign (node * arg_node, info * arg_info)
 node *
 PRTmonop (node * arg_node, info * arg_info)
 {
-  char *tmp;
+  const char *tmp;
 
   DBUG_ENTER ("PRTmonop");
 
-  switch (MONOP_OP( arg_node)) {
+	monop t = MONOP_OP( arg_node);
+
+  switch (t) {
     case MO_neg:
-      tmp = "-";
-      break;
     case MO_not:
-      tmp = "!";
+      tmp = monop_name[t];
       break;
     case MO_unknown:
       DBUG_ASSERT( 0, "unknown monop detected!");
@@ -332,53 +334,31 @@ PRTmonop (node * arg_node, info * arg_info)
 node *
 PRTbinop (node * arg_node, info * arg_info)
 {
-  char *tmp;
+  const char *tmp;
 
   DBUG_ENTER ("PRTbinop");
 
   printf( "(");
 
   BINOP_LEFT( arg_node) = TRAVdo( BINOP_LEFT( arg_node), arg_info);
+  
+  binop t = BINOP_OP( arg_node);
 
-  switch (BINOP_OP( arg_node)) {
+  switch (t) {
     case BO_add:
-      tmp = "+";
-      break;
     case BO_sub:
-      tmp = "-";
-      break;
     case BO_mul:
-      tmp = "*";
-      break;
     case BO_div:
-      tmp = "/";
-      break;
     case BO_mod:
-      tmp = "%";
-      break;
     case BO_lt:
-      tmp = "<";
-      break;
     case BO_le:
-      tmp = "<=";
-      break;
     case BO_gt:
-      tmp = ">";
-      break;
     case BO_ge:
-      tmp = ">=";
-      break;
     case BO_eq:
-      tmp = "==";
-      break;
     case BO_ne:
-      tmp = "!=";
-      break;
     case BO_or:
-      tmp = "||";
-      break;
     case BO_and:
-      tmp = "&&";
+      tmp = binop_name[t];
       break;
     case BO_unknown:
       DBUG_ASSERT( 0, "unknown binop detected!");

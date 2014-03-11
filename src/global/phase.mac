@@ -55,6 +55,26 @@ ENDPHASE( ca)
 
 /******************************************************************************/
 
+PHASE( tc,
+			 "Type Checking",
+			 ALWAYS)
+
+SUBPHASE( tpinf,
+					"Type Inference",
+					TPINFdoInference,
+					ALWAYS,
+					tc)
+
+SUBPHASE( tpmat,
+					"Type Matching",
+					TPMATdoMatching,
+					ALWAYS,
+					tc)
+
+ENDPHASE( tc)
+
+/******************************************************************************/
+
 
 PHASE( cg,
        "Generating Code",
