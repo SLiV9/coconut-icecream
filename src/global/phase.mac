@@ -58,6 +58,12 @@ SUBPHASE( tpinf,
 					ALWAYS,
 					tc)
 
+SUBPHASE( tpmat,
+					"Type Matching",
+					TPMATdoMatching,
+					ALWAYS,
+					tc)
+
 ENDPHASE( tc)
 
 /******************************************************************************/
