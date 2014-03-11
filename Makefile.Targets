@@ -86,5 +86,5 @@ as4ac				= as4ac.o
 split				= split.o
 
 idpre				= idpre.o
-namelink 		= namelink.o funhead.o
+namelink 		= namelink.o funhead.o namestackinfo.o
 
