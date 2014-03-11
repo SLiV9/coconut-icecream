@@ -11,11 +11,6 @@ struct INFO{
   node* last;
 };
 
-node* SPLITdeclars(node *arg_node, info *arg_info){
- DBUG_ENTER ("SPLITdeclars"); 
- 
- DBUG_RETURN (arg_node);
-}
 node* SPLITglobdef(node *arg_node, info *arg_info){
  DBUG_ENTER ("SPLITglobaldef");
   if (GLOBDEF_EXPR(arg_node) != NULL){
@@ -39,7 +34,7 @@ node* SPLITbody(node *arg_node, info *arg_info){
  this.last = NULL;
  BODY_VARDECS(arg_node) = TRAVopt(BODY_VARDECS(arg_node),&this); 
  INSTRS_NEXT(this.last) = BODY_INSTRS(arg_node);
- BODY_INSTRS(arg_node) = this.last;
+ BODY_INSTRS(arg_node) = this.head;
 
 
  BODY_FUNDEFS(arg_node) = TRAVopt(BODY_FUNDEFS(arg_node),arg_info);
@@ -56,8 +51,10 @@ node* SPLITvardec(node *arg_node, info *arg_info){
     VARDEC_EXPR(arg_node) = NULL;
     node * instrs = TBmakeInstrs(assign,NULL);
     if(arg_info->head == NULL){
+
       arg_info->head = arg_info->last = instrs; 
     }else{
+
       arg_info->last = INSTRS_NEXT(arg_info->last) = instrs;
     }
   }
