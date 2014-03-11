@@ -1,9 +1,12 @@
+
+int myglob = 7;
+
 export int main()
 {
-	int a;
+	int a = scanInt();
 	int r;
 	
-	a = scanInt();
+	
 	
 	if (a < 1)
 		a = 1;
