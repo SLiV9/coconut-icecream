@@ -8,6 +8,13 @@ export int main()
 {
 	int x = 0;
 	
+	int x = 1;
+	
+	int x(int x)
+	{
+		return x;
+	}
+	
 	while (true)
 	{
 		printInt(x);
@@ -15,8 +22,8 @@ export int main()
 	}
 	
 	// else pairt met meest recente if
-	if (a)
-		if (b)
+	if (x > 0)
+		if (x > 1)
 			x = 2 * x;
 		else
 			x = 3;
