@@ -1,9 +1,13 @@
+
+int myglob = 7;
+int myglob3 = 9;
+
 export int main()
 {
-	int a;
+	int a = myglob;
 	int r;
+        int c = a+r;	
 	
-	a = scanInt();
 	
 	if (a < 1)
 		a = 1;
@@ -16,7 +20,6 @@ export int main()
 		c = 9;
 	}
 
-	printNewlines(2);
 	
 	return 0;
 }
