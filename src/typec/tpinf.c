@@ -16,6 +16,8 @@ vtype getType(node* nd)
 		return VT_unknown;
 	}
 	
+	vtype r;
+	
 	switch (NODE_TYPE(nd))
 	{
 		case N_int:
@@ -51,9 +53,12 @@ vtype getType(node* nd)
 		case N_varcall:
 			return VARCALL_TYPE(nd);
 		case N_funcall:
-			return FUNCALL_TYPE(nd);
+			r = FUNCALL_TYPE(nd);
+			if (r == VT_void) { /* TODO */ };
+			return r;
 		default:
-			return VT_unknown;
+			DBUG_ASSERT( 0, "unknown value type detected!");
+			return VT_void;
 	}
 }
 
@@ -63,7 +68,7 @@ node* TPINFvarlet(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPINFvarlet");
   
-  VARLET_INDX( arg_node) = TRAVdo( VARLET_INDX( arg_node), arg_info);
+  VARLET_INDX( arg_node) = TRAVopt( VARLET_INDX( arg_node), arg_info);
   
   VARLET_TYPE( arg_node) = getType( VARLET_DEC( arg_node));
 
@@ -74,7 +79,7 @@ node* TPINFvarcall(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPINFvarcall");
   
-  VARCALL_INDX( arg_node) = TRAVdo( VARCALL_INDX( arg_node), arg_info);
+  VARCALL_INDX( arg_node) = TRAVopt( VARCALL_INDX( arg_node), arg_info);
   
   VARCALL_TYPE( arg_node) = getType( VARCALL_DEC( arg_node));
 
@@ -85,7 +90,7 @@ node* TPINFfuncall(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPINFfuncall");
   
-  FUNCALL_ARGS( arg_node) = TRAVdo( FUNCALL_ARGS( arg_node), arg_info);
+  FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
   
   FUNCALL_TYPE( arg_node) = getType( FUNCALL_DEC( arg_node));
 
@@ -95,6 +100,10 @@ node* TPINFfuncall(node *arg_node, info *arg_info)
 node* TPINFmonop(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPINFmonop");
+  
+  MONOP_EXPR( arg_node) = TRAVdo( MONOP_EXPR( arg_node), arg_info);
+  
+  MONOP_TYPE( arg_node) = getType( MONOP_EXPR( arg_node));
 
   DBUG_RETURN (arg_node);
 }
@@ -102,6 +111,21 @@ node* TPINFmonop(node *arg_node, info *arg_info)
 node* TPINFbinop(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPINFbinop");
+  
+  BINOP_LEFT( arg_node) = TRAVdo( BINOP_LEFT( arg_node), arg_info);
+  BINOP_RIGHT( arg_node) = TRAVdo( BINOP_RIGHT( arg_node), arg_info);
+  
+  vtype t1 = getType( BINOP_LEFT( arg_node));
+  vtype t2 = getType( BINOP_RIGHT( arg_node));
+  
+  if (t1 == t2)
+	{
+		BINOP_TYPE( arg_node) = t1;
+  }
+  else
+  {
+		BINOP_TYPE( arg_node) = VT_unknown;
+  }
 
   DBUG_RETURN (arg_node);
 }
