@@ -3,6 +3,13 @@ export int main()
 	int x = 2;
 	bool b = 2 + false;
 	
+	void foo()
+	{
+		//hoi
+	}
+	
+	foo();
+	b = !2 + foo();
 	x = (float) (3 * x + !b);
 	
 	return 0;

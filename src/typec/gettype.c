@@ -4,6 +4,8 @@
 #include "dbug.h"
 #include "memory.h"
 #include "str.h"
+#include "ctinfo.h"
+#include "myglobals.h"
 
 #include "gettype.h"
 
@@ -52,11 +54,16 @@ vtype getType(node* nd)
 			return VARCALL_TYPE(nd);
 		case N_funcall:
 			r = FUNCALL_TYPE(nd);
-			if (r == VT_void) { /* TODO */ };
+			if (r == VT_void) {
+				CTIerror("file %s, line %d\n"
+						"void returning function '%s' used in expression", \
+						myglobal.fn, NODE_LINE(nd), FUNCALL_NAME(nd));
+				return VT_unknown;
+			};
 			return r;
 		default:
-			DBUG_ASSERT( 0, "unknown value type detected!");
-			return VT_void;
+			DBUG_ASSERT( 0, "invalid gettype detected!");
+			return VT_unknown;
 	}
 }
 

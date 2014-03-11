@@ -8,8 +8,11 @@
 #include "dbug.h"
 #include "memory.h"
 #include "str.h"
+#include "ctinfo.h"
+#include "myglobals.h"
 
 #include "gettype.h"
+#include "print.h"
 
 
 node* TPINFvarlet(node *arg_node, info *arg_info)
@@ -51,7 +54,49 @@ node* TPINFmonop(node *arg_node, info *arg_info)
   
   MONOP_EXPR( arg_node) = TRAVdo( MONOP_EXPR( arg_node), arg_info);
   
-  MONOP_TYPE( arg_node) = getType( MONOP_EXPR( arg_node));
+  vtype t = getType( MONOP_EXPR( arg_node));
+  
+  switch (MONOP_OP( arg_node))
+  {
+  	case MO_neg:
+  		switch (t)
+  		{
+  			case VT_int:
+  			case VT_float:
+  			case VT_bool:
+  				MONOP_TYPE( arg_node) = t;
+  				break;
+  			case VT_unknown:
+  				MONOP_TYPE( arg_node) = VT_unknown;
+  				break;
+  			default:
+  				DBUG_ASSERT( 0, "invalid monop expr type detected!");
+  		}
+  		break;
+  	case MO_not:
+  		switch (t)
+  		{
+  			case VT_bool:
+  				MONOP_TYPE( arg_node) = t;
+  				break;
+  			case VT_int:
+  			case VT_float:
+  				CTIerror("file %s, line %d\n"
+							"operator %s called on expression of type %s", \
+							myglobal.fn, NODE_LINE( arg_node), \
+							monop_name[MONOP_OP( arg_node)], vtype_name[t]);
+  				MONOP_TYPE( arg_node) = VT_unknown;
+					break;
+  			case VT_unknown:
+  				MONOP_TYPE( arg_node) = VT_unknown;
+  				break;
+  			default:
+  				DBUG_ASSERT( 0, "invalid monop expr type detected!");
+  		}
+  		break;
+  	default:
+  		DBUG_ASSERT( 0, "invalid monop op detected!");
+  }
 
   DBUG_RETURN (arg_node);
 }

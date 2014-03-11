@@ -9,6 +9,8 @@
 #include "dbug.h"
 #include "memory.h"
 #include "str.h"
+#include "ctinfo.h"
+#include "myglobals.h"
 
 #include "gettype.h"
 
