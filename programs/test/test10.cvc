@@ -1,3 +1,6 @@
+
+int myglob = 7;
+
 export int main()
 {
 	int a = scanInt();

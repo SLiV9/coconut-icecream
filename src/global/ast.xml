@@ -46,6 +46,7 @@
       	<travuser>
       		<node name="VarDec" />
                 <node name="Body" />
+		  		<node name="GlobDef" />
       	</travuser>
       </traversal>
 

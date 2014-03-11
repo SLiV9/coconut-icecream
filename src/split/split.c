@@ -12,22 +12,35 @@ struct INFO{
 };
 
 node* SPLITdeclars(node *arg_node, info *arg_info){
- DBUG_ENTER ("SPLITdeclars");
+ DBUG_ENTER ("SPLITdeclars"); 
+ 
  DBUG_RETURN (arg_node);
 }
-node* SPLITglobaldef(node *arg_node, info *arg_info){
+node* SPLITglobdef(node *arg_node, info *arg_info){
  DBUG_ENTER ("SPLITglobaldef");
+  if (GLOBDEF_EXPR(arg_node) != NULL){
+    node * assign = TBmakeAssign(TBmakeVarlet(GLOBDEF_NAME(arg_node),NULL),GLOBDEF_EXPR(arg_node));
+    GLOBDEF_EXPR(arg_node) = NULL;
+    node * instrs = TBmakeInstrs(assign,NULL);
+    if(arg_info->head == NULL){
+      arg_info->head = arg_info->last = instrs; 
+    }else{
+      arg_info->last = INSTRS_NEXT(arg_info->last) = instrs;
+    }
+  }
+  // dont have to trav down nothitg to change there
  DBUG_RETURN (arg_node);
 }
 
 node* SPLITbody(node *arg_node, info *arg_info){
  DBUG_ENTER ("SPLITbody");
- printf("hoi\n");
- arg_info->head = arg_info->last = NULL;
- BODY_VARDECS(arg_node) = TRAVopt(BODY_VARDECS(arg_node),arg_info); 
- INSTRS_NEXT(arg_info->last) = BODY_INSTRS(arg_node);
- BODY_INSTRS(arg_node) = arg_info->last;
- arg_info->head = arg_info->last = NULL;
+ info this;
+ this.head = NULL;
+ this.last = NULL;
+ BODY_VARDECS(arg_node) = TRAVopt(BODY_VARDECS(arg_node),&this); 
+ INSTRS_NEXT(this.last) = BODY_INSTRS(arg_node);
+ BODY_INSTRS(arg_node) = this.last;
+
 
  BODY_FUNDEFS(arg_node) = TRAVopt(BODY_FUNDEFS(arg_node),arg_info);
  BODY_INSTRS(arg_node) = TRAVopt(BODY_INSTRS(arg_node),arg_info);
@@ -38,7 +51,6 @@ node* SPLITbody(node *arg_node, info *arg_info){
 
 node* SPLITvardec(node *arg_node, info *arg_info){
   DBUG_ENTER ("Splitvardec");
-  printf("deccing\n");
   if (VARDEC_EXPR(arg_node) != NULL){
     node * assign = TBmakeAssign(TBmakeVarlet(VARDEC_NAME(arg_node),NULL),VARDEC_EXPR(arg_node));
     VARDEC_EXPR(arg_node) = NULL;
@@ -58,34 +70,22 @@ node
 *SPLITdoSplit( node *syntaxtree)
 {
   info info;
+  info.head = info.last = NULL;
 
   DBUG_ENTER("SPLITdoSplit");
 
   DBUG_ASSERT( (syntaxtree!= NULL), "SPLITdoSplit called with empty syntaxtree");
 
-
-  //  info = (info*) malloc(sizeof(info));
-  TRAVpush( TR_prt);
+  TRAVpush( TR_split);
 
   syntaxtree = TRAVdo( syntaxtree, &info);
 
   TRAVpop();
+  node * header = TBmakeHeader("__init",VT_void,NULL);
 
-  //  info = FreeInfo(info);
+  node * body = TBmakeBody(NULL,NULL,info.head,NULL);
 
-
-  DBUG_RETURN( syntaxtree);
+  node * fun = TBmakeFundef(TRUE,header,body);
+  node * decl = TBmakeDeclars(fun,syntaxtree);
+  DBUG_RETURN( decl);
 }
-
-/*
-node* AS4IPvarcall(node *arg_node, info *arg_info)
-{
-  DBUG_ENTER ("AS4IPvarcall");
-
-	char* oldname = VARCALL_NAME( arg_node);
-  VARCALL_NAME( arg_node) = STRcat("__", oldname);
-  free(oldname);
-
-  DBUG_RETURN (arg_node);
-}
-*/
