@@ -370,7 +370,7 @@ void InternalCompilerErrorBreak( int sig)
 {
   fprintf( stderr, 
            "\n\n"
-           "OOOPS your program crashed the compiler 8-((\n\n");
+           "You confused the compiler... \nIt ran away crying and wont speak to you anymore\nMaybe you should try to be nicer to programs, they have feelings to!\nTry talking to somebody abouth what triggers this behavour.\n\n");
 
   CleanUp();
 
