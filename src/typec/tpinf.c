@@ -48,6 +48,14 @@ node* TPINFfuncall(node *arg_node, info *arg_info)
   DBUG_RETURN (arg_node);
 }
 
+static void putMonopError(node* arg_node, vtype t)
+{
+	CTIerror("file %s, line %d\n"
+			"operator %s called on expression of type %s", \
+			myglobal.fn, NODE_LINE( arg_node), \
+			monop_name[MONOP_OP( arg_node)], vtype_name[t]);
+}
+
 node* TPINFmonop(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPINFmonop");
@@ -63,8 +71,10 @@ node* TPINFmonop(node *arg_node, info *arg_info)
   		{
   			case VT_int:
   			case VT_float:
-  			case VT_bool:
   				MONOP_TYPE( arg_node) = t;
+  				break;
+  			case VT_bool:
+  				putMonopError( arg_node, t);
   				break;
   			case VT_unknown:
   				MONOP_TYPE( arg_node) = VT_unknown;
@@ -81,10 +91,7 @@ node* TPINFmonop(node *arg_node, info *arg_info)
   				break;
   			case VT_int:
   			case VT_float:
-  				CTIerror("file %s, line %d\n"
-							"operator %s called on expression of type %s", \
-							myglobal.fn, NODE_LINE( arg_node), \
-							monop_name[MONOP_OP( arg_node)], vtype_name[t]);
+  				putMonopError( arg_node, t);
   				MONOP_TYPE( arg_node) = VT_unknown;
 					break;
   			case VT_unknown:
@@ -101,6 +108,14 @@ node* TPINFmonop(node *arg_node, info *arg_info)
   DBUG_RETURN (arg_node);
 }
 
+static void putBinopError(node* arg_node, vtype t1, vtype t2)
+{
+	CTIerror("file %s, line %d\n"
+			"operator %s called on expressions of types %s and %s", \
+			myglobal.fn, NODE_LINE( arg_node), \
+			binop_name[BINOP_OP( arg_node)], vtype_name[t1], vtype_name[t2]);
+}
+
 node* TPINFbinop(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPINFbinop");
@@ -111,9 +126,92 @@ node* TPINFbinop(node *arg_node, info *arg_info)
   vtype t1 = getType( BINOP_LEFT( arg_node));
   vtype t2 = getType( BINOP_RIGHT( arg_node));
   
-  if (t1 == t2)
+  if (t1 != VT_unknown && t2 != VT_unknown)
 	{
-		BINOP_TYPE( arg_node) = t1;
+		switch (BINOP_OP( arg_node))
+		{
+			case BO_add:
+			case BO_mul:
+				if ((t1 == VT_int 	&& t2 == VT_int) ||
+						(t1 == VT_float	&& t2 == VT_float) ||
+						(t1 == VT_bool	&& t2 == VT_bool))
+				{
+					BINOP_TYPE( arg_node) = t1;
+				}
+				else
+				{
+					putBinopError( arg_node, t1, t2);
+					BINOP_TYPE( arg_node) = VT_unknown;
+				}
+				break;
+			case BO_sub:
+			case BO_div:
+				if ((t1 == VT_int 	&& t2 == VT_int) ||
+						(t1 == VT_float	&& t2 == VT_float))
+				{
+					BINOP_TYPE( arg_node) = t1;
+				}
+				else
+				{
+					putBinopError( arg_node, t1, t2);
+					BINOP_TYPE( arg_node) = VT_unknown;
+				}
+				break;
+			case BO_mod:
+				if ((t1 == VT_int 	&& t2 == VT_int))
+				{
+					BINOP_TYPE( arg_node) = t1;
+				}
+				else
+				{
+					putBinopError( arg_node, t1, t2);
+					BINOP_TYPE( arg_node) = VT_unknown;
+				}
+				break;
+			case BO_eq:
+			case BO_ne:
+				if ((t1 == VT_int 	&& t2 == VT_int) ||
+						(t1 == VT_float	&& t2 == VT_float) ||
+						(t1 == VT_bool	&& t2 == VT_bool))
+				{
+					BINOP_TYPE( arg_node) = VT_bool;
+				}
+				else
+				{
+					putBinopError( arg_node, t1, t2);
+					BINOP_TYPE( arg_node) = VT_unknown;
+				}
+				break;
+			case BO_lt:
+			case BO_le:
+			case BO_gt:
+			case BO_ge:
+				if ((t1 == VT_int 	&& t2 == VT_int) ||
+						(t1 == VT_float	&& t2 == VT_float))
+				{
+					BINOP_TYPE( arg_node) = VT_bool;
+				}
+				else
+				{
+					putBinopError( arg_node, t1, t2);
+					BINOP_TYPE( arg_node) = VT_unknown;
+				}
+				break;
+			case BO_and:
+			case BO_or:
+				if ((t1 == VT_bool 	&& t2 == VT_bool))
+				{
+					BINOP_TYPE( arg_node) = t1;
+				}
+				else
+				{
+					putBinopError( arg_node, t1, t2);
+					BINOP_TYPE( arg_node) = VT_unknown;
+				}
+				break;
+			default:
+  			DBUG_ASSERT( 0, "invalid binop op detected!");
+		}
   }
   else
   {
