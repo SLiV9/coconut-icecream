@@ -79,6 +79,7 @@
       <traversal id="TPMAT" name="Type matching" default="sons" include="tpmat.h">
       	<travuser>
       		<node name="FunDef" />
+      		<node name="Assign" />
       	</travuser>
       </traversal>
       

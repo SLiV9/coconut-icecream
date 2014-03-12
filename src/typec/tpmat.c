@@ -15,6 +15,45 @@
 #include "gettype.h"
 #include "print.h"
 
+node* TPMATassign(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPMATassign");
+  
+  ASSIGN_LET( arg_node) = TRAVdo( ASSIGN_LET( arg_node), arg_info);
+  ASSIGN_EXPR( arg_node) = TRAVdo( ASSIGN_EXPR( arg_node), arg_info);
+  
+  vtype vrt = getType( ASSIGN_LET( arg_node));
+  vtype ext = getType( ASSIGN_EXPR( arg_node));
+  
+  switch (vrt)
+  {
+  	case VT_int:
+  	case VT_float:
+  	case VT_bool:
+  		switch (ext)
+	 		{
+	 			case VT_int:
+	 			case VT_float:
+	 			case VT_bool:
+	 				if (vrt != ext)
+	 				{
+	 					CTIerror("file %s, line %d\n"
+								"cannot assign expr of type %s to variable of '%s' of type %s",\
+								myglobal.fn, NODE_LINE( arg_node), vtype_name[ext], \
+								VARLET_NAME( ASSIGN_LET( arg_node)), vtype_name[vrt]);
+	 				}
+	 				break;
+	 			default:
+	 				DBUG_ASSERT( 0, "invalid expr type detected!");
+			}
+  		break;
+  	default:
+  		DBUG_ASSERT( 0, "invalid varlet type detected!");
+  }
+
+	DBUG_RETURN( arg_node);
+}
+
 node* TPMATfundef(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPMATfundef");

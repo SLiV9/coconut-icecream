@@ -1,5 +1,7 @@
 export int main()
 {
+	int x;
+	
 	void foo()
 	{
 		return 2;
@@ -15,7 +17,7 @@ export int main()
 		return 0;
 	}
 	
-	foo();
+	x = baz();
 	
 	return 0;
 }

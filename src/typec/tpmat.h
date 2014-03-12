@@ -3,6 +3,7 @@
 
 #include "types.h"
 
+extern node* TPMATassign(node* arg_node, info* arg_info);
 extern node* TPMATfundef(node* arg_node, info* arg_info);
 
 extern node* TPMATdoMatching(node *syntax_tree);
