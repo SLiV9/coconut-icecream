@@ -15,6 +15,34 @@
 #include "gettype.h"
 #include "print.h"
 
+/*
+ * INFO structure
+ */
+struct INFO {
+  node *args;
+};
+
+#define INFO_ARGS(n) ((n)->args)
+
+static info *MakeInfo()
+{
+  info *result;
+  
+  result = MEMmalloc(sizeof(info));
+
+  INFO_ARGS(result) = NULL;
+  
+  return result;
+}
+
+static info *FreeInfo( info *info)
+{
+  info = MEMfree( info);
+
+  return info;
+}
+
+
 node* TPMATassign(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPMATassign");
@@ -104,6 +132,48 @@ node* TPMATfundef(node *arg_node, info *arg_info)
 	}
 
   DBUG_RETURN (arg_node);
+}
+
+node* TPMATfuncall(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPMATfuncall");
+	
+	// TODO
+	
+	/* 	Idee: info aanmaken en args in info->args stoppen,
+			Dan TRAVdo(Header) ofzo. Ugh maar echt heel kut.
+			Niet TRAVdo(Dec) want dan doe je de body van een
+			fundef opnieuw. Sowieso niet echt logisch.
+			Misschien gewoon Params opvragen, juist die in
+			info stoppen en dan TRAVdo op args? */
+  
+	DBUG_RETURN( arg_node);
+}
+
+node* TPMATheader(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPMATheader");
+	
+	if (HEADER_PARAMS( arg_node) != NULL)
+	{
+		// TODO
+  	HEADER_PARAMS( arg_node)	= TRAVdo( HEADER_PARAMS( arg_node), arg_info);
+  }
+  else
+	{
+		// TODO
+	}
+  
+	DBUG_RETURN( arg_node);
+}
+
+node* TPMATparams(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPMATparams");
+	
+	// TODO
+  
+	DBUG_RETURN( arg_node);
 }
 
 node* TPMATif(node *arg_node, info *arg_info)

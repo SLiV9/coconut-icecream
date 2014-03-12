@@ -79,6 +79,9 @@
       <traversal id="TPMAT" name="Type matching" default="sons" include="tpmat.h">
       	<travuser>
       		<node name="FunDef" />
+        	<node name="FunCall" />
+      		<node name="Header" />
+      		<node name="Params" />
       		<node name="Assign" />
       		<node name="If" />
       		<node name="For" />
