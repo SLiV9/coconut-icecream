@@ -36,16 +36,30 @@ void putUndeclaredError(int line, const char* name)
   				myglobal.fn, line, name);
 }
 
+bool isFunction(node* dec)
+{
+	switch (NODE_TYPE(dec))
+	{
+		case N_fundef:
+		case N_fundec:
+		case N_funcall:
+			return TRUE;
+		default:
+			return FALSE;
+	}
+}
+
 node* findNameDec(node *arg_node, info *arg_info, const char* name)
 {
 	node* dec;
 	node* nd = INFO_STACK( arg_info);
 	while (nd != NULL)
 	{
-		if (STReq( NAMEDECS_NAME( nd), name))
+		dec = NAMEDECS_DEC( nd);
+		
+		if (STReq( NAMEDECS_NAME( nd), name) && 
+				(isFunction( dec) == isFunction( arg_node)))
 		{
-			dec = NAMEDECS_DEC( nd);
-			
 			if (NAMEDECS_DEPTH( nd) < INFO_DEPTH( arg_info))
 			{
 				switch (NODE_TYPE( dec))
@@ -77,7 +91,8 @@ void pushNameDec(node *arg_node, info *arg_info, const char* name)
 	node* nd = INFO_STACK( arg_info);
 	while (nd != NULL)
 	{
-		if (STReq( NAMEDECS_NAME( nd), name))
+		if (STReq( NAMEDECS_NAME( nd), name) && 
+				(isFunction( NAMEDECS_DEC( nd)) == isFunction( arg_node)))
 		{
 			if (NAMEDECS_LEVEL( nd) >= INFO_LEVEL( arg_info))
 			{

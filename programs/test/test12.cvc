@@ -8,23 +8,29 @@ export int main()
 {
 	int x = 0;
 	
-	int x = 1;
+	int x0 = 1;
 	
 	int x(int x)
 	{
+		int x1 = x;
 		return x;
+	}
+	
+	int x0()
+	{
+		return 0;
 	}
 	
 	while (true)
 	{
 		printInt(x);
-		x = x + 1;
+		x = x(x) + 1;
 	}
 	
 	// else pairt met meest recente if
 	if (x > 0)
 		if (x > 1)
-			x = 2 * x;
+			x = 2 * x0;
 		else
 			x = 3;
 	
