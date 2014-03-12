@@ -38,15 +38,19 @@ node* TPMATassign(node *arg_node, info *arg_info)
 	 				if (vrt != ext)
 	 				{
 	 					CTIerror("file %s, line %d\n"
-								"cannot assign expr of type %s to variable of '%s' of type %s",\
+								"cannot assign expr of type %s to variable '%s' of type %s",\
 								myglobal.fn, NODE_LINE( arg_node), vtype_name[ext], \
 								VARLET_NAME( ASSIGN_LET( arg_node)), vtype_name[vrt]);
 	 				}
 	 				break;
+				case VT_unknown:
+					break;
 	 			default:
 	 				DBUG_ASSERT( 0, "invalid expr type detected!");
 			}
   		break;
+		case VT_unknown:
+			break;
   	default:
   		DBUG_ASSERT( 0, "invalid varlet type detected!");
   }
@@ -93,11 +97,108 @@ node* TPMATfundef(node *arg_node, info *arg_info)
 						HEADER_NAME( FUNDEF_HEAD( arg_node)));
   		}
   		break;
+		case VT_unknown:
+			break;
   	default:
   		DBUG_ASSERT( 0, "invalid return type detected!");
 	}
 
   DBUG_RETURN (arg_node);
+}
+
+node* TPMATif(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPMATif");
+  
+  IF_COND( arg_node)	= TRAVdo( IF_COND( arg_node), arg_info);
+  IF_THEN( arg_node) 	= TRAVdo( IF_THEN( arg_node), arg_info);
+  IF_ELSE( arg_node)	= TRAVopt( IF_ELSE( arg_node), arg_info);
+  
+  vtype cdt = getType( IF_COND( arg_node));
+  
+  switch (cdt)
+  {
+  	case VT_bool:
+  		break;
+  	case VT_int:
+  	case VT_float:
+			CTIerror("file %s, line %d\n"
+					"if statement condition of type %s", \
+					myglobal.fn, NODE_LINE( arg_node), vtype_name[cdt]);
+			break;
+		case VT_unknown:
+			break;
+  	default:
+  		DBUG_ASSERT( 0, "invalid if cond type detected!");
+  }
+
+	DBUG_RETURN( arg_node);
+}
+
+node* TPMATwhile(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPMATwhile");
+  
+  WHILE_COND( arg_node)	= TRAVdo( WHILE_COND( arg_node), arg_info);
+  WHILE_DO( arg_node) 	= TRAVdo( WHILE_DO( arg_node), arg_info);
+  
+  vtype cdt = getType( WHILE_COND( arg_node));
+  
+  switch (cdt)
+  {
+  	case VT_bool:
+  		break;
+  	case VT_int:
+  	case VT_float:
+			CTIerror("file %s, line %d\n"
+					"while statement condition of type %s", \
+					myglobal.fn, NODE_LINE( arg_node), vtype_name[cdt]);
+			break;
+		case VT_unknown:
+			break;
+  	default:
+  		DBUG_ASSERT( 0, "invalid while cond type detected!");
+  }
+
+	DBUG_RETURN( arg_node);
+}
+
+static void checkForExpr(node* arg_node, vtype t)
+{
+	switch (t)
+  {
+  	case VT_int:
+  		break;
+  	case VT_float:
+  	case VT_bool:
+			CTIerror("file %s, line %d\n"
+					"for statement expression of type %s", \
+					myglobal.fn, NODE_LINE( arg_node), vtype_name[t]);
+			break;
+		case VT_unknown:
+			break;
+  	default:
+  		DBUG_ASSERT( 0, "invalid for expr type detected!");
+  }
+}
+
+node* TPMATfor(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPMATfor");
+  
+  FOR_ITER( arg_node) = TRAVdo( FOR_ITER( arg_node), arg_info);
+  FOR_FROM( arg_node)	= TRAVdo( FOR_FROM( arg_node), arg_info);
+  FOR_TO( arg_node) 	= TRAVdo( FOR_TO( arg_node), arg_info);
+  FOR_INCR( arg_node)	= TRAVopt( FOR_INCR( arg_node), arg_info);
+  
+  checkForExpr( arg_node, getType( FOR_FROM( arg_node)));
+  checkForExpr( arg_node, getType( FOR_TO( arg_node)));
+  if (FOR_INCR( arg_node) != NULL)
+  {
+  	checkForExpr( arg_node, getType( FOR_INCR( arg_node)));
+  }
+
+	DBUG_RETURN( arg_node);
 }
 
 node *TPMATdoMatching(node *syntaxtree)

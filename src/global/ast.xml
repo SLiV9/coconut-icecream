@@ -80,6 +80,9 @@
       	<travuser>
       		<node name="FunDef" />
       		<node name="Assign" />
+      		<node name="If" />
+      		<node name="For" />
+      		<node name="While" />
       	</travuser>
       </traversal>
       
