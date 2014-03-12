@@ -122,10 +122,12 @@ node* NAMELINKfundef(node *arg_node, info *arg_info)
 			
 	node* old = INFO_STACK( arg_info);
 	INFO_DEPTH( arg_info) = INFO_DEPTH( arg_info) + 1;
+	INFO_LEVEL( arg_info) = INFO_LEVEL( arg_info) + 1;
   
   FUNDEF_HEAD( arg_node) = TRAVopt( FUNDEF_HEAD( arg_node), arg_info);
   FUNDEF_BODY( arg_node) = TRAVopt( FUNDEF_BODY( arg_node), arg_info);
 	
+	INFO_LEVEL( arg_info) = INFO_LEVEL( arg_info) - 1;
 	INFO_DEPTH( arg_info) = INFO_DEPTH( arg_info) - 1;
   INFO_STACK( arg_info) = old;
 
@@ -138,9 +140,11 @@ node* NAMELINKfundec(node *arg_node, info *arg_info)
 			
 	node* old = INFO_STACK( arg_info);
 	INFO_DEPTH( arg_info) = INFO_DEPTH( arg_info) + 1;
+	INFO_LEVEL( arg_info) = INFO_LEVEL( arg_info) + 1;
   
   FUNDEC_HEAD( arg_node) = TRAVopt( FUNDEC_HEAD( arg_node), arg_info);
 	
+	INFO_LEVEL( arg_info) = INFO_LEVEL( arg_info) - 1;
 	INFO_DEPTH( arg_info) = INFO_DEPTH( arg_info) - 1;
   INFO_STACK( arg_info) = old;
 
@@ -152,7 +156,7 @@ node* NAMELINKfor(node *arg_node, info *arg_info)
   DBUG_ENTER ("NAMELINKfor");
 
 	node* old = INFO_STACK( arg_info);
-	INFO_DEPTH( arg_info) = INFO_DEPTH( arg_info) + 1;
+	INFO_LEVEL( arg_info) = INFO_LEVEL( arg_info) + 1;
 	
 	FOR_FROM( arg_node) = TRAVdo( FOR_FROM( arg_node), arg_info);
 	FOR_TO( arg_node) = TRAVdo( FOR_TO( arg_node), arg_info);
@@ -162,7 +166,7 @@ node* NAMELINKfor(node *arg_node, info *arg_info)
 	
 	FOR_DO( arg_node) = TRAVopt( FOR_DO( arg_node), arg_info);
 	
-	INFO_DEPTH( arg_info) = INFO_DEPTH( arg_info) - 1;
+	INFO_LEVEL( arg_info) = INFO_LEVEL( arg_info) - 1;
 	INFO_STACK( arg_info) = old;
 
   DBUG_RETURN (arg_node);

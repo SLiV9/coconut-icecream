@@ -389,6 +389,18 @@
         		</targets>
         	</type>
         </attribute>
+        <attribute name="Level">
+        	<type name="Int">
+        		<targets>
+        			<target mandatory="yes">
+        				<any />
+        				<phases>
+        					<all />
+        				</phases>
+        			</target>
+        		</targets>
+        	</type>
+        </attribute>
       </attributes>
     </node>
     <node name="DimDecs">

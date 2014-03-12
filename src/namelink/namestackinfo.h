@@ -4,10 +4,12 @@
 struct INFO {
   node *stack;
   int depth;
+  int level;
 };
 
 #define INFO_STACK(n) ((n)->stack)
 #define INFO_DEPTH(n) ((n)->depth)
+#define INFO_LEVEL(n) ((n)->level)
 
 info *MakeInfo();
 

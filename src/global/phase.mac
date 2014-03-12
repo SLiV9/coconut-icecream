@@ -38,16 +38,15 @@ SUBPHASE( idpre,
 					NEVER,
 					ca)
 
-SUBPHASE( namelink,
-					"Linking calls to names",
-					NAMELINKdoLinkNames,
-					ALWAYS,
-					ca)
-
-
 SUBPHASE( split,
 					"Splitting",
 					SPLITdoSplit,
+					ALWAYS,
+					ca)
+
+SUBPHASE( namelink,
+					"Linking calls to names",
+					NAMELINKdoLinkNames,
 					ALWAYS,
 					ca)
 
