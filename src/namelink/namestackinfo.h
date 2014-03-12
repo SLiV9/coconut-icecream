@@ -15,7 +15,7 @@ info *MakeInfo();
 
 info *FreeInfo( info *info);
 
-void putUndeclaredError(int line, const char* name);
+void putUndeclaredError(int line, const char* name, bool isFun);
 
 node* findNameDec(node *arg_node, info *arg_info, const char* name);
 

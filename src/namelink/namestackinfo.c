@@ -30,10 +30,18 @@ info *FreeInfo( info *info)
   return info;
 }
 
-void putUndeclaredError(int line, const char* name)
+void putUndeclaredError(int line, const char* name, bool isFun)
 {
-	CTIerror("file %s, line %d\nundeclared identifier '%s'", \
+	if (isFun)
+	{
+		CTIerror("file %s, line %d\nreference to undeclared function '%s'", \
   				myglobal.fn, line, name);
+  }
+  else
+	{
+		CTIerror("file %s, line %d\nreference to undeclared variable '%s'", \
+  				myglobal.fn, line, name);
+  }
 }
 
 bool isFunction(node* dec)
@@ -81,7 +89,7 @@ node* findNameDec(node *arg_node, info *arg_info, const char* name)
 		nd = NAMEDECS_NEXT( nd);
 	}
 	
-	putUndeclaredError(NODE_LINE( arg_node), name);
+	putUndeclaredError(NODE_LINE( arg_node), name, isFunction( arg_node));
 	
 	return NULL;
 }
@@ -96,11 +104,20 @@ void pushNameDec(node *arg_node, info *arg_info, const char* name)
 		{
 			if (NAMEDECS_LEVEL( nd) >= INFO_LEVEL( arg_info))
 			{
-				CTIerror("file %s, line %d\n"
-						"identifier '%s' already declared in this scope\n"
-						"(first declaration at line %d)", \
-						myglobal.fn, NODE_LINE( arg_node), name, NODE_LINE( nd));
-				
+				if (isFunction( arg_node))
+				{
+					CTIerror("file %s, line %d\n"
+							"redeclaration of function '%s'\n"
+							"(first declaration at line %d)", \
+							myglobal.fn, NODE_LINE( arg_node), name, NODE_LINE( nd));
+				}
+				else
+				{
+					CTIerror("file %s, line %d\n"
+							"redeclaration of variable '%s'\n"
+							"(first declaration at line %d)", \
+							myglobal.fn, NODE_LINE( arg_node), name, NODE_LINE( nd));
+				}
 				return;
 			}
 			
