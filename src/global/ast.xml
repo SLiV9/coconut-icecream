@@ -78,6 +78,20 @@
 
 
 
+      <traversal id="CALCCONST" name="CalcConst" default="sons" include="calcconst.h">
+      	<travuser>
+      		<node name="Cast" />
+                <node name="MonOp" />
+		<node name="BinOp" />
+      	</travuser>
+      </traversal>
+
+
+
+
+
+
+
       <traversal id="PRT" name="Print Syntax Tree" default="user" include="print.h" />
 
       <traversal id="COPY" name="Copy Syntax Tree" default="user" include="copy_node.h" />

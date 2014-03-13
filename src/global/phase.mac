@@ -51,7 +51,22 @@ SUBPHASE( split,
 					ALWAYS,
 					ca)
 
+
 ENDPHASE( ca)
+
+/******************************************************************************/
+
+PHASE( co,
+			 "Code optimalisation",
+			 ALWAYS)
+
+SUBPHASE( calcconst,
+					"Calculate Constants",
+					CALCCONSTdoConstCalc,
+					ALWAYS,
+					co)
+
+ENDPHASE( co)
 
 /******************************************************************************/
 
