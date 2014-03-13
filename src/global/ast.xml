@@ -63,6 +63,8 @@
       	<travuser>
 		  		<node name="FunDef" />
 		  		<node name="FunDec" />
+		  		<node name="GlobDef" />
+		  		<node name="GlobDec" />
       	</travuser>
       </traversal>
     

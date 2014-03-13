@@ -1,6 +1,6 @@
-#include "test4.h"
-a = (42 + 
-(13
-                * tutu));
-b = a * - 1;
-c = a - b + 5 + -a / 2.0;
+void foo(int y)
+{
+	x = y;
+}
+
+int x = 10;

@@ -66,8 +66,6 @@ node* NAMELINKvardec(node *arg_node, info *arg_info)
 node* NAMELINKglobdef(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("NAMELINKglobdef");
-
-	pushNameDec( arg_node, arg_info, GLOBDEF_NAME(arg_node));
   
   GLOBDEF_EXPR( arg_node) = TRAVopt( GLOBDEF_EXPR( arg_node), arg_info);
   
@@ -79,8 +77,6 @@ node* NAMELINKglobdef(node *arg_node, info *arg_info)
 node* NAMELINKglobdec(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("NAMELINKglobdec");
-
-	pushNameDec( arg_node, arg_info, GLOBDEC_NAME(arg_node));
   
   GLOBDEC_DIMDECS( arg_node) = TRAVopt( GLOBDEC_DIMDECS( arg_node), arg_info);
 
