@@ -1,0 +1,26 @@
+CW [ Code ] => CWN [ Code ][ 0 ][ 1 ] | always
+
+CWN [
+
+			while (Cond)
+			{
+				Body
+			}
+			Rest
+			
+		][ X ][ Y ]
+	=>
+	
+			void While_X_Y()
+			{
+				if (Cond)
+				{
+					CWN[ Body ][ X_Y ][ 1 ]
+					While_X_Y();
+				}
+			}
+			While_X_Y();
+			CWN[ Rest ][ X ][ Y+1 ]
+			
+	| always
+
