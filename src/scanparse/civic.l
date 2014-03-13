@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <limits.h>
+#include <float.h>
 
 #include "types.h"
 #include "node_basic.h"
@@ -22,6 +24,9 @@
 #define YY_NO_UNPUT
 #define YY_NO_INPUT
 
+#define IS_FLOAT(d) (		( (d) >= FLT_MIN &&  (d) <= FLT_MAX) \
+										||	(-(d) >= FLT_MIN && -(d) <= FLT_MAX))
+
 %}
 
 %p 6000 /* set positions to 6000 */
@@ -32,6 +37,9 @@
 
 %%
 
+"-2147483648"							 { yylval.cint = -2147483648; FILTER( INTVAL); }
+[0]*\.[0]+|[0]*\.[0]*			 { yylval.cflt = 0.0f; FILTER( FLOATVAL); }
+
 "("                        { FILTER( BRL); }
 ")"                        { FILTER( BRR); }
 "{"                        { FILTER( BCL); }
@@ -41,6 +49,7 @@
 
 ","                        { FILTER( COMMA); }
 ";"                        { FILTER( SEMICOLON); }
+
 
 "-"                        { FILTER( MINUS); }
 "+"                        { FILTER( PLUS);  }
@@ -84,17 +93,36 @@
                              FILTER( ID);
                            }
 
-[0-9]+\.[0-9]*             { yylval.cflt=atof(yytext);
-                             FILTER( FLOATVAL);
-                           }
+[0-9]+\.[0-9]*|[0-9]*\.[0-9]+ 	{
+																	double d = strtod(yytext, NULL);
+																	if (!errno && IS_FLOAT(d))
+																	{
+																		yylval.cflt = (float) d;
+																	}
+																	else
+																	{
+																 		CTIerror("file %s, line %d, col %d\n"
+																 				"float out of bounds", \
+				        												myglobal.fn, global.line, global.col);
+																		yylval.cflt = 0.0;
+																	}
+				                       		FILTER( FLOATVAL);
+                           			}
 
-[0-9]*\.[0-9]+             { yylval.cflt=atof(yytext);
-                             FILTER( FLOATVAL);
-                           }
-
-
-[0-9]+                     { yylval.cint=atoi(yytext);
-                             FILTER( INTVAL);
+[0-9]+                   	 {
+															long v = strtol(yytext, NULL, 10);
+															if (!errno && v <= INT_MAX)
+														 	{
+														 		yylval.cint = (int) v;
+														 	}
+														 	else
+														 	{
+														 		CTIerror("file %s, line %d, col %d\n"
+														 				"integer out of bounds", \
+            												myglobal.fn, global.line, global.col);
+            										yylval.cint = 0;
+														 	}
+                             	FILTER( INTVAL);
                            }
 
 #[ ][0-9]+[ ]\"[^\"]+\".*\n     {

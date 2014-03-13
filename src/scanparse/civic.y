@@ -162,9 +162,9 @@ fundec:
 ;
 
 globdec:
-	EXTERN basictype ID
+	EXTERN basictype ID SEMICOLON
 			{ $$ = TBmakeGlobdec( STRcpy( $3), $2, NULL); }
-| EXTERN basictype BSL dimdecs BSR ID
+| EXTERN basictype BSL dimdecs BSR ID SEMICOLON
 			{ $$ = TBmakeGlobdec( STRcpy( $6), $2, $4); }
 ;
 
