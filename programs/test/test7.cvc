@@ -1,6 +1,19 @@
-#include "test4.h"
-a = (42 + 
-(13
-                * tutu));
-b = a * - 1;
-c = a - b + 5 + (float) -a / 2;
+export int main()
+{	
+	void foo()
+	{
+		//hoi
+	}
+	
+	void bar(int x)
+	{
+		//hey
+	}
+	
+	foo(2, 1);
+	bar();
+	bar(3, 4);
+	bar(true);
+	
+	return 0;
+}

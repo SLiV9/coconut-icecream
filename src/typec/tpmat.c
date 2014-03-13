@@ -15,34 +15,6 @@
 #include "gettype.h"
 #include "print.h"
 
-/*
- * INFO structure
- */
-struct INFO {
-  node *args;
-};
-
-#define INFO_ARGS(n) ((n)->args)
-
-static info *MakeInfo()
-{
-  info *result;
-  
-  result = MEMmalloc(sizeof(info));
-
-  INFO_ARGS(result) = NULL;
-  
-  return result;
-}
-
-static info *FreeInfo( info *info)
-{
-  info = MEMfree( info);
-
-  return info;
-}
-
-
 node* TPMATassign(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPMATassign");
@@ -138,40 +110,82 @@ node* TPMATfuncall(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPMATfuncall");
 	
-	// TODO
-	
-	/* 	Idee: info aanmaken en args in info->args stoppen,
-			Dan TRAVdo(Header) ofzo. Ugh maar echt heel kut.
-			Niet TRAVdo(Dec) want dan doe je de body van een
-			fundef opnieuw. Sowieso niet echt logisch.
-			Misschien gewoon Params opvragen, juist die in
-			info stoppen en dan TRAVdo op args? */
-  
-	DBUG_RETURN( arg_node);
-}
-
-node* TPMATheader(node *arg_node, info *arg_info)
-{
-  DBUG_ENTER ("TPMATheader");
-	
-	if (HEADER_PARAMS( arg_node) != NULL)
+	node* dec = FUNCALL_DEC( arg_node);
+	node* hd;
+	switch (NODE_TYPE( dec))
 	{
-		// TODO
-  	HEADER_PARAMS( arg_node)	= TRAVdo( HEADER_PARAMS( arg_node), arg_info);
-  }
-  else
-	{
-		// TODO
+		case N_fundef:
+			hd = FUNDEF_HEAD( dec);
+			break;
+		case N_fundec:
+			hd = FUNDEC_HEAD( dec);
+			break;
+		default:
+			DBUG_ASSERT( 0, "invalid funcall dec type detected!");
 	}
-  
-	DBUG_RETURN( arg_node);
-}
-
-node* TPMATparams(node *arg_node, info *arg_info)
-{
-  DBUG_ENTER ("TPMATparams");
 	
-	// TODO
+	node* params = HEADER_PARAMS( hd);
+	node* args = FUNCALL_ARGS( arg_node);
+	vtype prt, art;
+	int i = 0;
+	
+	while (params != NULL && args != NULL)
+	{
+		prt = getType( PARAMS_PARAM( params));
+		art = getType( EXPRS_EXPR( args));
+		i++;
+		
+		switch (prt)
+		{
+			case VT_int:
+			case VT_float:
+			case VT_bool:
+				switch (art)
+				{
+					case VT_int:
+					case VT_float:
+					case VT_bool:
+						if (art != prt)
+						{
+							CTIerror("file %s, line %d\n"
+									"argument #%d in call to function '%s' "
+									"(declared at line %d)\n"
+									"of type %s does not match parameter of type %s", \
+									myglobal.fn, NODE_LINE( arg_node), \
+									i, HEADER_NAME( hd), NODE_LINE( dec), \
+									vtype_name[art], vtype_name[prt]);
+						}
+						break;
+					case VT_unknown:
+						break;
+					default:
+						DBUG_ASSERT( 0, "invalid argument type detected!");
+				}
+				break;
+			case VT_unknown:
+				break;
+			default:
+				DBUG_ASSERT( 0, "invalid parameter type detected!");
+		}
+		
+		params = PARAMS_NEXT( params);
+		args = EXPRS_NEXT( args);
+	}
+	
+	if (params != NULL)
+	{
+		CTIerror("file %s, line %d\n"
+					"too few arguments in call to function '%s' (declared at line %d)", \
+					myglobal.fn, NODE_LINE( arg_node), \
+					HEADER_NAME( hd), NODE_LINE( dec));
+	}
+	else if (args != NULL)
+	{
+		CTIerror("file %s, line %d\n"
+					"too many arguments in call to function '%s' (declared at line %d)", \
+					myglobal.fn, NODE_LINE( arg_node), \
+					HEADER_NAME( hd), NODE_LINE( dec));
+	}
   
 	DBUG_RETURN( arg_node);
 }

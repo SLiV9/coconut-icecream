@@ -6,8 +6,6 @@
 extern node* TPMATassign(node* arg_node, info* arg_info);
 extern node* TPMATfundef(node* arg_node, info* arg_info);
 extern node* TPMATfuncall(node* arg_node, info* arg_info);
-extern node* TPMATheader(node* arg_node, info* arg_info);
-extern node* TPMATparams(node* arg_node, info* arg_info);
 extern node* TPMATif(node* arg_node, info* arg_info);
 extern node* TPMATwhile(node* arg_node, info* arg_info);
 extern node* TPMATfor(node* arg_node, info* arg_info);
