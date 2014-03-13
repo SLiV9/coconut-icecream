@@ -64,6 +64,7 @@ SUBPHASE( tpinf,
 					ALWAYS,
 					tc)
 
+
 SUBPHASE( tpmat,
 					"Type Matching",
 					TPMATdoMatching,
@@ -71,6 +72,20 @@ SUBPHASE( tpmat,
 					tc)
 
 ENDPHASE( tc)
+
+/******************************************************************************/
+
+PHASE( co,
+			 "Code optimalisation",
+			 ALWAYS)
+
+SUBPHASE( calcconst,
+					"Calculate Constants",
+					CALCCONSTdoConstCalc,
+					ALWAYS,
+					co)
+
+ENDPHASE( co)
 
 /******************************************************************************/
 
