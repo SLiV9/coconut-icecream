@@ -155,7 +155,8 @@ node* CALCCONSTbinop(node *arg_node, info *arg_info){
        DBUG_RETURN(TBmakeInt(r*l));
        break;
     case BO_div:
-       DBUG_RETURN(TBmakeInt(l/r));
+    	 if (r != 0)
+       		DBUG_RETURN(TBmakeInt(l/r));
        break;
     case BO_mod:
        DBUG_RETURN(TBmakeInt(l % r));
@@ -184,8 +185,8 @@ node* CALCCONSTbinop(node *arg_node, info *arg_info){
 
     }
   }else if(ntl == N_float){
-    int l = INT_VALUE(BINOP_LEFT( arg_node));
-    int r = INT_VALUE(BINOP_RIGHT( arg_node));
+    float l = FLOAT_VALUE(BINOP_LEFT( arg_node));
+    float r = FLOAT_VALUE(BINOP_RIGHT( arg_node));
 
     switch(BINOP_OP(arg_node)){
     case BO_add:
@@ -198,10 +199,8 @@ node* CALCCONSTbinop(node *arg_node, info *arg_info){
        DBUG_RETURN(TBmakeFloat(r*l));
        break;
     case BO_div:
-       DBUG_RETURN(TBmakeFloat(l/r));
-       break;
-    case BO_mod:
-       DBUG_RETURN(TBmakeFloat(l % r));
+    	 if (r != 0.0f)
+       		DBUG_RETURN(TBmakeFloat(l/r));
        break;
     case BO_lt:
        DBUG_RETURN(TBmakeBool(l < r));
