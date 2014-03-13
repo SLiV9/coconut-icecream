@@ -1,5 +1,18 @@
-# 4 "hoi.h" 2
-a = (42 + 
-(13
-                * tutu));
+export void main()
+{
+	int[5] x = [3, 1, 4, 1, 5];
+	int s = sum(x);
+	
+	int sum(int[k] a)
+	{
+		int sum = 0;
+		
+		for (int i = 0, k)
+		{
+			sum = sum + a[k];
+		}
+		
+		return sum;
+	}
+}
 

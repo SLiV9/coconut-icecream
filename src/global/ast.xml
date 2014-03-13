@@ -480,7 +480,34 @@
           </targets>
         </son>
       </sons>
-      <attributes />
+      <attributes>
+        <attribute name="Type">
+        	<type name="ValueType">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<phase name="tc" />
+		      				<phase name="cg" />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
+        <attribute name="Depth">
+        	<type name="Int">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<phase name="tc" />
+		      				<phase name="cg" />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
+      </attributes>
     </node>
     <node name="FunDef">
       <sons>

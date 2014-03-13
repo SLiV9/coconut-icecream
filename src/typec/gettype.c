@@ -61,6 +61,8 @@ vtype getType(node* nd)
 				return VT_unknown;
 			};
 			return r;
+		case N_arraylit:
+			return ARRAYLIT_TYPE(nd);
 		default:
 			DBUG_ASSERT( 0, "invalid gettype detected!");
 			return VT_unknown;
