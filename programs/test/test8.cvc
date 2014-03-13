@@ -1,5 +1,40 @@
-#include "test4.h"
-a = 4 * (- (float) ! true);
-b = foo(a, bar(), false);
-doFoo();
-doBar(a, b);
+export int main()
+{
+	int x;
+	
+	void foo()
+	{
+		return 2;
+	}
+	
+	int bar()
+	{
+		//return;
+	}
+	
+	bool baz()
+	{
+		return 0;
+	}
+	
+	x = baz();
+	
+	if (bar() + x)
+	{
+		while (x > 0)
+		{
+			do
+			{
+				for (int i = 0, x, baz())
+				{
+					x = x + i;
+				}
+				
+				x = x - 1;
+			}
+			while (foo());
+		}
+	}
+	
+	return 0;
+}

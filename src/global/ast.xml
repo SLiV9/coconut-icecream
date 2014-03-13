@@ -78,6 +78,12 @@
     
       <traversal id="TPMAT" name="Type matching" default="sons" include="tpmat.h">
       	<travuser>
+      		<node name="FunDef" />
+        	<node name="FunCall" />
+      		<node name="Assign" />
+      		<node name="If" />
+      		<node name="For" />
+      		<node name="While" />
       	</travuser>
       </traversal>
       
@@ -496,19 +502,6 @@
             </targets>
     			</type>
     		</attribute>
-        <attribute name="Type">
-        	<type name="ValueType">
-        		<targets>
-        			<target mandatory="no">
-		      			<any />
-		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
-		      			</phases>
-		      		</target>
-        		</targets>
-        	</type>
-        </attribute>
       </attributes>
     </node>
     <node name="FunDec">
@@ -524,21 +517,7 @@
 		    	</targets>
       	</son>
       </sons>
-      <attributes>
-        <attribute name="Type">
-        	<type name="ValueType">
-        		<targets>
-        			<target mandatory="no">
-		      			<any />
-		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
-		      			</phases>
-		      		</target>
-        		</targets>
-        	</type>
-        </attribute>
-      </attributes>
+      <attributes />
     </node>
     <node name="Header">
       <sons>
