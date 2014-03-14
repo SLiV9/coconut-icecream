@@ -1,4 +1,39 @@
-CW [ Code ] => CWN [ Code ][ 0 ][ 1 ] | always
+CW	[ 
+
+			Code
+			
+		]
+	=> 
+	
+		CFN [ Code ][ 0 ][ 1 ]
+		CWN [ Code ][ 0 ][ 1 ]
+		
+	| always
+
+
+
+CFN [
+
+			while (Cond)
+			{
+				Body
+			}
+			Rest
+			
+		][ X ][ Y ]
+	=>
+	
+			bool While_X_Y()
+			{
+				CFN[ Body ][ X_Y ][ 1 ]
+				CWN[ Body ][ X_Y ][ 1 ]
+				return (Cond && While_X_Y());
+			}
+			CFN[ Rest ][ X ][ Y+1 ]
+			
+	| always
+
+
 
 CWN [
 
@@ -11,15 +46,10 @@ CWN [
 		][ X ][ Y ]
 	=>
 	
-			void While_X_Y()
+			if (Cond)
 			{
-				if (Cond)
-				{
-					CWN[ Body ][ X_Y ][ 1 ]
-					While_X_Y();
-				}
-			}
 			While_X_Y();
+			}
 			CWN[ Rest ][ X ][ Y+1 ]
 			
 	| always
