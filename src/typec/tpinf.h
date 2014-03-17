@@ -7,6 +7,8 @@ extern node* TPINFvarlet(node *arg_node, info *arg_info);
 extern node* TPINFvarcall(node *arg_node, info *arg_info);
 extern node* TPINFfuncall(node *arg_node, info *arg_info);
 
+extern node* TPINFarraylit(node *arg_node, info *arg_info);
+
 extern node* TPINFmonop(node *arg_node, info *arg_info);
 extern node* TPINFbinop(node *arg_node, info *arg_info);
 

@@ -75,6 +75,7 @@
     		<node name="VarLet" />
         <node name="VarCall" />
         <node name="FunCall" />
+    		<node name="ArrayLit" />
       	</travuser>
       </traversal>
     

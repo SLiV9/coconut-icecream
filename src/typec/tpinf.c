@@ -48,6 +48,75 @@ node* TPINFfuncall(node *arg_node, info *arg_info)
   DBUG_RETURN (arg_node);
 }
 
+node* TPINFarraylit(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPINFarraylit");
+  
+  ARRAYLIT_EXPRS( arg_node) = TRAVdo( ARRAYLIT_EXPRS( arg_node), arg_info);
+  
+  node* exprs = ARRAYLIT_EXPRS( arg_node);
+  vtype t, t1;
+  int d = -1, d1;
+  bool valid = TRUE;
+  
+  do
+  {
+  	node* expr = EXPRS_EXPR( exprs);
+  	if (NODE_TYPE( expr) == N_arraylit)
+		{
+			t1 = ARRAYLIT_TYPE( expr);
+			d1 = ARRAYLIT_DEPTH( expr);
+		}
+		else
+		{
+			t1 = getType( expr);
+			d1 = 0;
+		}
+  	
+  	if (d < 0)
+  	{
+  		t = t1;
+  		d = d1;
+  	}
+  	else if (d1 != d)
+  	{
+  		if (d1 >= 0)
+  		{
+				CTIerror("file %s, line %d\n"
+						"invalid array literal because of dimension mismatch", \
+						myglobal.fn, NODE_LINE( arg_node));
+			}
+  		valid = FALSE;
+  	}
+  	else if (t1 != t)
+  	{
+  		if (t1 >= 0)
+  		{
+				CTIerror("file %s, line %d\n"
+						"invalid array literal because of type mismatch", \
+						myglobal.fn, NODE_LINE( arg_node));
+			}
+  		valid = FALSE;
+  	}
+  	
+  	exprs = EXPRS_NEXT( exprs);
+  }
+  while (valid && exprs != NULL);
+  
+  if (valid)
+  {
+  	ARRAYLIT_TYPE( arg_node) = t;
+  	ARRAYLIT_DEPTH( arg_node) = d + 1;
+  }
+  else
+  {
+  	ARRAYLIT_TYPE( arg_node) = VT_unknown;
+  	ARRAYLIT_DEPTH( arg_node) = -1;
+  }
+
+  DBUG_RETURN (arg_node);
+}
+
 static void putMonopError(node* arg_node, vtype t)
 {
 	CTIerror("file %s, line %d\n"
