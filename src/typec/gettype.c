@@ -72,3 +72,62 @@ vtype getType(node* nd)
 	}
 }
 
+int getDepth(node* arg_node)
+{
+	switch (NODE_TYPE( arg_node))
+	{
+		case N_vardec:
+			return VARDEC_DEPTH( arg_node);
+		case N_globdef:
+			return GLOBDEF_DEPTH( arg_node);
+		case N_globdec:
+			return GLOBDEC_DEPTH( arg_node);
+		case N_param:
+			return PARAM_DEPTH( arg_node);
+		case N_iter:
+		case N_dim:
+			return 0;
+		default:
+			DBUG_ASSERT( 0, "invalid getdepth type detected!");
+			return VT_unknown;
+	}
+}
+
+int getExprsLen(node* arg_node)
+{
+	int i = 0;
+	if (arg_node == NULL)
+	{
+		return i;
+	}
+	
+	DBUG_ASSERT( NODE_TYPE( arg_node) == N_exprs, \
+			"getExprsLen called on non-Exprs!");
+	node* exprs = arg_node;
+	while (exprs != NULL)
+	{
+		i++;
+		exprs = EXPRS_NEXT( exprs);
+	}
+	return i;
+}
+
+int getDimDecsLen(node* arg_node)
+{
+	int i = 0;
+	if (arg_node == NULL)
+	{
+		return i;
+	}
+	
+	DBUG_ASSERT( NODE_TYPE( arg_node) == N_dimdecs, \
+			"getDimDecsLen called on non-Exprs!");
+	node* dimdecs = arg_node;
+	while (dimdecs != NULL)
+	{
+		i++;
+		dimdecs = DIMDECS_NEXT( dimdecs);
+	}
+	return i;
+}
+

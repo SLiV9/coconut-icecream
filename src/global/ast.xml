@@ -70,12 +70,16 @@
     
       <traversal id="TPINF" name="Type inference" default="sons" include="tpinf.h">
       	<travuser>
-      	<node name="MonOp" />
-        <node name="BinOp" />
-    		<node name="VarLet" />
-        <node name="VarCall" />
-        <node name="FunCall" />
-    		<node name="ArrayLit" />
+		    	<node name="MonOp" />
+		      <node name="BinOp" />
+		  		<node name="VarLet" />
+		      <node name="VarCall" />
+		      <node name="FunCall" />
+		  		<node name="ArrayLit" />
+					<node name="VarDec" />
+					<node name="GlobDef" />
+					<node name="GlobDec" />
+					<node name="Param" />
       	</travuser>
       </traversal>
     
@@ -488,8 +492,7 @@
         			<target mandatory="no">
 		      			<any />
 		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>
@@ -501,8 +504,7 @@
         			<target mandatory="no">
 		      			<any />
 		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>
@@ -651,6 +653,18 @@
         		</targets>
         	</type>
         </attribute>
+        <attribute name="Depth">
+        	<type name="Int">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<range from="tc" to="cg" />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
     		<attribute name="Export">
     			<type name="Bool">
     				<targets>
@@ -698,6 +712,18 @@
 		      			<any />
 		      			<phases>
 		      				<all />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
+        <attribute name="Depth">
+        	<type name="Int">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>
@@ -757,14 +783,25 @@
         		</targets>
         	</type>
         </attribute>
+        <attribute name="Depth">
+        	<type name="Int">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<range from="tc" to="cg" />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
         <attribute name="Escaping">
         	<type name="Bool">
         		<targets>
         			<target mandatory="no">
         				<any />
         				<phases>
-        					<phase name="ca" />
-        					<phase name="cg" />
+		      				<range from="ca" to="cg" />
         				</phases>
         			</target>
         		</targets>
@@ -820,14 +857,25 @@
         		</targets>
         	</type>
         </attribute>
+        <attribute name="Depth">
+        	<type name="Int">
+        		<targets>
+        			<target mandatory="no">
+		      			<any />
+		      			<phases>
+		      				<range from="tc" to="cg" />
+		      			</phases>
+		      		</target>
+        		</targets>
+        	</type>
+        </attribute>
         <attribute name="Escaping">
         	<type name="Bool">
         		<targets>
         			<target mandatory="no">
         				<any />
         				<phases>
-        					<phase name="ca" />
-        					<phase name="cg" />
+		      				<range from="ca" to="cg" />
         				</phases>
         			</target>
         		</targets>
@@ -1037,8 +1085,7 @@
         			<target mandatory="no">
 		      			<any />
 		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>
@@ -1088,8 +1135,7 @@
         			<target mandatory="no">
 		      			<any />
 		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>
@@ -1141,8 +1187,7 @@
         			<target mandatory="no">
 		      			<any />
 		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>
@@ -1194,8 +1239,7 @@
         			<target mandatory="no">
 		      			<any />
 		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>
@@ -1247,8 +1291,7 @@
         			<target mandatory="no">
 		      			<any />
 		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>

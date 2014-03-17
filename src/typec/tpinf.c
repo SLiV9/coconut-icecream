@@ -117,6 +117,52 @@ node* TPINFarraylit(node *arg_node, info *arg_info)
   DBUG_RETURN (arg_node);
 }
 
+node* TPINFvardec(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPINFvardec");
+  
+  VARDEC_DIMDEFS( arg_node) = TRAVopt( VARDEC_DIMDEFS( arg_node), arg_info);
+  VARDEC_EXPR( arg_node) = TRAVopt( VARDEC_EXPR( arg_node), arg_info);
+  
+  VARDEC_DEPTH( arg_node) = getExprsLen( VARDEC_DIMDEFS( arg_node));
+
+  DBUG_RETURN (arg_node);
+}
+
+node* TPINFglobdef(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPINFglobdef");
+  
+  GLOBDEF_DIMDEFS( arg_node) = TRAVopt( GLOBDEF_DIMDEFS( arg_node), arg_info);
+  GLOBDEF_EXPR( arg_node) = TRAVopt( GLOBDEF_EXPR( arg_node), arg_info);
+  
+  GLOBDEF_DEPTH( arg_node) = getExprsLen( GLOBDEF_DIMDEFS( arg_node));
+
+  DBUG_RETURN (arg_node);
+}
+
+node* TPINFglobdec(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPINFglobdec");
+  
+  GLOBDEC_DIMDECS( arg_node) = TRAVopt( GLOBDEC_DIMDECS( arg_node), arg_info);
+  
+  GLOBDEC_DEPTH( arg_node) = getDimDecsLen( GLOBDEC_DIMDECS( arg_node));
+
+  DBUG_RETURN (arg_node);
+}
+
+node* TPINFparam(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPINFparam");
+  
+  PARAM_DIMDECS( arg_node) = TRAVopt( PARAM_DIMDECS( arg_node), arg_info);
+  
+  PARAM_DEPTH( arg_node) = getDimDecsLen( PARAM_DIMDECS( arg_node));
+
+  DBUG_RETURN (arg_node);
+}
+
 static void putMonopError(node* arg_node, vtype t)
 {
 	CTIerror("file %s, line %d\n"

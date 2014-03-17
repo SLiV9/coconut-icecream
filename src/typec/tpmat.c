@@ -30,10 +30,17 @@ node* TPMATassign(node *arg_node, info *arg_info)
   vtype vrt = getType( ASSIGN_LET( arg_node));
   
   vtype ext = VT_unknown;
-  if (!isArrayLit && !isAlloc)
-  {
+	if (!isAlloc)
+	{
 		ASSIGN_EXPR( arg_node) = TRAVdo( ASSIGN_EXPR( arg_node), arg_info);
-		ext = getType( ASSIGN_EXPR( arg_node));
+		if (!isArrayLit)
+		{
+			ext = getType( ASSIGN_EXPR( arg_node));
+		}
+		else
+		{
+			ext = ARRAYLIT_TYPE( ASSIGN_EXPR( arg_node));
+		}
   }
   
   switch (vrt)
