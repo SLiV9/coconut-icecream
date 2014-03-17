@@ -30,6 +30,27 @@ const char* binop_name[14] =  { "+", "-", "*", "/", "%",
                									"<", "<=", ">", ">=", "==", "!=",
                									"&&", "||", "unknown" };
 
+/* special array dimension display */
+static char* sadd[5] = { "", "[]", "[,]", "[,,]", "[,,,]" };
+
+char* arrayDimDisplay(int n)
+{
+	static char sadd_buffer[80] = "[...]";
+	
+	if (n <= 0)
+	{	
+		return sadd[0];
+	}
+	else if (n < 5)
+	{
+		return sadd[n];
+	}
+	else
+	{
+		// TODO
+		return sadd_buffer;
+	}
+}
 
 /*
  * INFO structure

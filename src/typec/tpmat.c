@@ -124,6 +124,19 @@ node* TPMATfundef(node *arg_node, info *arg_info)
   DBUG_RETURN (arg_node);
 }
 
+static void putParamMismatchError(node* arg_node, const char* hname, int i, \
+		node* dec, vtype art, int ad, vtype prt, int pd)
+{
+	CTIerror("file %s, line %d\n"
+			"argument #%d in call to function '%s' "
+			"(declared at line %d)\n"
+			"of type %s%s does not match parameter of type %s%s", \
+			myglobal.fn, NODE_LINE( arg_node), \
+			i, hname, NODE_LINE( dec), \
+			vtype_name[art], STRcpy(arrayDimDisplay(ad)), \
+			vtype_name[prt], STRcpy(arrayDimDisplay(pd)));
+}
+
 node* TPMATfuncall(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPMATfuncall");
@@ -167,13 +180,8 @@ node* TPMATfuncall(node *arg_node, info *arg_info)
 					case VT_bool:
 						if (art != prt)
 						{
-							CTIerror("file %s, line %d\n"
-									"argument #%d in call to function '%s' "
-									"(declared at line %d)\n"
-									"of type %s does not match parameter of type %s", \
-									myglobal.fn, NODE_LINE( arg_node), \
-									i, HEADER_NAME( hd), NODE_LINE( dec), \
-									vtype_name[art], vtype_name[prt]);
+							putParamMismatchError(arg_node, HEADER_NAME( hd), i, dec, \
+									art, 1, prt, 1);
 						}
 						break;
 					case VT_unknown:

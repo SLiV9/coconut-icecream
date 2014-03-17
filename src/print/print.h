@@ -15,6 +15,8 @@ const char* vtype_name[5];
 const char* monop_name[3];
 const char* binop_name[14];
 
+char* arrayDimDisplay(int n);
+
 extern node *PRTdeclars (node * arg_node, info * arg_info);
 extern node *PRTparams (node * arg_node, info * arg_info);
 extern node *PRTvardecs (node * arg_node, info * arg_info);

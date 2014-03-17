@@ -48,7 +48,7 @@ export void main()
 	}
 	
 	printFloat(average(x));
-	printFloat(sum(y));
+	printFloat(sum(2));
 	printFloat(getIth(x, 2));
 }
 
