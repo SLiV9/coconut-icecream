@@ -1,8 +1,11 @@
 extern void printFloat(float f);
 
+float[3] y = [30.0, -1.23, 5.0];
+
 export void main()
 {
-	float[5] x = [3.1415, -1.0, 0.0, 1.337, 303.03];
+	int n = 5;
+	float[n] x = [3.1415, -1.0, 0.0, 1.337, 303.03];
 	
 	float sum(float[k] a)
 	{

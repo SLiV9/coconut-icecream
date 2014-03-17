@@ -562,9 +562,9 @@ PRTglobdef (node * arg_node, info * arg_info)
 
   if (GLOBDEF_DIMDEFS( arg_node) != NULL)
   {
-  	printf("[ ");
+  	printf("[");
   	GLOBDEF_DIMDEFS( arg_node) = TRAVdo( GLOBDEF_DIMDEFS( arg_node), arg_info);
-  	printf(" ]");
+  	printf("]");
   }
 
   printf( " %s", GLOBDEF_NAME( arg_node));

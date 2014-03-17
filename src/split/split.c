@@ -4,6 +4,7 @@
 #include "traverse.h"
 #include "dbug.h"
 #include "str.h"
+#include "copy.h"
 #include <string.h>
 
 struct INFO{
@@ -49,17 +50,40 @@ node* SPLITbody(node *arg_node, info *arg_info){
  DBUG_RETURN (arg_node);
 }
 
+static node* dimdefsToAlloc( node* dimdefs)
+{
+	DBUG_ASSERT( NODE_TYPE(dimdefs) == N_exprs, "dimdefsToAlloc called on "
+			"something other than dimdefs!");
+	return TBmakeFuncall( STRcpy("__alloc"), COPYdoCopy(dimdefs));
+}
+
 node* SPLITvardec(node *arg_node, info *arg_info){
   DBUG_ENTER ("Splitvardec");
   if (VARDEC_EXPR(arg_node) != NULL){
-    node * assign = TBmakeAssign(TBmakeVarlet(STRcpy(VARDEC_NAME(arg_node)),NULL),VARDEC_EXPR(arg_node));
+    node * assign = TBmakeAssign( \
+    		TBmakeVarlet( STRcpy(VARDEC_NAME(arg_node)), NULL), \
+    		VARDEC_EXPR(arg_node));
     VARDEC_EXPR(arg_node) = NULL;
-    node * instrs = TBmakeInstrs(assign,NULL);
+    node* arralloc = NULL;
+    if (VARDEC_DIMDEFS( arg_node) != NULL)
+    {
+    	node* alloc = dimdefsToAlloc( VARDEC_DIMDEFS( arg_node));
+    	arralloc = TBmakeInstrs(
+    			TBmakeAssign( \
+    					TBmakeVarlet( STRcpy( VARDEC_NAME( arg_node)), NULL), \
+    					alloc), \
+    			NULL);
+    }
+    node * instrs = TBmakeInstrs(assign, arralloc);
+    node * last = instrs;
+    if (arralloc != NULL)
+    {
+    	last = arralloc;
+    }
     if(arg_info->head == NULL){
-
-      arg_info->head = arg_info->last = instrs; 
+      arg_info->head = arg_info->last = last; 
     }else{
-      arg_info->last = INSTRS_NEXT(arg_info->last) = instrs;
+      arg_info->last = INSTRS_NEXT(arg_info->last) = last;
     }
   }
   DBUG_RETURN (arg_node);
@@ -85,12 +109,15 @@ node
   TRAVpop();
 
   node * header = TBmakeHeader(STRcpy("__init"),VT_void,NULL);
-
   node * body = TBmakeBody(NULL,NULL,info.head,NULL);
-
   node * fun = TBmakeFundef(TRUE,header,body);
+  NODE_LINE(fun) = -1;
+  
+  node * headerA = TBmakeHeader(STRcpy("__alloc"), VT_void, NULL);
+  node * funA = TBmakeFundec(headerA);
+  NODE_LINE(funA) = 0;
 
-  node * decl = TBmakeDeclars(fun,   syntaxtree);
+  node * decl = TBmakeDeclars(fun, TBmakeDeclars(funA,   syntaxtree));
 
 
   DBUG_RETURN( decl);

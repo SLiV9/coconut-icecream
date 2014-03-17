@@ -44,6 +44,12 @@ SUBPHASE( split,
 					ALWAYS,
 					ca)
 
+SUBPHASE( hoi,
+					"Hoi",
+					PRTdoPrint,
+					ALWAYS,
+					ca)
+
 SUBPHASE( namelink,
 					"Linking calls to names",
 					NAMELINKdoLinkNames,
@@ -56,7 +62,7 @@ ENDPHASE( ca)
 
 PHASE( tc,
 			 "Type Checking",
-			 ALWAYS)
+			 NEVER)
 
 SUBPHASE( tpinf,
 					"Type Inference",
