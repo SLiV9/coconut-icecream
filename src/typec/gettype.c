@@ -62,7 +62,10 @@ vtype getType(node* nd)
 			};
 			return r;
 		case N_arraylit:
-			return ARRAYLIT_TYPE(nd);
+			CTIerror("file %s, line %d\n"
+					"array literal used outside of array assignment", \
+					myglobal.fn, NODE_LINE(nd));
+			return VT_unknown;
 		default:
 			DBUG_ASSERT( 0, "invalid gettype detected!");
 			return VT_unknown;

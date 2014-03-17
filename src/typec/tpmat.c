@@ -19,11 +19,22 @@ node* TPMATassign(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPMATassign");
   
-  ASSIGN_LET( arg_node) = TRAVdo( ASSIGN_LET( arg_node), arg_info);
-  ASSIGN_EXPR( arg_node) = TRAVdo( ASSIGN_EXPR( arg_node), arg_info);
+  node* expr = ASSIGN_EXPR( arg_node);
   
+  bool isArrayLit, isAlloc;
+  isArrayLit = (NODE_TYPE( expr) == N_arraylit);
+  isAlloc = ((NODE_TYPE( expr) == N_funcall) && \
+  		STReq("__alloc", FUNCALL_NAME( expr)));
+  
+  ASSIGN_LET( arg_node) = TRAVdo( ASSIGN_LET( arg_node), arg_info);
   vtype vrt = getType( ASSIGN_LET( arg_node));
-  vtype ext = getType( ASSIGN_EXPR( arg_node));
+  
+  vtype ext = VT_unknown;
+  if (!isArrayLit && !isAlloc)
+  {
+		ASSIGN_EXPR( arg_node) = TRAVdo( ASSIGN_EXPR( arg_node), arg_info);
+		ext = getType( ASSIGN_EXPR( arg_node));
+  }
   
   switch (vrt)
   {
@@ -109,6 +120,8 @@ node* TPMATfundef(node *arg_node, info *arg_info)
 node* TPMATfuncall(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPMATfuncall");
+  
+  FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
 	
 	node* dec = FUNCALL_DEC( arg_node);
 	node* hd;

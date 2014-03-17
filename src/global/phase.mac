@@ -62,7 +62,7 @@ ENDPHASE( ca)
 
 PHASE( tc,
 			 "Type Checking",
-			 NEVER)
+			 ALWAYS)
 
 SUBPHASE( tpinf,
 					"Type Inference",
