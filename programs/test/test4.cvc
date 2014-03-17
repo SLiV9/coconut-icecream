@@ -1,5 +1,26 @@
-#include "test4.h"
-a = (42 + 
-(13
-                * tutu));
+
+float y1 = -1.23;
+float[3] y = [30.0, y1, 5.0];
+export float[5] z;
+extern float[m] u;
+
+export void main()
+{
+	int n = 5;
+	float[n] x = [3.1415, -1.0, 0.0, 1.337, 303.03];
+	
+	float getIth(float[k] a, int i)
+	{
+		float r = 0.0;
+		if (i >= 0 && i < k)
+		{
+			r = a[i];
+		}
+		return r;
+	}
+	
+	printFloat(x[2]);
+	printFloat(sum([1.23, -4.55, 0.22]));
+	printFloat(getIth(x, 2));
+}
 

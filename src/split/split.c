@@ -12,18 +12,68 @@ struct INFO{
   node* last;
 };
 
+static node* dimdefsToAlloc( node* dimdefs)
+{
+	DBUG_ASSERT( NODE_TYPE(dimdefs) == N_exprs, "dimdefsToAlloc called on "
+			"something other than dimdefs!");
+	return TBmakeFuncall( STRcpy("__alloc"), COPYdoCopy(dimdefs));
+}
+
+static node* dimdefsToInstrs( const char* name, node* dimdefs)
+{
+  if (dimdefs != NULL)
+  {
+  	return TBmakeInstrs( TBmakeAssign( TBmakeVarlet( STRcpy( name), NULL), \
+  					dimdefsToAlloc( dimdefs)), NULL);
+  }
+  
+  return NULL;
+}
+
 node* SPLITglobdef(node *arg_node, info *arg_info){
  DBUG_ENTER ("SPLITglobaldef");
  
+	node * instr_assign = NULL;
+	node * instr_alloc = NULL;
+	node * instrs;
+	node * last;
+ 
   if (GLOBDEF_EXPR(arg_node) != NULL){
-    node * assign = TBmakeAssign(TBmakeVarlet(STRcpy(GLOBDEF_NAME(arg_node)),NULL),GLOBDEF_EXPR(arg_node));
+    node * assign = TBmakeAssign(
+    		TBmakeVarlet( STRcpy( GLOBDEF_NAME( arg_node)), NULL), \
+    		GLOBDEF_EXPR( arg_node));
     GLOBDEF_EXPR(arg_node) = NULL;
-    node * instrs = TBmakeInstrs(assign,NULL);
-    if(arg_info->head == NULL){
-      arg_info->head = arg_info->last = instrs; 
-    }else{
-      arg_info->last = INSTRS_NEXT(arg_info->last) = instrs;
-    }
+    instr_assign = TBmakeInstrs(assign, NULL);
+  }
+  
+  if (GLOBDEF_DIMDEFS( arg_node) != NULL)
+  {
+  	instr_alloc = dimdefsToInstrs( GLOBDEF_NAME( arg_node), \
+  			GLOBDEF_DIMDEFS( arg_node));
+  	INSTRS_NEXT( instr_alloc) = instr_assign;
+  }
+  
+  instrs = instr_assign;
+  if (instr_alloc != NULL)
+  {
+  	instrs = instr_alloc;
+  }
+  
+  last = instr_alloc;
+  if (instr_assign != NULL)
+  {
+  	last = instr_assign;
+  }
+  
+  if (instrs != NULL)
+  {
+		if(arg_info->head == NULL){
+		  arg_info->head = instrs;
+		  arg_info->last = last; 
+		}else{
+			INSTRS_NEXT(arg_info->last) = instrs;
+			arg_info->last = last;
+		}
   }
  
   // dont have to trav down nothitg to change there
@@ -50,42 +100,52 @@ node* SPLITbody(node *arg_node, info *arg_info){
  DBUG_RETURN (arg_node);
 }
 
-static node* dimdefsToAlloc( node* dimdefs)
-{
-	DBUG_ASSERT( NODE_TYPE(dimdefs) == N_exprs, "dimdefsToAlloc called on "
-			"something other than dimdefs!");
-	return TBmakeFuncall( STRcpy("__alloc"), COPYdoCopy(dimdefs));
-}
-
 node* SPLITvardec(node *arg_node, info *arg_info){
   DBUG_ENTER ("Splitvardec");
+  
+  node * instr_assign = NULL;
+	node * instr_alloc = NULL;
+	node * instrs;
+	node * last;
+ 
   if (VARDEC_EXPR(arg_node) != NULL){
-    node * assign = TBmakeAssign( \
-    		TBmakeVarlet( STRcpy(VARDEC_NAME(arg_node)), NULL), \
-    		VARDEC_EXPR(arg_node));
+    node * assign = TBmakeAssign(
+    		TBmakeVarlet( STRcpy( VARDEC_NAME( arg_node)), NULL), \
+    		VARDEC_EXPR( arg_node));
     VARDEC_EXPR(arg_node) = NULL;
-    node* arralloc = NULL;
-    if (VARDEC_DIMDEFS( arg_node) != NULL)
-    {
-    	node* alloc = dimdefsToAlloc( VARDEC_DIMDEFS( arg_node));
-    	arralloc = TBmakeInstrs(
-    			TBmakeAssign( \
-    					TBmakeVarlet( STRcpy( VARDEC_NAME( arg_node)), NULL), \
-    					alloc), \
-    			NULL);
-    }
-    node * instrs = TBmakeInstrs(assign, arralloc);
-    node * last = instrs;
-    if (arralloc != NULL)
-    {
-    	last = arralloc;
-    }
-    if(arg_info->head == NULL){
-      arg_info->head = arg_info->last = last; 
-    }else{
-      arg_info->last = INSTRS_NEXT(arg_info->last) = last;
-    }
+    instr_assign = TBmakeInstrs(assign, NULL);
   }
+  
+  if (VARDEC_DIMDEFS( arg_node) != NULL)
+  {
+  	instr_alloc = dimdefsToInstrs( VARDEC_NAME( arg_node), \
+  			VARDEC_DIMDEFS( arg_node));
+  	INSTRS_NEXT( instr_alloc) = instr_assign;
+  }
+  
+  instrs = instr_assign;
+  if (instr_alloc != NULL)
+  {
+  	instrs = instr_alloc;
+  }
+  
+  last = instr_alloc;
+  if (instr_assign != NULL)
+  {
+  	last = instr_assign;
+  }
+  
+  if (instrs != NULL)
+  {
+		if(arg_info->head == NULL){
+		  arg_info->head = instrs;
+		  arg_info->last = last; 
+		}else{
+			INSTRS_NEXT(arg_info->last) = instrs;
+			arg_info->last = last;
+		}
+  }
+  
   DBUG_RETURN (arg_node);
 }
 
