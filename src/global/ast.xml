@@ -744,8 +744,7 @@
         			<target mandatory="no">
         				<any />
         				<phases>
-        					<phase name="ca" />
-        					<phase name="cg" />
+        					<range from="ca" to="cg" />
         				</phases>
         			</target>
         		</targets>
@@ -807,8 +806,7 @@
         			<target mandatory="no">
         				<any />
         				<phases>
-        					<phase name="ca" />
-        					<phase name="cg" />
+        					<range from="ca" to="cg" />
         				</phases>
         			</target>
         		</targets>
@@ -1018,8 +1016,7 @@
         			<target mandatory="no">
 		      			<any />
 		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>
@@ -1069,8 +1066,7 @@
         			<target mandatory="no">
 		      			<any />
 		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>
@@ -1122,8 +1118,7 @@
         			<target mandatory="no">
 		      			<any />
 		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>
@@ -1175,8 +1170,7 @@
         			<target mandatory="no">
 		      			<any />
 		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>
@@ -1228,8 +1222,7 @@
         			<target mandatory="no">
 		      			<any />
 		      			<phases>
-		      				<phase name="tc" />
-		      				<phase name="cg" />
+		      				<range from="tc" to="cg" />
 		      			</phases>
 		      		</target>
         		</targets>

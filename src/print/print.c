@@ -557,14 +557,18 @@ node *
 PRTglobdef (node * arg_node, info * arg_info)
 {	
   DBUG_ENTER ("PRTglobdef");
-
+  
+	if (GLOBDEF_EXPORT( arg_node))
+	{
+		printf("export ");
+	}
   printType(GLOBDEF_TYPE( arg_node));
 
   if (GLOBDEF_DIMDEFS( arg_node) != NULL)
   {
-  	printf("[ ");
+  	printf("[");
   	GLOBDEF_DIMDEFS( arg_node) = TRAVdo( GLOBDEF_DIMDEFS( arg_node), arg_info);
-  	printf(" ]");
+  	printf("]");
   }
 
   printf( " %s", GLOBDEF_NAME( arg_node));
@@ -585,6 +589,7 @@ PRTglobdec (node * arg_node, info * arg_info)
 {	
   DBUG_ENTER ("PRTglobdec");
 
+	printf("extern ");
   printType(GLOBDEC_TYPE( arg_node));
 
   if (GLOBDEC_DIMDECS( arg_node) != NULL)
