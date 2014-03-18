@@ -2,6 +2,7 @@
 
 #include "namelink.h"
 #include "funhead.h"
+#include "globnames.h"
 
 #include "types.h"
 #include "tree_basic.h"
@@ -67,9 +68,7 @@ node* NAMELINKglobdef(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("NAMELINKglobdef");
   
-  GLOBDEF_EXPR( arg_node) = TRAVopt( GLOBDEF_EXPR( arg_node), arg_info);
-  
-  GLOBDEF_DIMDEFS( arg_node) = TRAVopt( GLOBDEF_DIMDEFS( arg_node), arg_info);
+  // nothing, see globnames
 
   DBUG_RETURN (arg_node);
 }
@@ -78,7 +77,7 @@ node* NAMELINKglobdec(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("NAMELINKglobdec");
   
-  GLOBDEC_DIMDECS( arg_node) = TRAVopt( GLOBDEC_DIMDECS( arg_node), arg_info);
+  // nothing, see globnames
 
   DBUG_RETURN (arg_node);
 }
@@ -196,6 +195,12 @@ node *NAMELINKdoLinkNames(node *syntaxtree)
 	info = MakeInfo();
 
   TRAVpush( TR_namelinkfunhead);
+
+  syntaxtree = TRAVdo( syntaxtree, info);
+
+  TRAVpop();
+
+  TRAVpush( TR_namelinkglobnames);
 
   syntaxtree = TRAVdo( syntaxtree, info);
 

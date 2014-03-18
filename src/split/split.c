@@ -15,7 +15,9 @@ node* SPLITglobdef(node *arg_node, info *arg_info){
  DBUG_ENTER ("SPLITglobaldef");
  
   if (GLOBDEF_EXPR(arg_node) != NULL){
-    node * assign = TBmakeAssign(TBmakeVarlet(STRcpy(GLOBDEF_NAME(arg_node)),NULL),GLOBDEF_EXPR(arg_node));
+  	node * letje = TBmakeVarlet( STRcpy( GLOBDEF_NAME(arg_node)), NULL);
+  	VARLET_DEC(letje) = arg_node;
+    node * assign = TBmakeAssign( letje, GLOBDEF_EXPR(arg_node));
     GLOBDEF_EXPR(arg_node) = NULL;
     node * instrs = TBmakeInstrs(assign,NULL);
     if(arg_info->head == NULL){
@@ -52,7 +54,9 @@ node* SPLITbody(node *arg_node, info *arg_info){
 node* SPLITvardec(node *arg_node, info *arg_info){
   DBUG_ENTER ("Splitvardec");
   if (VARDEC_EXPR(arg_node) != NULL){
-    node * assign = TBmakeAssign(TBmakeVarlet(STRcpy(VARDEC_NAME(arg_node)),NULL),VARDEC_EXPR(arg_node));
+  	node * letje = TBmakeVarlet( STRcpy( VARDEC_NAME(arg_node)), NULL);
+  	VARLET_DEC(letje) = arg_node;
+    node * assign = TBmakeAssign( letje ,VARDEC_EXPR(arg_node));
     VARDEC_EXPR(arg_node) = NULL;
     node * instrs = TBmakeInstrs(assign,NULL);
     if(arg_info->head == NULL){

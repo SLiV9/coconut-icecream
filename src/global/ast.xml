@@ -68,6 +68,15 @@
       	</travuser>
       </traversal>
     
+      <traversal id="NAMELINKGLOBNAMES" name="Linking global vars" default="sons" include="globnames.h">
+      	<travuser>
+		  		<node name="FunDef" />
+		  		<node name="FunDec" />
+		  		<node name="GlobDef" />
+		  		<node name="GlobDec" />
+      	</travuser>
+      </traversal>
+    
       <traversal id="TPINF" name="Type inference" default="sons" include="tpinf.h">
       	<travuser>
       	<node name="MonOp" />
