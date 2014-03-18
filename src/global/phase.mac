@@ -95,8 +95,14 @@ PHASE( cg,
        ALWAYS)
 
 SUBPHASE( prt, 
-          "Generating byte code",
+          "Print before generation",
           PRTdoPrint, 
+          ALWAYS,
+          cg)  
+
+SUBPHASE( gbc, 
+          "Generating byte code",
+          CODEGENdoCodegen, 
           ALWAYS,
           cg)      
 

@@ -6,7 +6,7 @@
 # 
 # SAC COPYRIGHT NOTICE, LICENSE, AND DISCLAIMER
 # 
-# (c) Copyright 1994 - 2011 by
+# (c) Copyright 1994 - 2010 by
 # 
 #   SAC Development Team
 #   SAC Research Foundation
@@ -49,75 +49,78 @@
 
 ###############################################################################
 #
-# Collection of source directories
+# Makefile for sac2c source directories
 #
-
-
-src = global scanparse print framework \
-			mycpp myscp \
-			idpre namelink split \
-			typec calcconst \
-			codegen
-
-
+# This Makefile is copied on demand into source directories.
+# Be sure not to edit these copies.
+#
 ###############################################################################
-#
-# Collection of object files
-#
-#  Note that the variable names must coincide with the directory names above.
-
-
-framework   = memory.o str.o ctinfo.o main_args.o dbug.o globals.o \
-              free_attribs.o free.o copy.o traverse.o scanparse.o main.o \
-              phase.o phase_drivers.o phase_info.o phase_options.o \
-              check_lib.o node_basic.o free_node.o copy_node.o \
-              traverse_tables.o traverse_helper.o check.o \
-              check_node.o check_attribs.o lookup_table.o 
-
-global      = options.o usage.o myglobals.o
-
-scanparse   = civic.tab.o civic.lex.o
-
-print       = print.o
-
-mycpp				= mycpp.o
-myscp				= myscp.o
-
-as4ip				= as4ip.o
-as4ac				= as4ac.o
-split				= split.o
-calcconst			= calcconst.o
-
-idpre				= idpre.o
-namelink 		= namelink.o funhead.o globnames.o namestackinfo.o
-typec				= tpinf.o tpmat.o gettype.o
-
-codegen			= codegen.o
 
 
 
 ###############################################################################
 #
-# Testing
+# General settings
 #
-#  Uncomment the necessary parts when adding extensions.
 
-# Subdirectories of "test/" to traverse into during testing. Enable
-# "nested_funs" and "arrays" when you start implementing those extensions.
-# "preprocess" is optional, for those who implemented the C preprocessor.
-TEST_DIRS := basic # nested_funs arrays preprocess
+PROJECT_ROOT = ../..
 
-# Flags to pass to your compiler when running tests (e.g., a verbosity level).
-TEST_CFLAGS := ""
+include $(PROJECT_ROOT)/Makefile.Config
 
-# Whether to run tests that compare program output. Set to 1 after you have
-# implemented your assembly phase.
-TEST_RUN_FUNCTIONAL := 0
+TARGET = $(notdir $(PWD))
 
-# Path to toolchain files, relative to the root directory (used for functional
-# test).
-TEST_CIVAS := toolchain/civas
-TEST_CIVVM := toolchain/civvm
 
-# Path to your compiler binary, relative to the root directory.
-TEST_CIVCC := bin/civicc
+
+###############################################################################
+#
+# Dummy rules
+#
+
+.PHONY: clean all devel prod 
+
+
+
+###############################################################################
+#
+# Start rules
+#
+
+all: devel
+
+devel:
+	@$(ECHO) ""
+	@$(ECHO) "Making current subdirectory (developer version)"
+	@$(MAKE) -C $(PROJECT_ROOT) TARGET="$(TARGET)" MODE="" CHECK_DEPS="yes" makesubdir
+
+prod:
+	@$(ECHO) ""
+	@$(ECHO) "Making current subdirectory (product version)"
+	@$(MAKE) -C $(PROJECT_ROOT) TARGET="$(TARGET)" MODE="prod" CHECK_DEPS="yes"makesubdir
+
+
+
+
+###############################################################################
+#
+# Rules for generating Makefiles
+#
+
+Makefile: $(PROJECT_ROOT)/Makefile.Source
+	@$(ECHO) "  Creating makefile: $@" 
+	@cp -f $< $@
+
+
+
+
+
+###############################################################################
+#
+# Rules for directory cleaning
+#
+
+clean:
+	@$(RM) *.o *.a *.bak *~ .*.d
+	@$(RM) $(patsubst %.xsl,%,$(wildcard *.xsl))
+	@$(RM) -r .sb SunWS_cache
+	@$(RM) *.lex.c *.tab.c *.tab.h y.output
+

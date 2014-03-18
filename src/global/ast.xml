@@ -106,10 +106,7 @@
 		  		<node name="GlobDef" />
       	</travuser>
       </traversal>
-
-
-
-
+      
       <traversal id="CALCCONST" name="CalcConst" default="sons" include="calcconst.h">
       	<travuser>
       		<node name="Cast" />
@@ -117,12 +114,12 @@
 		<node name="BinOp" />
       	</travuser>
       </traversal>
-
-
-
-
-
-
+      
+      <traversal id="CODEGEN" name="CodeGen" default="sons" include="codegen.h">
+      	<travuser>
+      		<node name="FunDef" />
+      	</travuser>
+      </traversal>
 
       <traversal id="PRT" name="Print Syntax Tree" default="user" include="print.h" />
 
