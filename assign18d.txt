@@ -1,0 +1,22 @@
+										;		   ; function header
+	esr 1							;	 0+2 ; 1 local variable
+	iload 0						;	 2+2 ; load x
+	iloadc_1					;	 4+1 ; load 1
+	ile								;	 5+1 ; x <= 1
+	branch_f 8				;	 6+3 ; if (x <= 1) {
+	iloadc_1					;	 9+1 ; 	load 1
+	istore 1					;	10+2 ; 	res = 1
+	jump 16						;	12+3 ; }
+										;	     ; else {
+	iload 0						;	14+2 ; 	load x
+	isrg							;	16+1 ; 	factorial(_)
+	iload 0						;	17+2 ; 		load x
+	iloadc_1					;	19+1 ;			load 1
+	isub							;	20+1 ;			x-1
+	jsr 1 -21					;	21+4 ;		factorial(x-1)
+	imul							;	25+1 ; 	x * factorial(x-1)
+	istore 1					;	26+2 ; 	res = x * factorial(x-1)
+										;	     ; }
+	iload 1						;	28+2 ; load res
+	ireturn						;	30+1 ; return res
+
