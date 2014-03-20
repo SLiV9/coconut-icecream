@@ -9,6 +9,8 @@
 
 #include "namestackinfo.h"
 
+static int scopediff = 0;
+
 info *MakeInfo()
 {
   info *result;
@@ -82,6 +84,8 @@ node* findNameDec(node *arg_node, info *arg_info, const char* name)
 						/* do nothing */ ;
 				}
 			}
+
+			scopediff++;
 			
 			return dec;
 		}
@@ -92,6 +96,11 @@ node* findNameDec(node *arg_node, info *arg_info, const char* name)
 	putUndeclaredError(NODE_LINE( arg_node), name, isFunction( arg_node));
 	
 	return NULL;
+}
+
+int getNameDecScopeDiff()
+{
+		return scopediff;
 }
 
 void pushNameDec(node *arg_node, info *arg_info, const char* name)

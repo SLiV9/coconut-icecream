@@ -29,7 +29,7 @@ const char* monop_name[3] =   { "!", "-", "unknown" };
 const char* binop_name[14] =  { "+", "-", "*", "/", "%",
                									"<", "<=", ">", ">=", "==", "!=",
                									"&&", "||", "unknown" };
-
+const char* scope_name[3] =   { "g", "l", "c" };
 
 /*
  * INFO structure
@@ -92,7 +92,7 @@ void printType(vtype t)
   printf( "%s", tmp);
 }
 
-void printLink(node* dec)
+void printLink(node* dec, int scopediff)
 {
 	if (dec == NULL)
 	{
@@ -102,32 +102,44 @@ void printLink(node* dec)
 	switch (NODE_TYPE(dec))
 	{
 		case N_vardec:
-			printf("{loc %s:%d}", VARDEC_NAME(dec), NODE_LINE(dec));
+			printf("{loc %s:%d", VARDEC_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_globdef:
-			printf("{glb %s:%d}", GLOBDEF_NAME(dec), NODE_LINE(dec));
+			printf("{glb %s:%d", GLOBDEF_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_globdec:
-			printf("{glb %s:%d}", GLOBDEF_NAME(dec), NODE_LINE(dec));
+			printf("{glb %s:%d", GLOBDEF_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_fundef:
-			printf("{fun %s:%d}", HEADER_NAME(FUNDEF_HEAD(dec)), NODE_LINE(dec));
+			printf("{fun %s:%d", HEADER_NAME(FUNDEF_HEAD(dec)), NODE_LINE(dec));
 			break;
 		case N_fundec:
-			printf("{fun %s:%d}", HEADER_NAME(FUNDEC_HEAD(dec)), NODE_LINE(dec));
+			printf("{fun %s:%d", HEADER_NAME(FUNDEC_HEAD(dec)), NODE_LINE(dec));
 			break;
 		case N_param:
-			printf("{prm %s:%d}", PARAM_NAME(dec), NODE_LINE(dec));
+			printf("{prm %s:%d", PARAM_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_iter:
-			printf("{itr %s:%d}", ITER_NAME(dec), NODE_LINE(dec));
+			printf("{itr %s:%d", ITER_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_dim:
-			printf("{dim %s:%d}", DIM_NAME(dec), NODE_LINE(dec));
+			printf("{dim %s:%d", DIM_NAME(dec), NODE_LINE(dec));
 			break;
 		default:
-			printf("{unknown}");
+			printf("{unknown");
 	}
+
+  if (scopediff >= -2 && scopediff <= 0)
+  {
+    printf(" $%s", scope_name[2 + scopediff]);
+    
+  }
+  if (scopediff > 0)
+  {
+    printf(" $%d", scopediff);
+  }
+
+  printf("}");
 }
 
 node *
@@ -431,7 +443,7 @@ PRTfuncall (node * arg_node, info * arg_info)
 
   if (FUNCALL_DEC( arg_node) != NULL)
 	{
-		printLink( FUNCALL_DEC( arg_node));
+		printLink( FUNCALL_DEC( arg_node), FUNCALL_SCOPEDIFF( arg_node));
 	}
 	else
 	{
@@ -454,7 +466,7 @@ PRTvarcall (node * arg_node, info * arg_info)
 
   if (VARCALL_DEC( arg_node) != NULL)
 	{
-		printLink( VARCALL_DEC( arg_node));
+		printLink( VARCALL_DEC( arg_node), VARCALL_SCOPEDIFF( arg_node));
 	}
 	else
 	{
@@ -480,7 +492,7 @@ PRTvarlet (node * arg_node, info * arg_info)
 
 	if (VARLET_DEC( arg_node) != NULL)
 	{
-		printLink( VARLET_DEC( arg_node));
+		printLink( VARLET_DEC( arg_node), VARLET_SCOPEDIFF( arg_node));
 	}
 	else
 	{

@@ -1,0 +1,29 @@
+export void main()
+{
+	int x;
+	bool foo()
+	{
+		int a;
+		int baz()
+		{
+			int f = 2;
+			if (bar())
+			{
+				f = 3;
+			}
+			return f * x;
+		}
+		a = baz();
+		return (a > 0) && foo() && bar();
+	}
+	bool bar()
+	{
+		int a = (2 * x);
+		return (a < 0);
+	}
+	x = 2;
+	if (foo())
+	{
+		x = 1;
+	}
+}
