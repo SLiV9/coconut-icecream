@@ -29,7 +29,7 @@ const char* monop_name[3] =   { "!", "-", "unknown" };
 const char* binop_name[14] =  { "+", "-", "*", "/", "%",
                									"<", "<=", ">", ">=", "==", "!=",
                									"&&", "||", "unknown" };
-const char* scope_name[3] =   { "g", "l", "c" };
+const char* scope_name[2] =   { "g", "l" };
 
 /*
  * INFO structure
@@ -129,9 +129,9 @@ void printLink(node* dec, int scopediff)
 			printf("{unknown");
 	}
 
-  if (scopediff >= -2 && scopediff <= 0)
+  if (scopediff >= -1 && scopediff <= 0)
   {
-    printf(" $%s", scope_name[2 + scopediff]);
+    printf(" $%s", scope_name[1 + scopediff]);
     
   }
   if (scopediff > 0)

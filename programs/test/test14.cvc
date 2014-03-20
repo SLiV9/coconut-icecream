@@ -14,16 +14,21 @@ export void main()
 			return f * x;
 		}
 		a = baz();
-		return (a > 0) && foo() && bar();
+		return (a > hoi()) && foo() && bar();
 	}
 	bool bar()
 	{
 		int a = (2 * x);
-		return (a < 0);
+		return (a < hoi());
 	}
 	x = 2;
 	if (foo())
 	{
-		x = 1;
+		x = hoi();
 	}
+}
+
+int hoi()
+{
+	return 1;
 }

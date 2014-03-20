@@ -83,9 +83,20 @@ node* findNameDec(node *arg_node, info *arg_info, const char* name)
 					default:
 						/* do nothing */ ;
 				}
-			}
 
-			scopediff++;
+				if (NAMEDECS_DEPTH( nd) > 0)
+				{
+					scopediff = NDSD_OUTER( INFO_DEPTH( arg_info) - NAMEDECS_DEPTH( nd));
+				}
+				else
+				{
+					scopediff = NDSD_GLOBAL();
+				}
+			}
+			else
+			{
+				scopediff = NDSD_LOCAL();
+			}
 			
 			return dec;
 		}
