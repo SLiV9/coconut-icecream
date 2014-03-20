@@ -124,7 +124,12 @@
       
       <traversal id="CODEGEN" name="CodeGen" default="sons" include="codegen.h">
       	<travuser>
-      		<node name="FunDef" />
+                <node name="MonOp" />
+		<node name="BinOp" />
+		<node name="Int" />
+		<node name="Float" />
+		<node name="Bool" />
+		<node name="VarCall" />
       	</travuser>
       </traversal>
 
