@@ -139,6 +139,24 @@ void printLink(node* dec, int scopediff)
     printf(" $%d", scopediff);
   }
 
+  switch (NODE_TYPE(dec))
+  {
+    case N_vardec:
+      if (VARDEC_SCOPEPOS(dec))
+      {
+        printf(" #%d", VARDEC_SCOPEPOS(dec));
+      }
+      break;
+    case N_param:
+      if (PARAM_SCOPEPOS(dec))
+      {
+        printf(" #%d", PARAM_SCOPEPOS(dec));
+      }
+      break;
+    default:
+      /* nothing */;
+  }
+
   printf("}");
 }
 
@@ -554,6 +572,11 @@ PRTvardec (node * arg_node, info * arg_info)
   }
   
   printf(";");
+
+  if (VARDEC_SCOPEPOS( arg_node))
+  {
+    printf(" #%d", VARDEC_SCOPEPOS( arg_node));
+  }
   
   if (VARDEC_ESCAPING( arg_node))
   {
@@ -638,6 +661,11 @@ PRTparam (node * arg_node, info * arg_info)
   }
 
   printf( " %s", PARAM_NAME( arg_node));
+
+  if (PARAM_SCOPEPOS( arg_node))
+  {
+    printf(" #%d", PARAM_SCOPEPOS( arg_node));
+  }
   
   if (PARAM_ESCAPING( arg_node))
   {

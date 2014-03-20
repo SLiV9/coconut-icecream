@@ -99,6 +99,12 @@ SUBPHASE( itersplit,
 					ALWAYS,
 					cr)
 
+SUBPHASE( varcount,
+					"Counting local variables",
+					VARCOUNTdoCount,
+					ALWAYS,
+					cr)
+
 ENDPHASE( cr)
 
 /******************************************************************************/

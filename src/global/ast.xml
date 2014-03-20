@@ -122,6 +122,17 @@
         </travuser>
       </traversal>
       
+      <traversal id="VARCOUNT" name="VarCount" default="sons" include="varcount.h">
+        <travuser>
+          <node name="FunDef" />
+          <node name="FunDec" />
+          <node name="Body" />
+          <node name="VarDec" />
+          <node name="Param" />
+        </travuser>
+      </traversal>
+
+      
       <traversal id="CODEGEN" name="CodeGen" default="sons" include="codegen.h">
       	<travuser>
       		<node name="FunDef" />
@@ -754,6 +765,18 @@
         		</targets>
         	</type>
         </attribute>
+        <attribute name="ScopePos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
       </attributes>
     </node>
     <node name="VarDec">
@@ -815,6 +838,18 @@
         			</target>
         		</targets>
         	</type>
+        </attribute>
+        <attribute name="ScopePos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
         </attribute>
         <attribute name="Iterator">
           <type name="Link">

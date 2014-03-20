@@ -14,7 +14,9 @@ export void main()
 			return f * x;
 		}
 		a = baz();
-		return (a > hoi()) && foo() && bar();
+		bar();
+		foo();
+		return (a > hoi());
 	}
 	bool bar()
 	{
