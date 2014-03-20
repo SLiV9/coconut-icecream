@@ -700,7 +700,7 @@ PRTif (node * arg_node, info * arg_info)
 	printf("{\n");
 	
 	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
-	IF_THEN( arg_node) = TRAVdo( IF_THEN( arg_node), arg_info);
+	IF_THEN( arg_node) = TRAVopt( IF_THEN( arg_node), arg_info);
 	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
 	
 	printIndent( arg_info);
@@ -739,7 +739,7 @@ PRTwhile (node * arg_node, info * arg_info)
 		printf("{\n");
 		
 		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
-		WHILE_DO( arg_node) = TRAVdo( WHILE_DO( arg_node), arg_info);
+		WHILE_DO( arg_node) = TRAVopt( WHILE_DO( arg_node), arg_info);
 		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
 		
 		printIndent( arg_info);
@@ -759,7 +759,7 @@ PRTwhile (node * arg_node, info * arg_info)
 		printf("{\n");
 		
 		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
-		WHILE_DO( arg_node) = TRAVdo( WHILE_DO( arg_node), arg_info);
+		WHILE_DO( arg_node) = TRAVopt( WHILE_DO( arg_node), arg_info);
 		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
 		
 		printIndent( arg_info);
@@ -795,7 +795,7 @@ PRTfor (node * arg_node, info * arg_info)
 	printf("{\n");
 	
 	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
-	FOR_DO( arg_node) = TRAVdo( FOR_DO( arg_node), arg_info);
+	FOR_DO( arg_node) = TRAVopt( FOR_DO( arg_node), arg_info);
 	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
 	
 	printIndent( arg_info);

@@ -850,7 +850,7 @@
     		</son>
     		<son name="Then">
     			<targets>
-    				<target mandatory="yes">
+    				<target mandatory="no">
     					<node name="Instrs" />
     					<phases>
     						<all />
@@ -885,7 +885,7 @@
     		</son>
     		<son name="Do">
     			<targets>
-    				<target mandatory="yes">
+    				<target mandatory="no">
     					<node name="Instrs" />
     					<phases>
     						<all />
@@ -953,7 +953,7 @@
     		</son>
     		<son name="Do">
     			<targets>
-    				<target mandatory="yes">
+    				<target mandatory="no">
     					<node name="Instrs" />
     					<phases>
     						<all />

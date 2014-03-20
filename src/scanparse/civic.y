@@ -171,6 +171,7 @@ globdec:
 block:
 	instr									{ $$ = TBmakeInstrs( $1, NULL); }
 | BCL instrs BCR				{ $$ = $2; }
+| BCL BCR								{ $$ = NULL; }
 ;
 
 instrs:
