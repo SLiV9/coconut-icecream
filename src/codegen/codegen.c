@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdarg.h>
 
+#include <libgen.h>
+
 #include "codegen.h"
 #include "types.h"
 #include "tree_basic.h"

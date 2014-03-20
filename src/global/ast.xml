@@ -1133,6 +1133,18 @@
             </targets>
           </type>
         </attribute>
+        <attribute name="ScopeDiff">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="ca" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
         <attribute name="Type">
         	<type name="ValueType">
         		<targets>
@@ -1185,6 +1197,18 @@
             </targets>
           </type>
         </attribute>
+        <attribute name="ScopeDiff">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="ca" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
         <attribute name="Type">
         	<type name="ValueType">
         		<targets>
@@ -1232,6 +1256,18 @@
                 <any />
                 <phases>
                   <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="ScopeDiff">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="ca" to="cg" />
                 </phases>
               </target>
             </targets>
