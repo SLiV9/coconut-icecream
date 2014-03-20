@@ -115,6 +115,13 @@
       	</travuser>
       </traversal>
       
+      <traversal id="ITERSPLIT" name="IterSplit" default="sons" include="itersplit.h">
+        <travuser>
+          <node name="Body" />
+          <node name="For" />
+        </travuser>
+      </traversal>
+      
       <traversal id="CODEGEN" name="CodeGen" default="sons" include="codegen.h">
       	<travuser>
       		<node name="FunDef" />
@@ -808,6 +815,18 @@
         			</target>
         		</targets>
         	</type>
+        </attribute>
+        <attribute name="Iterator">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
         </attribute>
       </attributes>
     </node>

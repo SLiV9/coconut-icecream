@@ -89,6 +89,20 @@ ENDPHASE( co)
 
 /******************************************************************************/
 
+PHASE( cr,
+			 "Code restructuring",
+			 ALWAYS)
+
+SUBPHASE( itersplit,
+					"Pulling iterators from for loops",
+					ITERSPLITdoSplit,
+					ALWAYS,
+					cr)
+
+ENDPHASE( cr)
+
+/******************************************************************************/
+
 
 PHASE( cg,
        "Generating Code",

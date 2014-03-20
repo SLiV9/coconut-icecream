@@ -547,6 +547,11 @@ PRTvardec (node * arg_node, info * arg_info)
   {
   	printf(" !esc");
   }
+
+  if (VARDEC_ITERATOR( arg_node))
+  {
+    printf(" !itr:%d", NODE_LINE( VARDEC_ITERATOR( arg_node)));
+  }
   
   printf("\n");
 

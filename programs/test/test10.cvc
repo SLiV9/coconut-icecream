@@ -17,9 +17,17 @@ export int main()
 	}
 
 	for(int k = 0,20){
-		c = 9;
+		c = 9 + k;
 	}
 
+	for(int k = 10,0)
+	{
+		for(int k = 0,10) {}
+		for(int k = k, 1)
+		{
+			r = c;
+		}
+	}
 	
 	return 0;
 }
