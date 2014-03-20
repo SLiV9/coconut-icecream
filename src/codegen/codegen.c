@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <libgen.h>
 
 #include "codegen.h"
 #include "types.h"
@@ -56,13 +57,27 @@ node *CODEGENfundef(node* arg_node, info* arg_info)
 
 node *CODEGENdoCodegen(node *syntaxtree)
 {
-  
+  char *dirnm, *basenm;
+  char *outfile;
+
 	DBUG_ENTER("CODEGENdoCodegen");
+
+	dirnm = dirname( STRcpy(global.infile));
+	basenm = basename( STRcpy(global.infile));
+
+  if (global.outfile)
+  {
+  	outfile = STRcpy( global.outfile);
+  }
+  else
+  {
+  	outfile = STRcatn( 4, dirnm, "/", basenm, ".s");
+  }
 	
-	FILE* out = fopen(global.outfile, "w+");
+	FILE* out = fopen(outfile, "w+");
 	if (out == NULL)
 	{
-		CTIabort( "Cannot open file '%s'.", global.outfile);
+		CTIabort( "Cannot open file '%s'.", outfile);
 	}
 	
 	info *info = MakeInfo(out);
