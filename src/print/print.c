@@ -31,24 +31,23 @@ const char* binop_name[14] =  { "+", "-", "*", "/", "%",
                									"&&", "||", "unknown" };
 const char* scope_name[2] =   { "g", "l" };
 
-/* special array dimension display */
-static char* sadd[5] = { "", "[]", "[,]", "[,,]", "[,,,]" };
-
 char* arrayDimDisplay(int n)
 {
-	static char sadd_buffer[80] = "[...]";
+  static char sadd_zero[80] = "";
+	static char sadd_one[80] = "[]";
+  static char sadd_buffer[80] = "[2d]";
 	
 	if (n <= 0)
 	{	
-		return sadd[0];
+		return sadd_zero;
 	}
-	else if (n < 5)
+	else if (n == 1)
 	{
-		return sadd[n];
+		return sadd_one;
 	}
 	else
 	{
-		// TODO
+    sprintf(sadd_buffer, "[%dd]", n);
 		return sadd_buffer;
 	}
 }

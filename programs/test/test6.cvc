@@ -1,9 +1,10 @@
-extern int[n] a;
-
-void foo(int[n] x) {}
-
 void main()
 {
-	int N = n;
-	foo(a);
+	int n = 1;
+	float[ square(n), square(n)] a = [[1.0]];
+	
+	int square(int x)
+	{
+		return (x * x);
+	}
 }

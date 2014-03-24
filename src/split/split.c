@@ -172,12 +172,8 @@ node
   node * body = TBmakeBody(NULL,NULL,info.head,NULL);
   node * fun = TBmakeFundef(TRUE,header,body);
   NODE_LINE(fun) = -1;
-  
-  node * headerA = TBmakeHeader(STRcpy("__alloc"), VT_void, NULL);
-  node * funA = TBmakeFundec(headerA);
-  NODE_LINE(funA) = 0;
 
-  node * decl = TBmakeDeclars(fun, TBmakeDeclars(funA,   syntaxtree));
+  node * decl = TBmakeDeclars(fun, syntaxtree);
 
 
   DBUG_RETURN( decl);
