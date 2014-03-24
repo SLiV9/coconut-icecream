@@ -32,7 +32,20 @@ node* TPINFvarcall(node *arg_node, info *arg_info)
   
   VARCALL_INDX( arg_node) = TRAVopt( VARCALL_INDX( arg_node), arg_info);
   
-  VARCALL_TYPE( arg_node) = getType( VARCALL_DEC( arg_node));
+  node* dec = VARCALL_DEC( arg_node);
+
+  if (NODE_TYPE( dec) == N_globdec)
+  {
+    if (GLOBDEC_DIMDECS( dec) != NULL && VARCALL_INDX( arg_node) == NULL)
+    {
+      CTIerror("file %s, line %d\n"
+          "extern array variable '%s' used without dereference", \
+          myglobal.fn, NODE_LINE( arg_node), \
+          GLOBDEC_NAME( dec));
+    }
+  }
+
+  VARCALL_TYPE( arg_node) = getType( dec);
 
   DBUG_RETURN (arg_node);
 }

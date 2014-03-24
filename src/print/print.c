@@ -130,7 +130,7 @@ void printLink(node* dec, int scopediff)
 			printf("{glb %s:%d", GLOBDEF_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_globdec:
-			printf("{glb %s:%d", GLOBDEF_NAME(dec), NODE_LINE(dec));
+			printf("{glb %s:%d", GLOBDEC_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_fundef:
 			printf("{fun %s:%d", HEADER_NAME(FUNDEF_HEAD(dec)), NODE_LINE(dec));

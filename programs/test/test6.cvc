@@ -1,6 +1,9 @@
-void foo(int y)
-{
-	x = y;
-}
+extern int[n] a;
 
-int x = 10;
+void foo(int[n] x) {}
+
+void main()
+{
+	int N = n;
+	foo(a);
+}
