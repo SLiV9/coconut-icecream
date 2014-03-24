@@ -1,4 +1,3 @@
-a = (42 + 
-(13
-                * tutu));
-
+int c = c;
+int a = b;
+int b = a;

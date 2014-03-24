@@ -17,7 +17,7 @@ node* NAMELINKFUNHEADglobdef(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("NAMELINKFUNHEADglobdef");
 
-	pushNameDec( arg_node, arg_info, GLOBDEF_NAME(arg_node));
+	// do nothing, see globnames
 
   DBUG_RETURN (arg_node);
 }
@@ -26,7 +26,7 @@ node* NAMELINKFUNHEADglobdec(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("NAMELINKFUNHEADglobdec");
 
-	pushNameDec( arg_node, arg_info, GLOBDEC_NAME(arg_node));
+	// do nothing, see globnames
 
   DBUG_RETURN (arg_node);
 }

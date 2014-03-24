@@ -29,6 +29,7 @@ const char* monop_name[3] =   { "!", "-", "unknown" };
 const char* binop_name[14] =  { "+", "-", "*", "/", "%",
                									"<", "<=", ">", ">=", "==", "!=",
                									"&&", "||", "unknown" };
+const char* scope_name[2] =   { "g", "l" };
 
 /* special array dimension display */
 static char* sadd[5] = { "", "[]", "[,]", "[,,]", "[,,,]" };
@@ -113,7 +114,7 @@ void printType(vtype t)
   printf( "%s", tmp);
 }
 
-void printLink(node* dec)
+void printLink(node* dec, int scopediff)
 {
 	if (dec == NULL)
 	{
@@ -123,32 +124,62 @@ void printLink(node* dec)
 	switch (NODE_TYPE(dec))
 	{
 		case N_vardec:
-			printf("{loc %s:%d}", VARDEC_NAME(dec), NODE_LINE(dec));
+			printf("{loc %s:%d", VARDEC_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_globdef:
-			printf("{glb %s:%d}", GLOBDEF_NAME(dec), NODE_LINE(dec));
+			printf("{glb %s:%d", GLOBDEF_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_globdec:
-			printf("{glb %s:%d}", GLOBDEF_NAME(dec), NODE_LINE(dec));
+			printf("{glb %s:%d", GLOBDEF_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_fundef:
-			printf("{fun %s:%d}", HEADER_NAME(FUNDEF_HEAD(dec)), NODE_LINE(dec));
+			printf("{fun %s:%d", HEADER_NAME(FUNDEF_HEAD(dec)), NODE_LINE(dec));
 			break;
 		case N_fundec:
-			printf("{fun %s:%d}", HEADER_NAME(FUNDEC_HEAD(dec)), NODE_LINE(dec));
+			printf("{fun %s:%d", HEADER_NAME(FUNDEC_HEAD(dec)), NODE_LINE(dec));
 			break;
 		case N_param:
-			printf("{prm %s:%d}", PARAM_NAME(dec), NODE_LINE(dec));
+			printf("{prm %s:%d", PARAM_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_iter:
-			printf("{itr %s:%d}", ITER_NAME(dec), NODE_LINE(dec));
+			printf("{itr %s:%d", ITER_NAME(dec), NODE_LINE(dec));
 			break;
 		case N_dim:
-			printf("{dim %s:%d}", DIM_NAME(dec), NODE_LINE(dec));
+			printf("{dim %s:%d", DIM_NAME(dec), NODE_LINE(dec));
 			break;
 		default:
-			printf("{unknown}");
+			printf("{unknown");
 	}
+
+  if (scopediff >= -1 && scopediff <= 0)
+  {
+    printf(" $%s", scope_name[1 + scopediff]);
+    
+  }
+  if (scopediff > 0)
+  {
+    printf(" $%d", scopediff);
+  }
+
+  switch (NODE_TYPE(dec))
+  {
+    case N_vardec:
+      if (VARDEC_SCOPEPOS(dec))
+      {
+        printf(" #%d", VARDEC_SCOPEPOS(dec));
+      }
+      break;
+    case N_param:
+      if (PARAM_SCOPEPOS(dec))
+      {
+        printf(" #%d", PARAM_SCOPEPOS(dec));
+      }
+      break;
+    default:
+      /* nothing */;
+  }
+
+  printf("}");
 }
 
 node *
@@ -452,7 +483,7 @@ PRTfuncall (node * arg_node, info * arg_info)
 
   if (FUNCALL_DEC( arg_node) != NULL)
 	{
-		printLink( FUNCALL_DEC( arg_node));
+		printLink( FUNCALL_DEC( arg_node), FUNCALL_SCOPEDIFF( arg_node));
 	}
 	else
 	{
@@ -475,7 +506,7 @@ PRTvarcall (node * arg_node, info * arg_info)
 
   if (VARCALL_DEC( arg_node) != NULL)
 	{
-		printLink( VARCALL_DEC( arg_node));
+		printLink( VARCALL_DEC( arg_node), VARCALL_SCOPEDIFF( arg_node));
 	}
 	else
 	{
@@ -501,7 +532,7 @@ PRTvarlet (node * arg_node, info * arg_info)
 
 	if (VARLET_DEC( arg_node) != NULL)
 	{
-		printLink( VARLET_DEC( arg_node));
+		printLink( VARLET_DEC( arg_node), VARLET_SCOPEDIFF( arg_node));
 	}
 	else
 	{
@@ -563,10 +594,20 @@ PRTvardec (node * arg_node, info * arg_info)
   }
   
   printf(";");
+
+  if (VARDEC_SCOPEPOS( arg_node))
+  {
+    printf(" #%d", VARDEC_SCOPEPOS( arg_node));
+  }
   
   if (VARDEC_ESCAPING( arg_node))
   {
   	printf(" !esc");
+  }
+
+  if (VARDEC_ITERATOR( arg_node))
+  {
+    printf(" !itr:%d", NODE_LINE( VARDEC_ITERATOR( arg_node)));
   }
   
   printf("\n");
@@ -583,7 +624,7 @@ PRTglobdef (node * arg_node, info * arg_info)
 	{
 		printf("export ");
 	}
-	
+
   printType(GLOBDEF_TYPE( arg_node));
 
   if (GLOBDEF_DIMDEFS( arg_node) != NULL)
@@ -610,9 +651,8 @@ node *
 PRTglobdec (node * arg_node, info * arg_info)
 {	
   DBUG_ENTER ("PRTglobdec");
-  
-  printf("extern ");
 
+	printf("extern ");
   printType(GLOBDEC_TYPE( arg_node));
 
   if (GLOBDEC_DIMDECS( arg_node) != NULL)
@@ -644,6 +684,11 @@ PRTparam (node * arg_node, info * arg_info)
   }
 
   printf( " %s", PARAM_NAME( arg_node));
+
+  if (PARAM_SCOPEPOS( arg_node))
+  {
+    printf(" #%d", PARAM_SCOPEPOS( arg_node));
+  }
   
   if (PARAM_ESCAPING( arg_node))
   {
@@ -723,7 +768,7 @@ PRTif (node * arg_node, info * arg_info)
 	printf("{\n");
 	
 	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
-	IF_THEN( arg_node) = TRAVdo( IF_THEN( arg_node), arg_info);
+	IF_THEN( arg_node) = TRAVopt( IF_THEN( arg_node), arg_info);
 	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
 	
 	printIndent( arg_info);
@@ -762,7 +807,7 @@ PRTwhile (node * arg_node, info * arg_info)
 		printf("{\n");
 		
 		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
-		WHILE_DO( arg_node) = TRAVdo( WHILE_DO( arg_node), arg_info);
+		WHILE_DO( arg_node) = TRAVopt( WHILE_DO( arg_node), arg_info);
 		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
 		
 		printIndent( arg_info);
@@ -782,7 +827,7 @@ PRTwhile (node * arg_node, info * arg_info)
 		printf("{\n");
 		
 		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
-		WHILE_DO( arg_node) = TRAVdo( WHILE_DO( arg_node), arg_info);
+		WHILE_DO( arg_node) = TRAVopt( WHILE_DO( arg_node), arg_info);
 		INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
 		
 		printIndent( arg_info);
@@ -818,7 +863,7 @@ PRTfor (node * arg_node, info * arg_info)
 	printf("{\n");
 	
 	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) + 1;
-	FOR_DO( arg_node) = TRAVdo( FOR_DO( arg_node), arg_info);
+	FOR_DO( arg_node) = TRAVopt( FOR_DO( arg_node), arg_info);
 	INFO_INDENT( arg_info) = INFO_INDENT( arg_info) - 1;
 	
 	printIndent( arg_info);

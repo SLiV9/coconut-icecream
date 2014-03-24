@@ -223,7 +223,7 @@ node* TPMATif(node *arg_node, info *arg_info)
   DBUG_ENTER ("TPMATif");
   
   IF_COND( arg_node)	= TRAVdo( IF_COND( arg_node), arg_info);
-  IF_THEN( arg_node) 	= TRAVdo( IF_THEN( arg_node), arg_info);
+  IF_THEN( arg_node) 	= TRAVopt( IF_THEN( arg_node), arg_info);
   IF_ELSE( arg_node)	= TRAVopt( IF_ELSE( arg_node), arg_info);
   
   vtype cdt = getType( IF_COND( arg_node));
@@ -252,7 +252,7 @@ node* TPMATwhile(node *arg_node, info *arg_info)
   DBUG_ENTER ("TPMATwhile");
   
   WHILE_COND( arg_node)	= TRAVdo( WHILE_COND( arg_node), arg_info);
-  WHILE_DO( arg_node) 	= TRAVdo( WHILE_DO( arg_node), arg_info);
+  WHILE_DO( arg_node) 	= TRAVopt( WHILE_DO( arg_node), arg_info);
   
   vtype cdt = getType( WHILE_COND( arg_node));
   
@@ -309,6 +309,8 @@ node* TPMATfor(node *arg_node, info *arg_info)
   {
   	checkForExpr( arg_node, getType( FOR_INCR( arg_node)));
   }
+
+  FOR_DO( arg_node) = TRAVopt( FOR_DO( arg_node), arg_info);
 
 	DBUG_RETURN( arg_node);
 }

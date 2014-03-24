@@ -1,4 +1,157 @@
-CW [ Code ] => CWN [ Code ][ 0 ][ 1 ] | always
+/* To apply the scheme on a function definition, execute
+			CW [ FunDef ]
+ */
+
+CW	[ 
+
+			Type Name(Params)
+			{
+				VarDecs
+				FunDefs
+				Instrs
+				Return
+			}
+			
+		]
+	=> 
+	
+		Type Name(Params)
+		{
+			VarDecs
+			CWS [ FunDefs ]
+			CFN [ Instrs ][ 0 ][ 0 ]
+			CWN [ Instrs ][ 0 ][ 0 ]
+			Return
+		}
+		
+	| always
+
+
+/* CWS [ FunDefs ] executes CW on each of the local fundefs. */
+
+CWS [
+
+			FunDef
+			FunDefs
+			
+		]
+	=>
+		
+		CW [ FunDef ]
+		CWS [ FunDefs ]
+		
+	| always
+
+
+
+
+/* CFN makes the functions used by CWN.
+ * These functions are added after the local fundefs.
+ * In case of while loops nested in while, if and for constructs, 
+ * variable X is suffixed with Y to X_Y, and Y is reset to 0. */
+
+
+CFN [
+
+			while (Cond)
+			{
+				Body
+			}
+			Rest
+			
+		][ X ][ Y ]
+	=>
+	
+			bool whilef_X_Y()
+			{
+				CFN [ Body ][ X_Y ][ 0 ]
+				CWN [ Body ][ X_Y ][ 0 ]
+				return (Cond && whilef_X_Y());
+			}
+			CFN [ Rest ][ X ][ Y+1 ]
+			
+	| always
+
+
+CFN [
+
+			do
+			{
+				Body
+			}
+			while (Cond);
+			Rest
+			
+		][ X ][ Y ]
+	=>
+	
+			bool whilef_X_Y()
+			{
+				CFN [ Body ][ X_Y ][ 0 ]
+				CWN [ Body ][ X_Y ][ 0 ]
+				return (Cond && whilef_X_Y());
+			}
+			CFN [ Rest ][ X ][ Y+1 ]
+			
+	| always
+
+
+CFN [
+
+			if (Cond)
+			{
+				Body1
+			}
+			else
+			{
+				Body2
+			}
+			Rest
+			
+		][ X ][ Y ]
+	=>
+		
+		CFN[ Body1 ][ X_Y_1 ][ 0 ]
+		CFN[ Body2 ][ X_Y_2 ][ 0 ]
+		CFN[ Rest ][ X ][ Y+1 ]
+	
+	| always
+
+
+CFN [
+
+			for (...)
+			{
+				Body
+			}
+			Rest
+			
+		][ X ]
+	=>
+		
+		CFN[ Body ][ X_Y ][ 0 ]
+		CFN[ Rest ][ X ][ Y+1 ]
+	
+	| always
+	
+CFN [
+
+			Instr
+			Rest
+		
+		][ X ][ Y ]
+	=>
+	
+		CFN[ Rest ][ X ][ Y ]
+
+	| Instr not {while, if, for}
+
+
+
+
+/* CWN changes the actual instructions and actually replaces the while loops.
+ * Again, while loops nested in while, if and for constructs cause the
+ * markers to shift, that is, the arguments become [ X_Y ][ 0 ]. */
 
 CWN [
 
@@ -11,16 +164,196 @@ CWN [
 		][ X ][ Y ]
 	=>
 	
-			void While_X_Y()
+			if (Cond)
 			{
-				if (Cond)
-				{
-					CWN[ Body ][ X_Y ][ 1 ]
-					While_X_Y();
-				}
+				whilef_X();
 			}
-			While_X_Y();
-			CWN[ Rest ][ X ][ Y+1 ]
+			CWN [ Rest ][ X ][ X+1 ]
 			
 	| always
+
+
+CWN [
+
+			do
+			{
+				Body
+			}
+			while (Cond);
+			Rest
+			
+		][ X ][ Y ]
+	=>
+	
+			whilef_X();
+			CWN [ Rest ][ X ][ X+1 ]
+			
+	| always
+
+
+CWN [
+
+			if (Cond)
+			{
+				Body1
+			}
+			else
+			{
+				Body2
+			}
+			Rest
+			
+		][ X ][ Y ]
+	=>
+		
+		if (Cond)
+		{
+			CWN[ Body1 ][ X_Y_1 ][ 0 ]
+		}
+		{
+			CWN[ Body2 ][ X_Y_2 ][ 0 ]
+		}
+		CWN[ Rest ][ X ][ Y+1 ]
+	
+	| always
+
+
+CWN [
+
+			for (...)
+			{
+				Body
+			}
+			Rest
+			
+		][ X ]
+	=>
+		
+		for (...)
+		{
+			CWN[ Body ][ X_Y ][ 0 ]
+		}
+		CWN[ Rest ][ X ][ Y+1 ]
+	
+	| always
+	
+CWN [
+
+			Instr
+			Rest
+		
+		][ X ][ Y ]
+	=>
+	
+		Instr
+		CWN[ Rest ][ X ][ Y ]
+
+	| Instr not {while, if, for}
+
+
+
+
+
+/* Example: */
+
+float foo()
+{
+	int x = 0;
+	
+	bool bar()
+	{
+		while (x < 0)
+		{
+			x = x + 1;
+		}
+		
+		return (x > 0);
+	}
+	
+	do
+	{
+		if (x > 10)
+		{
+			while (bar())
+			{
+				x = x - 1;
+			}
+		}
+		else
+		{
+			while (false)
+			{
+				x = -1;
+			}
+		}
+		x = x + 1;
+	}
+	while (bar());
+	
+	return (float) x;
+}
+
+/* becomes */
+
+float foo()
+{
+	int x = 0;
+	
+	bool bar()
+	{
+		bool whilef_0_0()
+		{
+			x = x - 1;
+			return ((x < 0) && whilef_0_0());
+		}
+		
+		if (x < 0)
+		{
+			whilef_0_0();
+		}
+		
+		return (x > 0);
+	}
+	
+	bool whilef_0_0()
+	{
+		bool whilef_0_0_1_0()
+		{
+			x = x - 1;
+			return (bar() && whilef_0_0_1_0());
+		}
+		
+		bool whilef_0_0_2_0()
+		{
+			x = -1;
+			return (false && whilef_0_0_2_0());
+		}
+		
+		if (x > 10)
+		{
+			if (bar())
+			{
+				whilef_0_0_1_0();
+			}
+		}
+		else
+		{
+			if (false)
+			{
+				whilef_0_0_2_0();
+			}
+		}
+		
+		x = x + 1;
+	}
+	
+	whilef_0_0();
+	
+	return (float) x;
+}
+
+/* This scheme is only theoretically semantically equivalent, since executing
+ * a program after compiling with this scheme, might cause a stack overflow
+ * because of the high recursion depth. Also, almost every variable becomes
+ * an escaped variable. */
 

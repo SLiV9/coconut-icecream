@@ -2,6 +2,7 @@
 
 #include "namelink.h"
 #include "funhead.h"
+#include "globnames.h"
 
 #include "types.h"
 #include "tree_basic.h"
@@ -20,6 +21,7 @@ node* NAMELINKvarcall(node *arg_node, info *arg_info)
   
   VARCALL_DEC( arg_node) = findNameDec( arg_node, arg_info, \
   		VARCALL_NAME( arg_node));
+  VARCALL_SCOPEDIFF( arg_node) = getNameDecScopeDiff();
   
   VARCALL_INDX( arg_node) = TRAVopt( VARCALL_INDX( arg_node), arg_info);
 
@@ -32,6 +34,7 @@ node* NAMELINKvarlet(node *arg_node, info *arg_info)
   
   VARLET_DEC( arg_node) = findNameDec( arg_node, arg_info, \
   		VARLET_NAME( arg_node));
+  VARLET_SCOPEDIFF( arg_node) = getNameDecScopeDiff();
   
   VARLET_INDX( arg_node) = TRAVopt( VARLET_INDX( arg_node), arg_info);
 
@@ -44,6 +47,7 @@ node* NAMELINKfuncall(node *arg_node, info *arg_info)
   
   FUNCALL_DEC( arg_node) = findNameDec( arg_node, arg_info, \
   		FUNCALL_NAME( arg_node));
+  FUNCALL_SCOPEDIFF( arg_node) = getNameDecScopeDiff();
   
   FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
 
@@ -67,9 +71,7 @@ node* NAMELINKglobdef(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("NAMELINKglobdef");
   
-  GLOBDEF_EXPR( arg_node) = TRAVopt( GLOBDEF_EXPR( arg_node), arg_info);
-  
-  GLOBDEF_DIMDEFS( arg_node) = TRAVopt( GLOBDEF_DIMDEFS( arg_node), arg_info);
+  // nothing, see globnames
 
   DBUG_RETURN (arg_node);
 }
@@ -78,7 +80,7 @@ node* NAMELINKglobdec(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("NAMELINKglobdec");
   
-  GLOBDEC_DIMDECS( arg_node) = TRAVopt( GLOBDEC_DIMDECS( arg_node), arg_info);
+  // nothing, see globnames
 
   DBUG_RETURN (arg_node);
 }
@@ -196,6 +198,12 @@ node *NAMELINKdoLinkNames(node *syntaxtree)
 	info = MakeInfo();
 
   TRAVpush( TR_namelinkfunhead);
+
+  syntaxtree = TRAVdo( syntaxtree, info);
+
+  TRAVpop();
+
+  TRAVpush( TR_namelinkglobnames);
 
   syntaxtree = TRAVdo( syntaxtree, info);
 

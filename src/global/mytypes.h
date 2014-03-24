@@ -18,5 +18,11 @@ typedef enum { BO_add, BO_sub, BO_mul, BO_div, BO_mod,
                BO_lt, BO_le, BO_gt, BO_ge, BO_eq, BO_ne, 
                BO_and, BO_or, BO_unknown } binop;
 
+/*
+ * NameDec Scope Depth
+ */
+#define NDSD_GLOBAL() (-1)
+#define NDSD_LOCAL() (0)
+#define NDSD_OUTER(n) (n)
 
 #endif  /* _CIVCC_MYTYPES_H_ */

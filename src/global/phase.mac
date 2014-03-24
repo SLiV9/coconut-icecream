@@ -38,21 +38,15 @@ SUBPHASE( idpre,
 					NEVER,
 					ca)
 
-SUBPHASE( split,
-					"Splitting",
-					SPLITdoSplit,
-					ALWAYS,
-					ca)
-
-SUBPHASE( hoi,
-					"Hoi",
-					PRTdoPrint,
-					ALWAYS,
-					ca)
-
 SUBPHASE( namelink,
 					"Linking calls to names",
 					NAMELINKdoLinkNames,
+					ALWAYS,
+					ca)
+
+SUBPHASE( split,
+					"Splitting",
+					SPLITdoSplit,
 					ALWAYS,
 					ca)
 
@@ -95,14 +89,40 @@ ENDPHASE( co)
 
 /******************************************************************************/
 
+PHASE( cr,
+			 "Code restructuring",
+			 ALWAYS)
+
+SUBPHASE( itersplit,
+					"Pulling iterators from for loops",
+					ITERSPLITdoSplit,
+					ALWAYS,
+					cr)
+
+SUBPHASE( varcount,
+					"Counting local variables",
+					VARCOUNTdoCount,
+					ALWAYS,
+					cr)
+
+ENDPHASE( cr)
+
+/******************************************************************************/
+
 
 PHASE( cg,
        "Generating Code",
        ALWAYS)
 
 SUBPHASE( prt, 
-          "Generating byte code",
+          "Print before generation",
           PRTdoPrint, 
+          ALWAYS,
+          cg)  
+
+SUBPHASE( gbc, 
+          "Generating byte code",
+          CODEGENdoCodegen, 
           ALWAYS,
           cg)      
 
