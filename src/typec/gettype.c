@@ -74,6 +74,11 @@ vtype getType(node* nd)
 
 int getDepth(node* arg_node)
 {
+	if (arg_node == NULL)
+	{
+		return 0;
+	}
+
 	switch (NODE_TYPE( arg_node))
 	{
 		case N_vardec:

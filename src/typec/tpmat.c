@@ -28,8 +28,10 @@ node* TPMATassign(node *arg_node, info *arg_info)
   
   ASSIGN_LET( arg_node) = TRAVdo( ASSIGN_LET( arg_node), arg_info);
   vtype vrt = getType( ASSIGN_LET( arg_node));
+  int vd = getDepth( VARLET_DEC( ASSIGN_LET( arg_node)));
   
   vtype ext = VT_unknown;
+  int ed = 0;
 	if (!isAlloc)
 	{
 		ASSIGN_EXPR( arg_node) = TRAVdo( ASSIGN_EXPR( arg_node), arg_info);
@@ -40,6 +42,7 @@ node* TPMATassign(node *arg_node, info *arg_info)
 		else
 		{
 			ext = ARRAYLIT_TYPE( ASSIGN_EXPR( arg_node));
+			ed = ARRAYLIT_DEPTH( ASSIGN_EXPR( arg_node));
 		}
   }
   
@@ -53,12 +56,15 @@ node* TPMATassign(node *arg_node, info *arg_info)
 	 			case VT_int:
 	 			case VT_float:
 	 			case VT_bool:
-	 				if (vrt != ext)
+	 				if (vrt != ext || (isArrayLit && (vd != ed)))
 	 				{
 	 					CTIerror("file %s, line %d\n"
-								"cannot assign expr of type %s to variable '%s' of type %s",\
-								myglobal.fn, NODE_LINE( arg_node), vtype_name[ext], \
-								VARLET_NAME( ASSIGN_LET( arg_node)), vtype_name[vrt]);
+								"cannot assign expr of type %s%s "
+								"to variable '%s' of type %s%s",\
+								myglobal.fn, NODE_LINE( arg_node), \
+								vtype_name[ext], arrayDimDisplay( ed), \
+								VARLET_NAME( ASSIGN_LET( arg_node)), \
+								vtype_name[vrt], arrayDimDisplay( vd));
 	 				}
 	 				break;
 				case VT_unknown:
