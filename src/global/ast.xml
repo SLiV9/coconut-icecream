@@ -651,10 +651,20 @@
         		<target mandatory="no">
         			<node name="Exprs" />
         			<phases>
-        				<all />
+        				<range from="ld" to="ca" />
         			</phases>
         		</target>
         	</targets>
+        </son>
+        <son name="DimDecs">
+          <targets>
+            <target mandatory="no">
+              <node name="DimDecs" />
+              <phases>
+                <range from="ca" to="cg" />
+              </phases>
+            </target>
+          </targets>
         </son>
       </sons>
       <attributes>

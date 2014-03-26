@@ -21,15 +21,14 @@ static node* dimdefsToAlloc( node* dimdefs)
 
 static node* dimdefsToInstrs( node* arg_node, const char* name, node* dimdefs)
 {
-  if (dimdefs != NULL)
-  {
-    node * letje = TBmakeVarlet( STRcpy( name), NULL);
-    VARLET_DEC( letje) = arg_node;
-  	return TBmakeInstrs( TBmakeAssign( letje, \
-  					dimdefsToAlloc( dimdefs)), NULL);
-  }
-  
-  return NULL;
+  DBUG_ASSERT( dimdefs != NULL, "dimdefsToAlloc called on null dimdefs!");
+  DBUG_ASSERT( NODE_TYPE(dimdefs) == N_exprs, "dimdefsToAlloc called on "
+      "something other than dimdefs!");
+
+  node * letje = TBmakeVarlet( STRcpy( name), NULL);
+  VARLET_DEC( letje) = arg_node;
+	return TBmakeInstrs( TBmakeAssign( letje, \
+					dimdefsToAlloc( dimdefs)), NULL);
 }
 
 node* SPLITglobdef(node *arg_node, info *arg_info){

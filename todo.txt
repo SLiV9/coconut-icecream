@@ -24,6 +24,13 @@ int[2d] a;
 __alloc(a);
 
 aangezien de assembler multidimensional aankan?
+Nee, multidimensionaliteit van assembler mogen we niet gebruiken.
+Dus
+
+int[_a_1, _a_2] a;
+_a_1 = f();
+_a_2 = f();
+a = __alloc(_a_1, _a_2);
 
 
 TODO: Arrays als expression in een assign, niet zonder dereference.
