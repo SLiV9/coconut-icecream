@@ -12,23 +12,79 @@ struct INFO{
   node* last;
 };
 
-static node* dimdefsToAlloc( node* dimdefs)
+static node* dimdefsToDimdecs( node* dimdefs, const char* name)
 {
-	DBUG_ASSERT( NODE_TYPE(dimdefs) == N_exprs, "dimdefsToAlloc called on "
-			"something other than dimdefs!");
-	return TBmakeFuncall( STRcpy("__alloc"), COPYdoCopy(dimdefs));
+  DBUG_ASSERT( NODE_TYPE(dimdefs) == N_exprs, "dimdefsToDimdecs called on "
+      "something other than dimdefs!");
+
+  node* defs = dimdefs;
+  node* dimdecs = NULL;
+  node* dim;
+  int i = 0;
+
+  while (defs != NULL)
+  {
+    dim = TBmakeDim( STRcatn(4, "_", STRcpy( name), "_", STRitoa( i)));
+    dimdecs = TBmakeDimdecs( dim, dimdecs);
+    defs = EXPRS_NEXT( defs);
+    i++;
+  }
+
+  return dimdecs;
 }
 
-static node* dimdefsToInstrs( node* arg_node, const char* name, node* dimdefs)
+static node* dimdecsToAlloc( node* dimdecs)
+{
+	DBUG_ASSERT( NODE_TYPE(dimdecs) == N_dimdecs, "dimdefsToAlloc called on "
+			"something other than dimdecs!");
+
+  node * args = NULL;
+  node * decs = dimdecs;
+  node * dim;
+  node * call;
+
+  while (decs != NULL)
+  {
+    dim = DIMDECS_DIM( decs);
+    call = TBmakeVarcall( STRcpy( DIM_NAME( dim)), NULL);
+    VARCALL_DEC( call) = dim;
+    args = TBmakeExprs( call, args);
+    decs = DIMDECS_NEXT( decs);
+  }
+
+	return TBmakeFuncall( STRcpy("__alloc"), args);
+}
+
+static node* dimdefsToInstrs( node* arg_node, const char* name, \
+    node* dimdefs, node* dimdecs)
 {
   DBUG_ASSERT( dimdefs != NULL, "dimdefsToAlloc called on null dimdefs!");
   DBUG_ASSERT( NODE_TYPE(dimdefs) == N_exprs, "dimdefsToAlloc called on "
       "something other than dimdefs!");
+  DBUG_ASSERT( NODE_TYPE(dimdecs) == N_dimdecs, "dimdefsToAlloc called on "
+      "something other than dimdecs!");
 
   node * letje = TBmakeVarlet( STRcpy( name), NULL);
   VARLET_DEC( letje) = arg_node;
-	return TBmakeInstrs( TBmakeAssign( letje, \
-					dimdefsToAlloc( dimdefs)), NULL);
+	node * instrs = TBmakeInstrs( TBmakeAssign( letje, \
+					dimdecsToAlloc( dimdecs)), NULL);
+
+  node * decs = dimdecs;
+  node * defs = dimdefs;
+  node * dim;
+
+  while (decs != NULL && defs != NULL)
+  {
+    dim = DIMDECS_DIM( decs);
+    letje = TBmakeVarlet( STRcpy( DIM_NAME( dim)), NULL);
+    VARLET_DEC( letje) = dim;
+    instrs = TBmakeInstrs( TBmakeAssign( letje, \
+        COPYdoCopy( EXPRS_EXPR( defs))), instrs);
+    decs = DIMDECS_NEXT( decs);
+    defs = EXPRS_NEXT( defs);
+  }
+
+  return instrs;
 }
 
 node* SPLITglobdef(node *arg_node, info *arg_info){
@@ -37,7 +93,7 @@ node* SPLITglobdef(node *arg_node, info *arg_info){
 	node * instr_assign = NULL;
 	node * instr_alloc = NULL;
 	node * instrs;
-	node * last;
+	node * last = NULL;
  
   if (GLOBDEF_EXPR(arg_node) != NULL){
   	node * letje = TBmakeVarlet( STRcpy( GLOBDEF_NAME(arg_node)), NULL);
@@ -49,9 +105,17 @@ node* SPLITglobdef(node *arg_node, info *arg_info){
   
   if (GLOBDEF_DIMDEFS( arg_node) != NULL)
   {
+    GLOBDEF_DIMDECS( arg_node) = dimdefsToDimdecs( GLOBDEF_DIMDEFS( arg_node), \
+        GLOBDEF_NAME( arg_node));
   	instr_alloc = dimdefsToInstrs( arg_node, GLOBDEF_NAME( arg_node), \
-  			GLOBDEF_DIMDEFS( arg_node));
-  	INSTRS_NEXT( instr_alloc) = instr_assign;
+  			GLOBDEF_DIMDEFS( arg_node), GLOBDEF_DIMDECS( arg_node));
+    GLOBDEF_DIMDEFS( arg_node) = NULL;
+    last = instr_alloc;
+    while (INSTRS_NEXT( last) != NULL)
+    {
+        last = INSTRS_NEXT( last);
+    }
+  	INSTRS_NEXT( last) = instr_assign;
   }
   
   instrs = instr_assign;
@@ -59,8 +123,6 @@ node* SPLITglobdef(node *arg_node, info *arg_info){
   {
   	instrs = instr_alloc;
   }
-  
-  last = instr_alloc;
   if (instr_assign != NULL)
   {
   	last = instr_assign;
@@ -107,7 +169,7 @@ node* SPLITvardec(node *arg_node, info *arg_info){
   node * instr_assign = NULL;
 	node * instr_alloc = NULL;
 	node * instrs;
-	node * last;
+	node * last = NULL;
  
   if (VARDEC_EXPR(arg_node) != NULL){
   	node * letje = TBmakeVarlet( STRcpy( VARDEC_NAME(arg_node)), NULL);
@@ -119,9 +181,17 @@ node* SPLITvardec(node *arg_node, info *arg_info){
   
   if (VARDEC_DIMDEFS( arg_node) != NULL)
   {
+    VARDEC_DIMDECS( arg_node) = dimdefsToDimdecs( VARDEC_DIMDEFS( arg_node), \
+        VARDEC_NAME( arg_node));
   	instr_alloc = dimdefsToInstrs( arg_node, VARDEC_NAME( arg_node), \
-  			VARDEC_DIMDEFS( arg_node));
-  	INSTRS_NEXT( instr_alloc) = instr_assign;
+  			VARDEC_DIMDEFS( arg_node), VARDEC_DIMDECS( arg_node));
+    VARDEC_DIMDEFS( arg_node) = NULL;
+    last = instr_alloc;
+    while (INSTRS_NEXT( last) != NULL)
+    {
+        last = INSTRS_NEXT( last);
+    }
+    INSTRS_NEXT( last) = instr_assign;
   }
   
   instrs = instr_assign;
@@ -129,8 +199,6 @@ node* SPLITvardec(node *arg_node, info *arg_info){
   {
   	instrs = instr_alloc;
   }
-  
-  last = instr_alloc;
   if (instr_assign != NULL)
   {
   	last = instr_assign;

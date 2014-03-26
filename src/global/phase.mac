@@ -50,6 +50,12 @@ SUBPHASE( split,
 					ALWAYS,
 					ca)
 
+SUBPHASE( hoi, 
+          "Hallo",
+          PRTdoPrint, 
+          ALWAYS,
+          ca)  
+
 ENDPHASE( ca)
 
 /******************************************************************************/

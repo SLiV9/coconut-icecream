@@ -137,7 +137,7 @@ node* TPINFvardec(node *arg_node, info *arg_info)
   VARDEC_DIMDEFS( arg_node) = TRAVopt( VARDEC_DIMDEFS( arg_node), arg_info);
   VARDEC_EXPR( arg_node) = TRAVopt( VARDEC_EXPR( arg_node), arg_info);
   
-  VARDEC_DEPTH( arg_node) = getExprsLen( VARDEC_DIMDEFS( arg_node));
+  VARDEC_DEPTH( arg_node) = getDimDecsLen( VARDEC_DIMDECS( arg_node));
 
   DBUG_RETURN (arg_node);
 }
@@ -149,7 +149,7 @@ node* TPINFglobdef(node *arg_node, info *arg_info)
   GLOBDEF_DIMDEFS( arg_node) = TRAVopt( GLOBDEF_DIMDEFS( arg_node), arg_info);
   GLOBDEF_EXPR( arg_node) = TRAVopt( GLOBDEF_EXPR( arg_node), arg_info);
   
-  GLOBDEF_DEPTH( arg_node) = getExprsLen( GLOBDEF_DIMDEFS( arg_node));
+  GLOBDEF_DEPTH( arg_node) = getDimDecsLen( GLOBDEF_DIMDECS( arg_node));
 
   DBUG_RETURN (arg_node);
 }

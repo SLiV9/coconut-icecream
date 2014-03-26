@@ -9,6 +9,7 @@ export void main()
 	float[2, n] y = [[4.24, 3.1 * sum(x)], [3.1, 3.1]];
 	float[n] z = [[2.0]];
 	float[2] u = x;
+	float[n] w;
 	int v = x;
 	
 	float sum(float[k] a)

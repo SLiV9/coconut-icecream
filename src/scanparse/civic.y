@@ -230,32 +230,32 @@ funcall:
 
 globdef:
 	basictype ID SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $2), $1, FALSE, NULL, NULL); }
+			{ $$ = TBmakeGlobdef( STRcpy( $2), $1, FALSE, NULL, NULL, NULL); }
 | basictype ID LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $2), $1, FALSE, $4, NULL); }
+			{ $$ = TBmakeGlobdef( STRcpy( $2), $1, FALSE, $4, NULL, NULL); }
 | basictype BSL exprs BSR ID SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $5), $1, FALSE, NULL, $3); }
+			{ $$ = TBmakeGlobdef( STRcpy( $5), $1, FALSE, NULL, $3, NULL); }
 | basictype BSL exprs BSR ID LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $5), $1, FALSE, $7, $3); }
+			{ $$ = TBmakeGlobdef( STRcpy( $5), $1, FALSE, $7, $3, NULL); }
 |	EXPORT basictype ID SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $3), $2, TRUE, NULL, NULL); }
+			{ $$ = TBmakeGlobdef( STRcpy( $3), $2, TRUE, NULL, NULL, NULL); }
 | EXPORT basictype ID LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $3), $2, TRUE, $5, NULL); }
+			{ $$ = TBmakeGlobdef( STRcpy( $3), $2, TRUE, $5, NULL, NULL); }
 | EXPORT basictype BSL exprs BSR ID SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $6), $2, TRUE, NULL, $4); }
+			{ $$ = TBmakeGlobdef( STRcpy( $6), $2, TRUE, NULL, $4, NULL); }
 | EXPORT basictype BSL exprs BSR ID LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $6), $2, TRUE, $8, $4); }
+			{ $$ = TBmakeGlobdef( STRcpy( $6), $2, TRUE, $8, $4, NULL); }
 ;
 
 vardec:
 	basictype ID SEMICOLON
-			{ $$ = TBmakeVardec( STRcpy( $2), $1, NULL, NULL); }
+			{ $$ = TBmakeVardec( STRcpy( $2), $1, NULL, NULL, NULL); }
 | basictype ID LET expr SEMICOLON
-			{ $$ = TBmakeVardec( STRcpy( $2), $1, $4, NULL); }
+			{ $$ = TBmakeVardec( STRcpy( $2), $1, $4, NULL, NULL); }
 | basictype BSL exprs BSR ID SEMICOLON
-			{ $$ = TBmakeVardec( STRcpy( $5), $1, NULL, $3); }
+			{ $$ = TBmakeVardec( STRcpy( $5), $1, NULL, $3, NULL); }
 | basictype BSL exprs BSR ID LET expr SEMICOLON
-			{ $$ = TBmakeVardec( STRcpy( $5), $1, $7, $3); }
+			{ $$ = TBmakeVardec( STRcpy( $5), $1, $7, $3, NULL); }
 ;
 
 header:

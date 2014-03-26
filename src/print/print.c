@@ -596,10 +596,11 @@ PRTvardec (node * arg_node, info * arg_info)
 
   printType(VARDEC_TYPE( arg_node));
 
-  if (VARDEC_DIMDEFS( arg_node) != NULL)
+  if (VARDEC_DIMDEFS( arg_node) != NULL || VARDEC_DIMDECS( arg_node) != NULL)
   {
   	printf("[");
-  	VARDEC_DIMDEFS( arg_node) = TRAVdo( VARDEC_DIMDEFS( arg_node), arg_info);
+  	VARDEC_DIMDEFS( arg_node) = TRAVopt( VARDEC_DIMDEFS( arg_node), arg_info);
+    VARDEC_DIMDECS( arg_node) = TRAVopt( VARDEC_DIMDECS( arg_node), arg_info);
   	printf("]");
   }
 
@@ -640,10 +641,11 @@ PRTglobdef (node * arg_node, info * arg_info)
 
   printType(GLOBDEF_TYPE( arg_node));
 
-  if (GLOBDEF_DIMDEFS( arg_node) != NULL)
+  if (GLOBDEF_DIMDEFS( arg_node) != NULL || GLOBDEF_DIMDECS( arg_node) != NULL)
   {
   	printf("[");
-  	GLOBDEF_DIMDEFS( arg_node) = TRAVdo( GLOBDEF_DIMDEFS( arg_node), arg_info);
+  	GLOBDEF_DIMDEFS( arg_node) = TRAVopt( GLOBDEF_DIMDEFS( arg_node), arg_info);
+    GLOBDEF_DIMDECS( arg_node) = TRAVopt( GLOBDEF_DIMDECS( arg_node), arg_info);
   	printf("]");
   }
 
