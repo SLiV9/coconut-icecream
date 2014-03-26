@@ -132,6 +132,8 @@
           <node name="FunDef" />
           <node name="FunDec" />
           <node name="Body" />
+          <node name="GlobDef" />
+          <node name="GlobDec" />
           <node name="VarDec" />
           <node name="Param" />
           <node name="Iter" />

@@ -120,6 +120,24 @@ node* VARCOUNTdim(node *arg_node, info *arg_info)
 	DBUG_RETURN (arg_node);
 }
 
+node* VARCOUNTglobdef(node *arg_node, info *arg_info)
+{
+	DBUG_ENTER ("VARCOUNTglobdef");
+
+	// do nothing
+
+	DBUG_RETURN (arg_node);
+}
+
+node* VARCOUNTglobdec(node *arg_node, info *arg_info)
+{
+	DBUG_ENTER ("VARCOUNTglobdec");
+
+	// do nothing
+
+	DBUG_RETURN (arg_node);
+}
+
 node *VARCOUNTdoCount(node *syntaxtree)
 {
 	DBUG_ENTER("VARCOUNTdoCount");
