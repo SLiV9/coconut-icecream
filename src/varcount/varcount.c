@@ -100,6 +100,26 @@ node* VARCOUNTparam(node *arg_node, info *arg_info)
 	DBUG_RETURN (arg_node);
 }
 
+node* VARCOUNTiter(node *arg_node, info *arg_info)
+{
+	DBUG_ENTER ("VARCOUNTiter");
+
+	ITER_SCOPEPOS( arg_node) = INFO_COUNT( arg_info);
+	INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 1;
+
+	DBUG_RETURN (arg_node);
+}
+
+node* VARCOUNTdim(node *arg_node, info *arg_info)
+{
+	DBUG_ENTER ("VARCOUNTdim");
+
+	DIM_SCOPEPOS( arg_node) = INFO_COUNT( arg_info);
+	INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 1;
+
+	DBUG_RETURN (arg_node);
+}
+
 node *VARCOUNTdoCount(node *syntaxtree)
 {
 	DBUG_ENTER("VARCOUNTdoCount");

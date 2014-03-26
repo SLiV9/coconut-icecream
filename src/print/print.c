@@ -174,6 +174,18 @@ void printLink(node* dec, int scopediff)
         printf(" #%d", PARAM_SCOPEPOS(dec));
       }
       break;
+    case N_iter:
+      if (ITER_SCOPEPOS(dec))
+      {
+        printf(" #%d", ITER_SCOPEPOS(dec));
+      }
+      break;
+    case N_dim:
+      if (DIM_SCOPEPOS(dec))
+      {
+        printf(" #%d", DIM_SCOPEPOS(dec));
+      }
+      break;
     default:
       /* nothing */;
   }
@@ -236,7 +248,7 @@ PRTvardecs (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTvardecs");
 
-  VARDECS_VARDEC( arg_node) = TRAVdo( VARDECS_VARDEC( arg_node), arg_info);
+  VARDECS_DEC( arg_node) = TRAVdo( VARDECS_DEC( arg_node), arg_info);
   
   VARDECS_NEXT( arg_node) = TRAVopt( VARDECS_NEXT( arg_node), arg_info);
   
@@ -304,7 +316,7 @@ PRTdimdecs (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTdimdecs");
 
-  DIMDECS_DIM( arg_node) = TRAVdo( DIMDECS_DIM( arg_node), arg_info);
+  printf("%s", DIM_NAME( DIMDECS_DIM( arg_node)));
   
   if (DIMDECS_NEXT( arg_node) != NULL)
   {
@@ -320,7 +332,14 @@ PRTdim (node * arg_node, info * arg_info)
 {	
   DBUG_ENTER ("PRTdim");
 
-  printf( "%s", DIM_NAME( arg_node));
+  printIndent( arg_info);
+  printf( "dim");
+  printf( " %s;", DIM_NAME( arg_node));
+
+  if (DIM_SCOPEPOS( arg_node))
+  {
+    printf(" #%d", DIM_SCOPEPOS( arg_node));
+  }
 
   DBUG_RETURN (arg_node);
 }
@@ -603,11 +622,6 @@ PRTvardec (node * arg_node, info * arg_info)
   {
   	printf(" !esc");
   }
-
-  if (VARDEC_ITERATOR( arg_node))
-  {
-    printf(" !itr:%d", NODE_LINE( VARDEC_ITERATOR( arg_node)));
-  }
   
   printf("\n");
 
@@ -844,7 +858,7 @@ PRTfor (node * arg_node, info * arg_info)
 	printIndent( arg_info);
   printf("for (int ");
   
-	FOR_ITER( arg_node) = TRAVdo( FOR_ITER( arg_node), arg_info);
+	printf("%s", ITER_NAME( FOR_ITER( arg_node)));
 	printf(" = ");
 	FOR_FROM( arg_node) = TRAVdo( FOR_FROM( arg_node), arg_info);
 	printf(", ");
@@ -876,7 +890,20 @@ PRTiter (node * arg_node, info * arg_info)
 {	
   DBUG_ENTER ("PRTiter");
 
-  printf( "%s", ITER_NAME( arg_node));
+  printIndent( arg_info);
+  printf( "itr");
+  if (ITER_FOR( arg_node) != NULL)
+  {
+    printf(":%d", NODE_LINE( ITER_FOR( arg_node)));
+  }
+  printf( " %s;", ITER_NAME( arg_node));
+
+  if (ITER_SCOPEPOS( arg_node))
+  {
+    printf(" #%d", ITER_SCOPEPOS( arg_node));
+  }
+
+  printf("\n");
 
   DBUG_RETURN (arg_node);
 }
