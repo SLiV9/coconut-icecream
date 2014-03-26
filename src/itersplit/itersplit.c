@@ -11,6 +11,7 @@
 #include "ctinfo.h"
 #include "memory.h"
 #include "print.h"
+#include "copy.h"
 
 /*
  * INFO structure
@@ -74,11 +75,10 @@ node* ITERSPLITfor(node *arg_node, info *arg_info)
   DBUG_ENTER ("ITERSPLITfor");
 
   node* itr = FOR_ITER( arg_node);
-	node* dec = TBmakeVardec( STRcpy( ITER_NAME(itr)), VT_int, NULL, NULL);
-	VARDEC_ESCAPING( dec) = FALSE;
-	VARDEC_ITERATOR( dec) = itr;
+	FOR_ITER( arg_node) = COPYdoCopy( itr);
 
-	node* vdecs = TBmakeVardecs( dec, NULL);
+  ITER_FOR( itr) = arg_node;
+	node* vdecs = TBmakeVardecs( itr, NULL);
 
 	if (INFO_HEAD( arg_info) == NULL)
 	{

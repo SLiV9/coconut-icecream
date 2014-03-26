@@ -129,6 +129,8 @@
           <node name="Body" />
           <node name="VarDec" />
           <node name="Param" />
+          <node name="Iter" />
+          <node name="Dim" />
         </travuser>
       </traversal>
 
@@ -193,6 +195,13 @@
     		<node name="FunDef" />
     		<node name="FunDec" />
     	</target>
+    </nodeset>
+    <nodeset name="LocalDec">
+      <target>
+        <node name="VarDec" />
+        <node name="Iter" />
+        <node name="Dim" />
+      </target>
     </nodeset>
   </nodesets>
 
@@ -294,10 +303,10 @@
     </node>
     <node name="VarDecs">
       <sons>
-        <son name="VarDec">
+        <son name="Dec">
           <targets>
             <target mandatory="yes">
-              <node name="VarDec" />
+              <set name="LocalDec" />
               <phases>
                 <all />
               </phases>
@@ -489,6 +498,18 @@
                 <any />
                 <phases>
                   <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="ScopePos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
                 </phases>
               </target>
             </targets>
@@ -856,18 +877,6 @@
             </targets>
           </type>
         </attribute>
-        <attribute name="Iterator">
-          <type name="Link">
-            <targets>
-              <target mandatory="no">
-                <any />
-                <phases>
-                  <range from="cr" to="cg" />
-                </phases>
-              </target>
-            </targets>
-          </type>
-        </attribute>
       </attributes>
     </node>
      <node name="Assign">
@@ -1033,6 +1042,30 @@
                 <any />
                 <phases>
                   <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="For">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="ScopePos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
                 </phases>
               </target>
             </targets>
