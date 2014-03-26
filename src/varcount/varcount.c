@@ -58,9 +58,11 @@ node* VARCOUNTfundef(node *arg_node, info *arg_info)
 
 	FUNDEF_HEAD( arg_node) = TRAVopt( FUNDEF_HEAD( arg_node), arg_info);
 
-	FUNDEF_BODY( arg_node) = TRAVopt( FUNDEF_BODY( arg_node), arg_info);
+	FUNDEF_BODY( arg_node) = TRAVdo( FUNDEF_BODY( arg_node), arg_info);
 
-	//DBUG_ASSERT( arg_info == NULL, "fundef left with running arg_info!");
+	arg_info = FreeInfo(arg_info);
+
+	DBUG_ASSERT( arg_info == NULL, "fundef left with running arg_info!");
 
 	DBUG_RETURN (arg_node);
 }
@@ -73,9 +75,7 @@ node* VARCOUNTbody(node *arg_node, info *arg_info)
 
 	BODY_VARDECS( arg_node) = TRAVopt( BODY_VARDECS( arg_node), arg_info);
 
-	arg_info = FreeInfo(arg_info);
-
-	BODY_FUNDEFS( arg_node) = TRAVopt( BODY_FUNDEFS( arg_node), arg_info);
+	BODY_FUNDEFS( arg_node) = TRAVopt( BODY_FUNDEFS( arg_node), NULL);
 
 	DBUG_RETURN (arg_node);
 }
