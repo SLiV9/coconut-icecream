@@ -85,6 +85,12 @@ PHASE( cr,
 			 "Code restructuring",
 			 ALWAYS)
 
+SUBPHASE( arraysplit,
+					"Pulling array dims, unfolding arraylits",
+					ARRAYSPLITdoSplit,
+					ALWAYS,
+					cr)
+
 SUBPHASE( itersplit,
 					"Pulling iterators from for loops",
 					ITERSPLITdoSplit,
