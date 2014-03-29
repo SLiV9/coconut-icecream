@@ -1,7 +1,4 @@
 
-TODO: Tijdens typechecking a[i] indices i op type int en aantal controleren.
-
-
 TODO: Na typechecking arraylit unfolding.
 
 

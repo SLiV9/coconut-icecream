@@ -9,6 +9,8 @@ extern node* TPMATfuncall(node* arg_node, info* arg_info);
 extern node* TPMATif(node* arg_node, info* arg_info);
 extern node* TPMATwhile(node* arg_node, info* arg_info);
 extern node* TPMATfor(node* arg_node, info* arg_info);
+extern node* TPMATvarlet(node* arg_node, info* arg_info);
+extern node* TPMATvarcall(node* arg_node, info* arg_info);
 
 extern node* TPMATdoMatching(node *syntax_tree);
 

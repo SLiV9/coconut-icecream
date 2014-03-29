@@ -328,6 +328,75 @@ node* TPMATfor(node *arg_node, info *arg_info)
 	DBUG_RETURN( arg_node);
 }
 
+static void checkDereferencing(node* arg_node, node* indx, int d, const char* name)
+{
+  int i = 0;
+  node* indxs = indx;
+  node* ex;
+
+  while (i < d && indxs != NULL)
+  {
+  	ex = EXPRS_EXPR( indxs);
+  	switch (getType( ex))
+  	{
+  		case VT_int:
+  			break;
+  		case VT_float:
+  		case VT_bool:
+				CTIerror("file %s, line %d\n"
+						"index #%d of '%s' is not of type int", \
+						myglobal.fn, NODE_LINE( arg_node), i, name);
+			case VT_unknown:
+				break;
+			default:
+  			DBUG_ASSERT( 0, "invalid index type detected!");
+  	}
+  	indxs = EXPRS_NEXT( indxs);
+  	i++;
+  }
+
+  if (i < d)
+  {
+		CTIerror("file %s, line %d\n"
+				"too few indexes in dereferencing variable '%s'", \
+				myglobal.fn, NODE_LINE( arg_node), name);
+  }
+  else if (indxs != NULL)
+  {
+		CTIerror("file %s, line %d\n"
+				"too many indexes in dereferencing variable '%s'", \
+				myglobal.fn, NODE_LINE( arg_node), name);
+  }
+}
+
+node* TPMATvarlet(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPMATvarlet");
+
+  if (VARLET_INDX( arg_node) != NULL)
+  {
+	  VARLET_INDX( arg_node) = TRAVdo( VARLET_INDX( arg_node), arg_info);
+	  checkDereferencing( arg_node, VARLET_INDX( arg_node), \
+	  		getDepth( VARLET_DEC( arg_node)), VARLET_NAME( arg_node));
+	}
+
+	DBUG_RETURN( arg_node);
+}
+
+node* TPMATvarcall(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPMATvarcall");
+
+  if (VARCALL_INDX( arg_node) != NULL)
+  {
+	  VARCALL_INDX( arg_node) = TRAVdo( VARCALL_INDX( arg_node), arg_info);
+	  checkDereferencing( arg_node, VARCALL_INDX( arg_node), \
+	  		getDepth( VARCALL_DEC( arg_node)), VARCALL_NAME( arg_node));
+	}
+
+	DBUG_RETURN( arg_node);
+}
+
 node *TPMATdoMatching(node *syntaxtree)
 {	
 	DBUG_ENTER("TPMATdoMatching");
