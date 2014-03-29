@@ -83,33 +83,6 @@ node* TPMATassign(node *arg_node, info *arg_info)
 	DBUG_RETURN( arg_node);
 }
 
-node* TPMATvarlet(node *arg_node, info *arg_info)
-{
-	DBUG_ENTER ("TPMATvarlet");
-
-	VARLET_INDX( arg_node) = TRAVopt( VARLET_INDX( arg_node), arg_info);
-
-	switch (NODE_TYPE( VARLET_DEC( arg_node)))
-	{
-		case N_iter:
-			CTIerror("file %s, line %d\n"
-				"illegal assignment to iterator '%s'",\
-				myglobal.fn, NODE_LINE( arg_node), \
-				VARLET_NAME( arg_node));
-			break;
-		case N_dim:
-			CTIerror("file %s, line %d\n"
-				"illegal assignment to dimension '%s'",\
-				myglobal.fn, NODE_LINE( arg_node), \
-				VARLET_NAME( arg_node));
-			break;
-		default:
-			/* nothing */;
-	}
-
-	DBUG_RETURN( arg_node);
-}
-
 node* TPMATfundef(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("TPMATfundef");
@@ -408,6 +381,18 @@ node* TPMATvarlet(node *arg_node, info *arg_info)
 	  VARLET_INDX( arg_node) = TRAVdo( VARLET_INDX( arg_node), arg_info);
 	  checkDereferencing( arg_node, VARLET_INDX( arg_node), \
 	  		getDepth( VARLET_DEC( arg_node)), VARLET_NAME( arg_node));
+	}
+
+	switch (NODE_TYPE( VARLET_DEC( arg_node)))
+	{
+		case N_iter:
+			CTIerror("file %s, line %d\n"
+				"illegal assignment to iterator '%s'",\
+				myglobal.fn, NODE_LINE( arg_node), \
+				VARLET_NAME( arg_node));
+			break;
+		default:
+			/* nothing */;
 	}
 
 	DBUG_RETURN( arg_node);

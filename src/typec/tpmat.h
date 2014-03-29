@@ -4,7 +4,6 @@
 #include "types.h"
 
 extern node* TPMATassign(node* arg_node, info* arg_info);
-extern node* TPMATvarlet(node* arg_node, info* arg_info);
 extern node* TPMATfundef(node* arg_node, info* arg_info);
 extern node* TPMATfuncall(node* arg_node, info* arg_info);
 extern node* TPMATif(node* arg_node, info* arg_info);
