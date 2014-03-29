@@ -75,6 +75,20 @@ ENDPHASE( tc)
 
 /******************************************************************************/
 
+PHASE( cr,
+			 "Code restructuring",
+			 ALWAYS)
+
+SUBPHASE( itersplit,
+					"Pulling iterators from for loops",
+					ITERSPLITdoSplit,
+					ALWAYS,
+					cr)
+
+ENDPHASE( cr)
+
+/******************************************************************************/
+
 PHASE( co,
 			 "Code optimalisation",
 			 ALWAYS)
@@ -89,30 +103,16 @@ ENDPHASE( co)
 
 /******************************************************************************/
 
-PHASE( cr,
-			 "Code restructuring",
-			 ALWAYS)
 
-SUBPHASE( itersplit,
-					"Pulling iterators from for loops",
-					ITERSPLITdoSplit,
-					ALWAYS,
-					cr)
+PHASE( cg,
+       "Generating Code",
+       ALWAYS)
 
 SUBPHASE( varcount,
 					"Counting local variables",
 					VARCOUNTdoCount,
 					ALWAYS,
-					cr)
-
-ENDPHASE( cr)
-
-/******************************************************************************/
-
-
-PHASE( cg,
-       "Generating Code",
-       ALWAYS)
+					cg)
 
 SUBPHASE( prt, 
           "Print before generation",
