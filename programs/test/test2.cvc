@@ -1,3 +1,5 @@
-int c = c;
-int a = b;
-int b = a;
+float[2, 4, 8] w;
+int x = 2;
+int[2] a;
+int[2] b = [a[1], a[0]];
+int y = 3;

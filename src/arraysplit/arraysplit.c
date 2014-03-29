@@ -43,54 +43,78 @@ static info *FreeInfo( info *info)
   return info;
 }
 
-node* ARRAYSPLITbody(node *arg_node, info *arg_info)
+node* ARRAYSPLITdeclars(node *arg_node, info *arg_info)
 {
-	DBUG_ENTER ("ARRAYSPLITbody");
+  DBUG_ENTER ("ARRAYSPLITdeclars");
 
-	if (BODY_VARDECS( arg_node) != NULL)
+  DBUG_ASSERT( INFO_HEAD( arg_info) == NULL, \
+  		"going into declars with nonempty info!");
+
+  DECLARS_NEXT( arg_node) = TRAVopt( DECLARS_NEXT( arg_node), arg_info);
+
+  DBUG_ASSERT( INFO_HEAD( arg_info) == NULL, \
+  		"going into declar with nonempty info!");
+
+  DECLARS_DECLAR( arg_node) = TRAVdo( DECLARS_DECLAR( arg_node), arg_info);
+
+  node* declars = arg_node;
+
+	if (INFO_HEAD( arg_info) != NULL)
 	{
-		BODY_VARDECS( arg_node) = TRAVopt( BODY_VARDECS( arg_node), arg_info);
-
-		node* vdecs = BODY_VARDECS( arg_node);
-		while (VARDECS_NEXT( vdecs) != NULL)
-		{
-			vdecs = VARDECS_NEXT( vdecs);
-		}
-		VARDECS_NEXT( vdecs) = INFO_HEAD( arg_info);
+		DECLARS_NEXT( INFO_LAST( arg_info)) = declars;
+		declars = INFO_HEAD( arg_info);
+		INFO_HEAD( arg_info) = NULL;
+		INFO_LAST( arg_info) = NULL;
 	}
-	INFO_HEAD( arg_info) = NULL;
-	INFO_LAST( arg_info) = NULL;
 
-	BODY_FUNDEFS( arg_node) = TRAVopt( BODY_FUNDEFS( arg_node), arg_info);
-
-	DBUG_RETURN (arg_node);
+  DBUG_RETURN (declars);
 }
 
-/*node* ARRAYSPLITfor(node *arg_node, info *arg_info)
+static void insertDimdecs(node* arg_node, info* arg_info, node* dimdecs)
 {
-  DBUG_ENTER ("ARRAYSPLITfor");
+  while (dimdecs != NULL)
+  {
+  	node* dim = DIMDECS_DIM( dimdecs);
+  	DIMDECS_DIM( dimdecs) = COPYdoCopy( dim);
+  	DIM_DEC( dim) = arg_node;
+		node* declar = TBmakeDeclars( dim, NULL);
+		
+		if (INFO_HEAD( arg_info) == NULL)
+		{
+			INFO_HEAD( arg_info) = declar;
+			INFO_LAST( arg_info) = declar;
+		}
+		else
+		{
+			DECLARS_NEXT( INFO_LAST( arg_info)) = declar;
+			INFO_LAST( arg_info) = declar;
+		}
 
-  node* itr = FOR_ITER( arg_node);
-	FOR_ITER( arg_node) = COPYdoCopy( itr);
+		dimdecs = DIMDECS_NEXT( dimdecs);
+  }
+}
 
-  ITER_FOR( itr) = arg_node;
-	node* vdecs = TBmakeVardecs( itr, NULL);
+node* ARRAYSPLITglobdef(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("ARRAYSPLITglobdef");
 
-	if (INFO_HEAD( arg_info) == NULL)
-	{
-		INFO_HEAD( arg_info) = vdecs;
-		INFO_LAST( arg_info) = vdecs;
-	}	
-	else
-	{
-		VARDECS_NEXT( INFO_LAST( arg_info)) = vdecs;
-		INFO_LAST( arg_info) = vdecs;
-	}
+  // no need to travdo
 
-	FOR_DO( arg_node) = TRAVopt( FOR_DO( arg_node), arg_info);
+  insertDimdecs(arg_node, arg_info, GLOBDEF_DIMDECS( arg_node));
 
   DBUG_RETURN (arg_node);
-}*/
+}
+
+node* ARRAYSPLITglobdec(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("ARRAYSPLITglobdec");
+
+  // no need to travdo
+
+  insertDimdecs(arg_node, arg_info, GLOBDEC_DIMDECS( arg_node));
+
+  DBUG_RETURN (arg_node);
+}
 
 node *ARRAYSPLITdoSplit(node *syntaxtree)
 {

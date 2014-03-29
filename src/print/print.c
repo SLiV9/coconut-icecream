@@ -341,6 +341,8 @@ PRTdim (node * arg_node, info * arg_info)
     printf(" #%d", DIM_SCOPEPOS( arg_node));
   }
 
+  printf("\n");
+
   DBUG_RETURN (arg_node);
 }
 
