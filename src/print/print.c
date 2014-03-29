@@ -336,14 +336,17 @@ PRTdim (node * arg_node, info * arg_info)
 
   printIndent( arg_info);
   printf( "dim");
-  printf( " %s;", DIM_NAME( arg_node));
+  printf( " %s", DIM_NAME( arg_node));
+  if (INFO_INDENT( arg_info) >= 0)
+    printf(";");
 
   if (DIM_SCOPEPOS( arg_node))
   {
     printf(" #%d", DIM_SCOPEPOS( arg_node));
   }
 
-  printf("\n");
+  if (INFO_INDENT( arg_info) >= 0)
+    printf("\n");
 
   DBUG_RETURN (arg_node);
 }
@@ -584,7 +587,10 @@ PRTheader (node * arg_node, info * arg_info)
   
   printf("(");
   
+  int indent = INFO_INDENT( arg_info);
+  INFO_INDENT( arg_info) = -1;
   HEADER_PARAMS( arg_node) = TRAVopt( HEADER_PARAMS( arg_node), arg_info);
+  INFO_INDENT( arg_info) = indent;
   
   printf(")");
 

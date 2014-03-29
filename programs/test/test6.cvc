@@ -10,6 +10,7 @@ extern float[w, k] e;
 int foo(float[k1, k2] \
 	a, int i)
 {
+	int[k1, k2] u;
 	m = m + (int) a[k1-i, k2-i];
 	return (int) e[k1, m];
 }

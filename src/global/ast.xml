@@ -141,6 +141,10 @@
           <node name="Declars" />
           <node name="GlobDef" />
           <node name="GlobDec" />
+          <node name="VarDecs" />
+          <node name="VarDec" />
+          <node name="Params" />
+          <node name="Param" />
         </travuser>
       </traversal>
       
