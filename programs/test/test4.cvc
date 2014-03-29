@@ -1,5 +1,10 @@
-#include "test4.h"
-a = (42 + 
-(13
-                * tutu));
-
+int foo(float[k] a)
+{
+	for (int i = 0, k)
+	{
+		a[i] = 2.0 * (float) k;
+		i = i + 1;
+		k = k - 1;
+	}
+	return k;
+}

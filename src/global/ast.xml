@@ -92,6 +92,7 @@
       		<node name="FunDef" />
         	<node name="FunCall" />
       		<node name="Assign" />
+          <node name="VarLet" />
       		<node name="If" />
       		<node name="For" />
       		<node name="While" />
