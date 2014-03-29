@@ -98,6 +98,7 @@ node* SPLITglobdef(node *arg_node, info *arg_info){
   if (GLOBDEF_EXPR(arg_node) != NULL){
   	node * letje = TBmakeVarlet( STRcpy( GLOBDEF_NAME(arg_node)), NULL);
   	VARLET_DEC(letje) = arg_node;
+    VARLET_SCOPEDIFF(letje) = NDSD_GLOBAL();
     node * assign = TBmakeAssign( letje, GLOBDEF_EXPR(arg_node));
     GLOBDEF_EXPR(arg_node) = NULL;
     instr_assign = TBmakeInstrs(assign, NULL);

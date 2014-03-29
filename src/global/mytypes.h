@@ -21,8 +21,8 @@ typedef enum { BO_add, BO_sub, BO_mul, BO_div, BO_mod,
 /*
  * NameDec Scope Depth
  */
-#define NDSD_GLOBAL() (-1)
-#define NDSD_LOCAL() (0)
+#define NDSD_GLOBAL() (-2)
+#define NDSD_LOCAL() (-1)
 #define NDSD_OUTER(n) (n)
 
 #endif  /* _CIVCC_MYTYPES_H_ */
