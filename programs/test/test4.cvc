@@ -1,4 +1,3 @@
-
 float y1 = -1.23;
 float[3] y = [30.0, y1, 5.0];
 export float[5] z;
@@ -34,3 +33,13 @@ export void main()
 	getIth(y, -1);
 }
 
+int foo(float[k] a)
+{
+	for (int i = 0, k)
+	{
+		a[i] = 2.0 * (float) k;
+		i = i + 1;
+		k = k - 1;
+	}
+	return k;
+}
