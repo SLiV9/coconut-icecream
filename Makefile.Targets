@@ -91,7 +91,7 @@ calcconst			= calcconst.o
 
 idpre				= idpre.o
 namelink 		= namelink.o funhead.o globnames.o namestackinfo.o
-typec				= tpinf.o tpmat.o gettype.o
+typec				= tpinf.o tping.o tpmat.o gettype.o
 
 itersplit		= itersplit.o
 arraysplit	= arraysplit.o

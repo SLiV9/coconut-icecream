@@ -58,6 +58,12 @@ PHASE( tc,
 			 "Type Checking",
 			 ALWAYS)
 
+SUBPHASE( hee, 
+          "Hoi hoi",
+          PRTdoPrint, 
+          ALWAYS,
+          tc)  
+
 SUBPHASE( tpinf,
 					"Type Inference",
 					TPINFdoInference,

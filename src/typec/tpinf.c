@@ -1,6 +1,7 @@
 #include <string.h>
 
 #include "tpinf.h"
+#include "tping.h"
 
 #include "types.h"
 #include "tree_basic.h"
@@ -151,29 +152,6 @@ node* TPINFvardec(node *arg_node, info *arg_info)
   VARDEC_EXPR( arg_node) = TRAVopt( VARDEC_EXPR( arg_node), arg_info);
   
   VARDEC_DEPTH( arg_node) = getDimDecsLen( VARDEC_DIMDECS( arg_node));
-
-  DBUG_RETURN (arg_node);
-}
-
-node* TPINFglobdef(node *arg_node, info *arg_info)
-{
-  DBUG_ENTER ("TPINFglobdef");
-  
-  GLOBDEF_DIMDEFS( arg_node) = TRAVopt( GLOBDEF_DIMDEFS( arg_node), arg_info);
-  GLOBDEF_EXPR( arg_node) = TRAVopt( GLOBDEF_EXPR( arg_node), arg_info);
-  
-  GLOBDEF_DEPTH( arg_node) = getDimDecsLen( GLOBDEF_DIMDECS( arg_node));
-
-  DBUG_RETURN (arg_node);
-}
-
-node* TPINFglobdec(node *arg_node, info *arg_info)
-{
-  DBUG_ENTER ("TPINFglobdec");
-  
-  GLOBDEC_DIMDECS( arg_node) = TRAVopt( GLOBDEC_DIMDECS( arg_node), arg_info);
-  
-  GLOBDEC_DEPTH( arg_node) = getDimDecsLen( GLOBDEC_DIMDECS( arg_node));
 
   DBUG_RETURN (arg_node);
 }
@@ -394,6 +372,12 @@ node* TPINFbinop(node *arg_node, info *arg_info)
 node *TPINFdoInference(node *syntaxtree)
 {	
 	DBUG_ENTER("TPINFdoInference");
+
+  TRAVpush( TR_tping);
+
+  syntaxtree = TRAVdo( syntaxtree, NULL);
+
+  TRAVpop();
 
   TRAVpush( TR_tpinf);
 

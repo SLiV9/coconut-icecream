@@ -37,7 +37,9 @@ char* arrayDimDisplay(int n)
 	static char sadd_one[80] = "[]";
   static char sadd_buffer[80] = "[2d]";
 	
-	if (n <= 0)
+  DBUG_ASSERT(n >= 0, "arrayDimDisplay called on negative number!");
+
+	if (n == 0)
 	{	
 		return sadd_zero;
 	}

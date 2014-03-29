@@ -10,8 +10,6 @@ extern node* TPINFfuncall(node *arg_node, info *arg_info);
 extern node* TPINFarraylit(node *arg_node, info *arg_info);
 
 extern node* TPINFvardec(node *arg_node, info *arg_info);
-extern node* TPINFglobdef(node *arg_node, info *arg_info);
-extern node* TPINFglobdec(node *arg_node, info *arg_info);
 extern node* TPINFparam(node *arg_node, info *arg_info);
 
 extern node* TPINFcast(node *arg_node, info *arg_info);

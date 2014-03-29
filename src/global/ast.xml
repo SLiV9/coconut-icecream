@@ -87,10 +87,15 @@
 		      <node name="FunCall" />
 		  		<node name="ArrayLit" />
 					<node name="VarDec" />
-					<node name="GlobDef" />
-					<node name="GlobDec" />
 					<node name="Param" />
       	</travuser>
+      </traversal>
+    
+      <traversal id="TPING" name="Type inference global" default="sons" include="tping.h">
+        <travuser>
+          <node name="GlobDef" />
+          <node name="GlobDec" />
+        </travuser>
       </traversal>
     
       <traversal id="TPMAT" name="Type matching" default="sons" include="tpmat.h">

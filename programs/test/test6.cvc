@@ -1,25 +1,21 @@
-int m = 2;
-float[m, 3] e;
+extern void printInt(int n);
 
-int foo(int[k1, k2] \
+int m = 2;
+float[m, 3] a;
+int i = foo(a, 2);
+float[m, 3] b;
+
+extern float[w, k] e;
+
+int foo(float[k1, k2] \
 	a, int i)
 {
-	return a[k1-i, k2-i];
+	m = m + (int) a[k1-i, k2-i];
+	return (int) e[k1, m];
 }
 
 void main()
 {
-	int n = 1;
-	float[ square(n), square(n)] a = [[1.0]];
-	int[n] b = [1];
-	int[n] c = [b];
-	
-	int square(int x)
-	{
-		return (x * x);
-	}
-
-	a[n, b] = (float) n;
-
-	n = n + 1;
+	foo(b, 3);
+	printInt(m);
 }
