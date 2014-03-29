@@ -215,9 +215,10 @@ node* ARRAYSPLITvarcall(node *arg_node, info *arg_info)
 
   // no need to travdo
 
-  /*
-   * TODO
-   */
+  /* HOLY FUCK als dec = vardec, dan VARDEC_DIMDECS zijn 'n KOPIE van
+   * wat ik wil, dus dan linking verkeerd. :c
+   * Varcalls moeten waarschijnlijk voor de rest van arraysplit. */
+  //insertItems(arg_node, arg_info, NULL, N_exprs);
 
   DBUG_RETURN (arg_node);
 }

@@ -57,7 +57,8 @@ src = global scanparse print framework \
 			mycpp myscp \
 			idpre namelink split \
 			typec calcconst \
-			itersplit arraysplit varcount \
+			itersplit arraysplit \
+			varcount \
 			codegen
 
 
@@ -94,7 +95,7 @@ namelink 		= namelink.o funhead.o globnames.o namestackinfo.o
 typec				= tpinf.o tping.o tpmat.o gettype.o
 
 itersplit		= itersplit.o
-arraysplit	= arraysplit.o
+arraysplit	= arraysplit.o alitunfold.o
 varcount		= varcount.o
 
 codegen			= codegen.o

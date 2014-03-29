@@ -148,6 +148,11 @@
         </travuser>
       </traversal>
       
+      <traversal id="ALITUNFOLD" name="AlitUnfold" default="sons" include="alitunfold.h">
+        <travuser>
+        </travuser>
+      </traversal>
+      
       <traversal id="VARCOUNT" name="VarCount" default="sons" include="varcount.h">
         <travuser>
           <node name="FunDef" />

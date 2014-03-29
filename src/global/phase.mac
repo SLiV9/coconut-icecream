@@ -58,12 +58,6 @@ PHASE( tc,
 			 "Type Checking",
 			 ALWAYS)
 
-SUBPHASE( hee, 
-          "Hoi hoi",
-          PRTdoPrint, 
-          ALWAYS,
-          tc)  
-
 SUBPHASE( tpinf,
 					"Type Inference",
 					TPINFdoInference,
@@ -89,10 +83,16 @@ SUBPHASE( hoi,
           "Hallo",
           PRTdoPrint, 
           ALWAYS,
-          cr)  
+          cr)
+
+SUBPHASE( alitunfold,
+					"Unfolding arraylits",
+					ALITUNFOLDdoUnfold,
+					ALWAYS,
+					cr)
 
 SUBPHASE( arraysplit,
-					"Pulling array dims, unfolding arraylits",
+					"Pulling array dims",
 					ARRAYSPLITdoSplit,
 					ALWAYS,
 					cr)

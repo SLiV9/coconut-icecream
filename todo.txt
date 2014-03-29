@@ -1,14 +1,11 @@
 
-TODO: Na typechecking arraylit unfolding.
+TODO: Extern arrays naar getters en setters.
 
 
-TODO: Na typechecking array dimension als vardecs ervoor.
+TODO: Arraylit unfolding.
 
 
-TODO: Na typechecking array dimensions als parameters ervoor.
+TODO: Dimension reduction.
 
 
-TODO: Extern arrays naar getters en setters, voor dimension reduction.
-
-
-TODO: Dimension reduction (ook na typechecking).
+TODO: Array dimensions als arguments in funcalls ervoor.
