@@ -92,6 +92,19 @@ int getDepth(node* arg_node)
 		case N_iter:
 		case N_dim:
 			return 0;
+		case N_varlet:
+			return VARLET_DEPTH( arg_node);
+		case N_varcall:
+			return VARCALL_DEPTH( arg_node);
+		case N_funcall:
+			return 0;
+		case N_binop:
+		case N_monop:
+		case N_cast:
+		case N_int:
+		case N_bool:
+		case N_float:
+			return 0;
 		default:
 			DBUG_ASSERT( 0, "invalid getdepth type detected!");
 			return VT_unknown;

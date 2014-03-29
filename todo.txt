@@ -1,45 +1,5 @@
-TODO: DimDefs naar aparte vardecs/globdefs maken, tijdens splitting.
 
-int[f(), f()] a;
-a[1,2] = 3;
-==>
-int[f(), f()] a;
-a = __alloc(f(), f());
-a[1 * f() + 2] = 3;
-
-Dit gaat fout als f() zijeffecten heeft, want van 2 -> 5 keer aangeroepen.
-Handigst is denk ik gewoon
-
-int _a_1 = f(); !dim
-int _a_2 = f(); !dim
-int[_a_1, _a_2] a;
-a = __alloc(_a_1, _a_2);
-a[1 * a_1 + a_2] = 3;
-
-Namen hoeven niet per se zo, want dit is na namelinking.
-
-Of gewoon
-
-int[2d] a;
-__alloc(a);
-
-aangezien de assembler multidimensional aankan?
-Nee, multidimensionaliteit van assembler mogen we niet gebruiken.
-Dus
-
-int[_a_1, _a_2] a;
-_a_1 = f();
-_a_2 = f();
-a = __alloc(_a_1, _a_2);
-
-
-TODO: Arrays als expression in een assign, niet zonder dereference.
-
-
-TODO: Tijdens typechecking depth controle in varlets en varcalls.
-
-
-TODO: Tijdens typechecking a[i] indices i op type int controleren.
+TODO: Tijdens typechecking a[i] indices i op type int en aantal controleren.
 
 
 TODO: Na typechecking arraylit unfolding.

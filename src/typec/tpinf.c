@@ -22,6 +22,10 @@ node* TPINFvarlet(node *arg_node, info *arg_info)
   VARLET_INDX( arg_node) = TRAVopt( VARLET_INDX( arg_node), arg_info);
   
   VARLET_TYPE( arg_node) = getType( VARLET_DEC( arg_node));
+  if (VARLET_INDX( arg_node) != NULL)
+    VARLET_DEPTH( arg_node) = 0;
+  else
+    VARLET_DEPTH( arg_node) = getDepth( VARLET_DEC( arg_node));
 
   DBUG_RETURN (arg_node);
 }
@@ -36,7 +40,7 @@ node* TPINFvarcall(node *arg_node, info *arg_info)
 
   if (NODE_TYPE( dec) == N_globdec)
   {
-    if (GLOBDEC_DIMDECS( dec) != NULL && VARCALL_INDX( arg_node) == NULL)
+    if (VARCALL_INDX( arg_node) == NULL && GLOBDEC_DIMDECS( dec) != NULL)
     {
       CTIerror("file %s, line %d\n"
           "extern array variable '%s' used without dereference", \
@@ -46,6 +50,10 @@ node* TPINFvarcall(node *arg_node, info *arg_info)
   }
 
   VARCALL_TYPE( arg_node) = getType( dec);
+  if (VARCALL_INDX( arg_node) != NULL)
+    VARCALL_DEPTH( arg_node) = 0;
+  else
+    VARCALL_DEPTH( arg_node) = getDepth( VARCALL_DEC( arg_node));
 
   DBUG_RETURN (arg_node);
 }
@@ -191,6 +199,12 @@ node* TPINFmonop(node *arg_node, info *arg_info)
   MONOP_EXPR( arg_node) = TRAVdo( MONOP_EXPR( arg_node), arg_info);
   
   vtype t = getType( MONOP_EXPR( arg_node));
+  if (getDepth( MONOP_EXPR( arg_node)) > 0)
+  {
+    CTIerror("file %s, line %d\n"
+        "array used in expression without dereferencing", \
+        myglobal.fn, NODE_LINE( arg_node));
+  }
   
   switch (MONOP_OP( arg_node))
   {
@@ -253,6 +267,18 @@ node* TPINFbinop(node *arg_node, info *arg_info)
   
   vtype t1 = getType( BINOP_LEFT( arg_node));
   vtype t2 = getType( BINOP_RIGHT( arg_node));
+  if (getDepth( BINOP_LEFT( arg_node)) > 0)
+  {
+    CTIerror("file %s, line %d\n"
+        "array used in expression without dereferencing", \
+        myglobal.fn, NODE_LINE( arg_node));
+  }
+  if (getDepth( BINOP_RIGHT( arg_node)) > 0)
+  {
+    CTIerror("file %s, line %d\n"
+        "array used in expression without dereferencing", \
+        myglobal.fn, NODE_LINE( arg_node));
+  }
   
   if (t1 != VT_unknown && t2 != VT_unknown)
 	{

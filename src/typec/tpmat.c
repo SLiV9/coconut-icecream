@@ -38,6 +38,13 @@ node* TPMATassign(node *arg_node, info *arg_info)
 		if (!isArrayLit)
 		{
 			ext = getType( ASSIGN_EXPR( arg_node));
+			ed = getDepth( ASSIGN_EXPR( arg_node));
+			if (ed > 0)
+			{
+				CTIerror("file %s, line %d\n"
+						"array used in expression without dereferencing", \
+						myglobal.fn, NODE_LINE( arg_node));
+			}
 		}
 		else
 		{

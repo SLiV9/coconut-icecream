@@ -2,9 +2,14 @@ void main()
 {
 	int n = 1;
 	float[ square(n), square(n)] a = [[1.0]];
+	float[ n * n, n * n] b = a;
+	float b1 = 2.0 * b;
+	float b2 = a + b[2];
 	
 	int square(int x)
 	{
 		return (x * x);
 	}
+
+	n = n + 1;
 }
