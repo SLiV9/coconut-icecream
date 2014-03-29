@@ -6,3 +6,9 @@ TODO: Na typechecking array dimension als vardecs ervoor.
 
 
 TODO: Na typechecking array dimensions als parameters ervoor.
+
+
+TODO: Extern arrays naar getters en setters, voor dimension reduction.
+
+
+TODO: Dimension reduction (ook na typechecking).

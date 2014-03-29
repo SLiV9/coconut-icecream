@@ -199,6 +199,7 @@
     		<node name="FunDec" />
     		<node name="GlobDef" />
     		<node name="GlobDec" />
+        <node name="Dim" />
     	</target>
     </nodeset>
     <nodeset name="NameDec">
@@ -217,6 +218,12 @@
       <target>
         <node name="VarDec" />
         <node name="Iter" />
+        <node name="Dim" />
+      </target>
+    </nodeset>
+    <nodeset name="ParamOrDim">
+      <target>
+        <node name="Param" />
         <node name="Dim" />
       </target>
     </nodeset>
@@ -298,7 +305,7 @@
         <son name="Param">
           <targets>
             <target mandatory="yes">
-              <node name="Param" />
+              <set name="ParamOrDim" />
               <phases>
                 <all />
               </phases>

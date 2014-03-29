@@ -50,12 +50,6 @@ SUBPHASE( split,
 					ALWAYS,
 					ca)
 
-SUBPHASE( hoi, 
-          "Hallo",
-          PRTdoPrint, 
-          ALWAYS,
-          ca)  
-
 ENDPHASE( ca)
 
 /******************************************************************************/
@@ -84,6 +78,12 @@ ENDPHASE( tc)
 PHASE( cr,
 			 "Code restructuring",
 			 ALWAYS)
+
+SUBPHASE( hoi, 
+          "Hallo",
+          PRTdoPrint, 
+          ALWAYS,
+          cr)  
 
 SUBPHASE( arraysplit,
 					"Pulling array dims, unfolding arraylits",

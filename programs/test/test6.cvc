@@ -1,10 +1,16 @@
+int m = 2;
+float[m, 3] e;
+
+int foo(int[k1, k2] \
+	a, int i)
+{
+	return a[k1-i, k2-i];
+}
+
 void main()
 {
 	int n = 1;
 	float[ square(n), square(n)] a = [[1.0]];
-	float[ n * n, n * n] b = a[1];
-	float b1 = b[1.0];
-	float b2 = b[2];
 	
 	int square(int x)
 	{
@@ -12,6 +18,4 @@ void main()
 	}
 
 	n = n + 1;
-	a[2] = b1;
-	a[1,2,3] = b2;
 }
