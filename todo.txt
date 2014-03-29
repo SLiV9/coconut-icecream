@@ -2,7 +2,7 @@
 TODO: Na typechecking arraylit unfolding.
 
 
-TODO: Na typechecking array dimension ervoor.
+TODO: Na typechecking array dimension als vardecs ervoor.
 
 
-TODO: CR moet voor CO, lijkt me zo.
+TODO: Na typechecking array dimensions als parameters ervoor.

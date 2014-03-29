@@ -7,10 +7,10 @@ export void main()
 	int n = 5;
 	float[n] x = [3.1415, -1.0, 0.0, 1.337, 303.03];
 	float[2, n] y = [[4.24, 3.1 * sum(x)], [3.1, 3.1]];
-	float[n] z = [[2.0]];
-	float[2] u = x;
+	float[n] z = [2.0];
+	float[2] u = x[1];
 	float[n] w;
-	int v = x;
+	int v = (int) x[1];
 	
 	float sum(float[k] a)
 	{
@@ -49,9 +49,18 @@ export void main()
 		}
 		return r;
 	}
+
+	float oops(float[k] a)
+	{
+		for (int i = a, x[2,3], y[1])
+		{
+			i = i - 1;
+		}
+		return a;
+	}
 	
 	printFloat(average(x));
-	printFloat(sum(z));
+	printFloat(sum(z) + sum(y));
 	printFloat(getIth(x, 2));
 }
 

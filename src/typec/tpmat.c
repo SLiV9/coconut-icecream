@@ -38,13 +38,7 @@ node* TPMATassign(node *arg_node, info *arg_info)
 		if (!isArrayLit)
 		{
 			ext = getType( ASSIGN_EXPR( arg_node));
-			ed = getDepth( ASSIGN_EXPR( arg_node));
-			if (ed > 0)
-			{
-				CTIerror("file %s, line %d\n"
-						"array used in expression without dereferencing", \
-						myglobal.fn, NODE_LINE( arg_node));
-			}
+  		checkDereferenced( ASSIGN_EXPR( arg_node));
 		}
 		else
 		{
@@ -98,6 +92,7 @@ node* TPMATfundef(node *arg_node, info *arg_info)
   
   vtype hrt = getType( arg_node);
   node* ret = BODY_RETURN( FUNDEF_BODY( arg_node));
+  checkDereferenced( ret);
   
   switch (hrt)
   {
@@ -173,12 +168,15 @@ node* TPMATfuncall(node *arg_node, info *arg_info)
 	node* params = HEADER_PARAMS( hd);
 	node* args = FUNCALL_ARGS( arg_node);
 	vtype prt, art;
+  int pd, ad;
 	int i = 0;
 	
 	while (params != NULL && args != NULL)
 	{
 		prt = getType( PARAMS_PARAM( params));
 		art = getType( EXPRS_EXPR( args));
+		pd = getDepth( PARAMS_PARAM( params));
+		ad = getDepth( EXPRS_EXPR( args));
 		i++;
 		
 		switch (prt)
@@ -191,10 +189,10 @@ node* TPMATfuncall(node *arg_node, info *arg_info)
 					case VT_int:
 					case VT_float:
 					case VT_bool:
-						if (art != prt)
+						if (art != prt || ad != pd)
 						{
 							putParamMismatchError(arg_node, HEADER_NAME( hd), i, dec, \
-									art, 1, prt, 1);
+									art, ad, prt, pd);
 						}
 						break;
 					case VT_unknown:
@@ -238,6 +236,7 @@ node* TPMATif(node *arg_node, info *arg_info)
   IF_COND( arg_node)	= TRAVdo( IF_COND( arg_node), arg_info);
   IF_THEN( arg_node) 	= TRAVopt( IF_THEN( arg_node), arg_info);
   IF_ELSE( arg_node)	= TRAVopt( IF_ELSE( arg_node), arg_info);
+  checkDereferenced( IF_COND( arg_node));
   
   vtype cdt = getType( IF_COND( arg_node));
   
@@ -266,6 +265,7 @@ node* TPMATwhile(node *arg_node, info *arg_info)
   
   WHILE_COND( arg_node)	= TRAVdo( WHILE_COND( arg_node), arg_info);
   WHILE_DO( arg_node) 	= TRAVopt( WHILE_DO( arg_node), arg_info);
+  checkDereferenced( WHILE_COND( arg_node));
   
   vtype cdt = getType( WHILE_COND( arg_node));
   
@@ -315,6 +315,9 @@ node* TPMATfor(node *arg_node, info *arg_info)
   FOR_FROM( arg_node)	= TRAVdo( FOR_FROM( arg_node), arg_info);
   FOR_TO( arg_node) 	= TRAVdo( FOR_TO( arg_node), arg_info);
   FOR_INCR( arg_node)	= TRAVopt( FOR_INCR( arg_node), arg_info);
+  checkDereferenced( FOR_FROM( arg_node));
+  checkDereferenced( FOR_TO( arg_node));
+  checkDereferenced( FOR_INCR( arg_node));
   
   checkForExpr( arg_node, getType( FOR_FROM( arg_node)));
   checkForExpr( arg_node, getType( FOR_TO( arg_node)));

@@ -184,6 +184,29 @@ node* TPINFparam(node *arg_node, info *arg_info)
   DBUG_RETURN (arg_node);
 }
 
+bool checkDereferenced(node* x)
+{
+  if (getDepth(x) > 0)
+  {
+    CTIerror("file %s, line %d\n"
+        "array used in expression without dereferencing", \
+        myglobal.fn, NODE_LINE( x));
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+node* TPINFcast(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("TPINFcast");
+
+  CAST_EXPR( arg_node) = TRAVdo( CAST_EXPR( arg_node), arg_info);
+  checkDereferenced( CAST_EXPR( arg_node));
+
+  DBUG_RETURN (arg_node);
+}
+
 static void putMonopError(node* arg_node, vtype t)
 {
 	CTIerror("file %s, line %d\n"
@@ -199,12 +222,7 @@ node* TPINFmonop(node *arg_node, info *arg_info)
   MONOP_EXPR( arg_node) = TRAVdo( MONOP_EXPR( arg_node), arg_info);
   
   vtype t = getType( MONOP_EXPR( arg_node));
-  if (getDepth( MONOP_EXPR( arg_node)) > 0)
-  {
-    CTIerror("file %s, line %d\n"
-        "array used in expression without dereferencing", \
-        myglobal.fn, NODE_LINE( arg_node));
-  }
+  checkDereferenced( MONOP_EXPR( arg_node));
   
   switch (MONOP_OP( arg_node))
   {
@@ -267,18 +285,8 @@ node* TPINFbinop(node *arg_node, info *arg_info)
   
   vtype t1 = getType( BINOP_LEFT( arg_node));
   vtype t2 = getType( BINOP_RIGHT( arg_node));
-  if (getDepth( BINOP_LEFT( arg_node)) > 0)
-  {
-    CTIerror("file %s, line %d\n"
-        "array used in expression without dereferencing", \
-        myglobal.fn, NODE_LINE( arg_node));
-  }
-  if (getDepth( BINOP_RIGHT( arg_node)) > 0)
-  {
-    CTIerror("file %s, line %d\n"
-        "array used in expression without dereferencing", \
-        myglobal.fn, NODE_LINE( arg_node));
-  }
+  checkDereferenced( BINOP_LEFT( arg_node));
+  checkDereferenced( BINOP_RIGHT( arg_node));
   
   if (t1 != VT_unknown && t2 != VT_unknown)
 	{

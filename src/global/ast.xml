@@ -81,6 +81,7 @@
       	<travuser>
 		    	<node name="MonOp" />
 		      <node name="BinOp" />
+          <node name="Cast" />
 		  		<node name="VarLet" />
 		      <node name="VarCall" />
 		      <node name="FunCall" />

@@ -14,9 +14,12 @@ extern node* TPINFglobdef(node *arg_node, info *arg_info);
 extern node* TPINFglobdec(node *arg_node, info *arg_info);
 extern node* TPINFparam(node *arg_node, info *arg_info);
 
+extern node* TPINFcast(node *arg_node, info *arg_info);
 extern node* TPINFmonop(node *arg_node, info *arg_info);
 extern node* TPINFbinop(node *arg_node, info *arg_info);
 
 extern node* TPINFdoInference(node *syntax_tree);
+
+bool checkDereferenced(node* x);
 
 #endif /* _TPINF_H_ */
