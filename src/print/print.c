@@ -129,9 +129,9 @@ void printLink(node* dec, int scopediff)
 			printf("{unknown");
 	}
 
-  if (scopediff >= -1 && scopediff <= 0)
+  if (scopediff >= -2 && scopediff < 0)
   {
-    printf(" $%s", scope_name[1 + scopediff]);
+    printf(" $%s", scope_name[2 + scopediff]);
     
   }
   if (scopediff > 0)
