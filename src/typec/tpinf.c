@@ -20,6 +20,8 @@ node* TPINFvarlet(node *arg_node, info *arg_info)
   DBUG_ENTER ("TPINFvarlet");
   
   VARLET_INDX( arg_node) = TRAVopt( VARLET_INDX( arg_node), arg_info);
+
+  DBUG_ASSERT( VARLET_DEC( arg_node) != NULL, "varlet dec is null!");
   
   VARLET_TYPE( arg_node) = getType( VARLET_DEC( arg_node));
   if (VARLET_INDX( arg_node) != NULL)
@@ -38,6 +40,8 @@ node* TPINFvarcall(node *arg_node, info *arg_info)
   
   node* dec = VARCALL_DEC( arg_node);
 
+  DBUG_ASSERT( dec != NULL, "varcall dec is null!");
+
   if (NODE_TYPE( dec) == N_globdec)
   {
     if (VARCALL_INDX( arg_node) == NULL && GLOBDEC_DIMDECS( dec) != NULL)
@@ -53,7 +57,7 @@ node* TPINFvarcall(node *arg_node, info *arg_info)
   if (VARCALL_INDX( arg_node) != NULL)
     VARCALL_DEPTH( arg_node) = 0;
   else
-    VARCALL_DEPTH( arg_node) = getDepth( VARCALL_DEC( arg_node));
+    VARCALL_DEPTH( arg_node) = getDepth( dec);
 
   DBUG_RETURN (arg_node);
 }
@@ -187,6 +191,9 @@ node* TPINFparam(node *arg_node, info *arg_info)
 
 bool checkDereferenced(node* x)
 {
+  if (x == NULL)
+    return TRUE;
+  
   if (getDepth(x) > 0)
   {
     CTIerror("file %s, line %d\n"

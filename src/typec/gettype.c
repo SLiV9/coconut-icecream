@@ -9,16 +9,16 @@
 
 #include "gettype.h"
 
-vtype getType(node* nd)
+vtype getType(node* arg_node)
 {
-	if (nd == NULL)
+	if (arg_node == NULL)
 	{
 		return VT_unknown;
 	}
 	
 	vtype r;
 	
-	switch (NODE_TYPE(nd))
+	switch (NODE_TYPE( arg_node))
 	{
 		case N_int:
 			return VT_int;
@@ -27,44 +27,44 @@ vtype getType(node* nd)
 		case N_bool:
 			return VT_bool;
 		case N_cast:
-			return CAST_TYPE(nd);
+			return CAST_TYPE( arg_node);
 		case N_binop:
-			return BINOP_TYPE(nd);
+			return BINOP_TYPE( arg_node);
 		case N_monop:
-			return MONOP_TYPE(nd);
+			return MONOP_TYPE( arg_node);
 		case N_vardec:
-			return VARDEC_TYPE(nd);
+			return VARDEC_TYPE( arg_node);
 		case N_globdef:
-			return GLOBDEF_TYPE(nd);
+			return GLOBDEF_TYPE( arg_node);
 		case N_globdec:
-			return GLOBDEC_TYPE(nd);
+			return GLOBDEC_TYPE( arg_node);
 		case N_param:
-			return PARAM_TYPE(nd);
+			return PARAM_TYPE( arg_node);
 		case N_iter:
 			return VT_int;
 		case N_dim:
 			return VT_int;
 		case N_fundef:
-			return HEADER_TYPE( FUNDEF_HEAD( nd));
+			return HEADER_TYPE( FUNDEF_HEAD( arg_node));
 		case N_fundec:
-			return HEADER_TYPE( FUNDEC_HEAD( nd));
+			return HEADER_TYPE( FUNDEC_HEAD( arg_node));
 		case N_varlet:
-			return VARLET_TYPE(nd);
+			return VARLET_TYPE( arg_node);
 		case N_varcall:
-			return VARCALL_TYPE(nd);
+			return VARCALL_TYPE( arg_node);
 		case N_funcall:
-			r = FUNCALL_TYPE(nd);
+			r = FUNCALL_TYPE( arg_node);
 			if (r == VT_void) {
 				CTIerror("file %s, line %d\n"
 						"void returning function '%s' used in expression", \
-						myglobal.fn, NODE_LINE(nd), FUNCALL_NAME(nd));
+						myglobal.fn, NODE_LINE( arg_node), FUNCALL_NAME( arg_node));
 				return VT_unknown;
 			};
 			return r;
 		case N_arraylit:
 			CTIerror("file %s, line %d\n"
 					"array literal used outside of array assignment", \
-					myglobal.fn, NODE_LINE(nd));
+					myglobal.fn, NODE_LINE( arg_node));
 			return VT_unknown;
 		default:
 			DBUG_ASSERT( 0, "invalid gettype detected!");
@@ -74,10 +74,7 @@ vtype getType(node* nd)
 
 int getDepth(node* arg_node)
 {
-	if (arg_node == NULL)
-	{
-		return 0;
-	}
+	DBUG_ASSERT( arg_node != NULL, "getDepth called on null!");
 
 	switch (NODE_TYPE( arg_node))
 	{
