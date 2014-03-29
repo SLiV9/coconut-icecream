@@ -19,18 +19,32 @@ static node* dimdefsToDimdecs( node* dimdefs, const char* name)
 
   node* defs = dimdefs;
   node* dimdecs = NULL;
+  node* ddshead = NULL;
+  node* ddslast = NULL;
   node* dim;
   int i = 0;
 
   while (defs != NULL)
   {
     dim = TBmakeDim( STRcatn(4, "_", STRcpy( name), "_", STRitoa( i)));
-    dimdecs = TBmakeDimdecs( dim, dimdecs);
+    dimdecs = TBmakeDimdecs( dim, NULL);
+
+    if (ddshead == NULL)
+    {
+      ddshead = dimdecs;
+      ddslast = dimdecs;
+    }
+    else
+    {
+      DIMDECS_NEXT( ddslast) = dimdecs;
+      ddslast = dimdecs;
+    }
+
     defs = EXPRS_NEXT( defs);
     i++;
   }
 
-  return dimdecs;
+  return ddshead;
 }
 
 static node* dimdecsToAlloc( node* dimdecs, int scopediff)
@@ -38,10 +52,13 @@ static node* dimdecsToAlloc( node* dimdecs, int scopediff)
 	DBUG_ASSERT( NODE_TYPE(dimdecs) == N_dimdecs, "dimdefsToAlloc called on "
 			"something other than dimdecs!");
 
-  node * args = NULL;
   node * decs = dimdecs;
   node * dim;
   node * call;
+
+  node * argshead = NULL;
+  node * argslast = NULL;
+  node * args;
 
   while (decs != NULL)
   {
@@ -49,11 +66,23 @@ static node* dimdecsToAlloc( node* dimdecs, int scopediff)
     call = TBmakeVarcall( STRcpy( DIM_NAME( dim)), NULL);
     VARCALL_DEC( call) = dim;
     VARCALL_SCOPEDIFF( call) = scopediff;
-    args = TBmakeExprs( call, args);
+    args = TBmakeExprs( call, NULL);
+
+    if (argshead == NULL)
+    {
+      argshead = args;
+      argslast = args;
+    }
+    else
+    {
+      EXPRS_NEXT( argslast) = args;
+      argslast = args;
+    }
+
     decs = DIMDECS_NEXT( decs);
   }
 
-	return TBmakeFuncall( STRcpy("__alloc"), args);
+	return TBmakeFuncall( STRcpy("__alloc"), argshead);
 }
 
 static node* dimdefsToInstrs( node* arg_node, const char* name, \
@@ -81,16 +110,38 @@ static node* dimdefsToInstrs( node* arg_node, const char* name, \
   node * defs = dimdefs;
   node * dim;
 
+  node * instrhead = NULL;
+  node * instrlast = NULL;
+  node * instr;
+
   while (decs != NULL && defs != NULL)
   {
     dim = DIMDECS_DIM( decs);
     letje = TBmakeVarlet( STRcpy( DIM_NAME( dim)), NULL);
     VARLET_DEC( letje) = dim;
     VARLET_SCOPEDIFF( letje) = scopediff;
-    instrs = TBmakeInstrs( TBmakeAssign( letje, \
-        COPYdoCopy( EXPRS_EXPR( defs))), instrs);
+    instr = TBmakeInstrs( TBmakeAssign( letje, \
+        COPYdoCopy( EXPRS_EXPR( defs))), NULL);
+
+    if (instrhead == NULL)
+    {
+      instrhead = instr;
+      instrlast = instr;
+    }
+    else
+    {
+      INSTRS_NEXT( instrlast) = instr;
+      instrlast = instr;
+    }
+
     decs = DIMDECS_NEXT( decs);
     defs = EXPRS_NEXT( defs);
+  }
+
+  if (instrhead != NULL)
+  {
+    INSTRS_NEXT( instrlast) = instrs;
+    instrs = instrhead;
   }
 
   return instrs;
