@@ -340,6 +340,7 @@ static void checkDereferencing(node* arg_node, node* indx, int d, const char* na
   while (i < d && indxs != NULL)
   {
   	ex = EXPRS_EXPR( indxs);
+  	checkDereferenced( ex);
   	switch (getType( ex))
   	{
   		case VT_int:
