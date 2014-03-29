@@ -91,6 +91,7 @@ node* TPINFarraylit(node *arg_node, info *arg_info)
 		else
 		{
 			t1 = getType( expr);
+      checkDereferenced( expr);
 			d1 = 0;
 		}
   	

@@ -12,7 +12,7 @@ void main()
 	int n = 1;
 	float[ square(n), square(n)] a = [[1.0]];
 	int[n] b = [1];
-	int[b] c;
+	int[n] c = [b];
 	
 	int square(int x)
 	{
