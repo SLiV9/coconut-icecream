@@ -96,9 +96,13 @@ node* findNameDec(node *arg_node, info *arg_info, const char* name)
 					scopediff = NDSD_GLOBAL();
 				}
 			}
-			else
+			else if (NAMEDECS_DEPTH( nd) > 0)
 			{
 				scopediff = NDSD_LOCAL();
+			}
+			else
+			{
+				scopediff = NDSD_GLOBAL();
 			}
 			
 			return dec;

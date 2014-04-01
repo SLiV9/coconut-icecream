@@ -1,3 +1,2 @@
-int c = c;
-int a = b;
+int a = 2;
 int b = a;
