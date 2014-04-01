@@ -32,8 +32,13 @@ node *MYSCPdoScanParse(node *syntaxtree)
                "MYSCPdoScapParse() called with existing syntax tree.");
   
   if (global.cpp) {
-  	dirnm = dirname( STRcpy(global.infile));
-  	basenm = basename( STRcpy(global.infile));
+    char *buffer;
+    buffer = STRcpy(global.infile);
+  	dirnm = dirname( buffer);
+    MEMfree(buffer);
+    buffer = STRcpy(global.infile);
+    basenm = basename( buffer);
+    MEMfree(buffer);
   
     filename = STRcatn( 4,
                         dirnm,
@@ -51,6 +56,11 @@ node *MYSCPdoScanParse(node *syntaxtree)
     CTIabort( "Cannot open file '%s'.", filename);
   }
 
+  if (global.cpp)
+  {
+    MEMfree(dirnm);
+    MEMfree(basenm);
+  }
   MEMfree( filename);
   
   result = YYparseTree();

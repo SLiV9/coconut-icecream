@@ -18,8 +18,11 @@ node *MYCPPdoPreprocessing(node *syntaxtree)
   
   DBUG_ENTER("MYCPPdoPreprocessing");
 
-	dirnm = dirname( STRcpy(global.infile));
-	basenm = basename( STRcpy(global.infile));
+  char *buffer1, *buffer2;
+  buffer1 = STRcpy(global.infile);
+  buffer2 = STRcpy(global.infile);
+	dirnm = dirname( buffer1);
+	basenm = basename( buffer2);
 
   cppcallstr = STRcatn( 7, 
                         "cpp ",
@@ -39,6 +42,12 @@ node *MYCPPdoPreprocessing(node *syntaxtree)
   }
   
   global.cpp = TRUE;
+
+  MEMfree(buffer1);
+  MEMfree(buffer2);
+  MEMfree(dirnm);
+  MEMfree(basenm);
+  MEMfree(cppcallstr);
 
   DBUG_RETURN( syntaxtree);
 }
