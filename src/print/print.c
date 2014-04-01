@@ -423,6 +423,28 @@ PRTbinop (node * arg_node, info * arg_info)
 }
 
 node *
+PRThoare (node * arg_node, info * arg_info)
+{
+  DBUG_ENTER ("PRThoare");
+
+  printf( "(");
+
+  HOARE_COND( arg_node) = TRAVdo( HOARE_COND( arg_node), arg_info);
+
+  printf(" ? ");
+
+  HOARE_LEFT( arg_node) = TRAVdo( HOARE_LEFT( arg_node), arg_info);
+
+  printf( " : ");
+
+  HOARE_RIGHT( arg_node) = TRAVdo( HOARE_RIGHT( arg_node), arg_info);
+
+  printf( ")");
+
+  DBUG_RETURN (arg_node);
+}
+
+node *
 PRTfloat (node * arg_node, info * arg_info)
 {
   DBUG_ENTER ("PRTfloat");

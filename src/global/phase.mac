@@ -120,6 +120,12 @@ SUBPHASE( nestrename,
 					ALWAYS,
 					pr)
 
+SUBPHASE( ternary,
+					"Casts and SCL to ternaries",
+					TERNARYdoReplace,
+					ALWAYS,
+					pr)
+
 ENDPHASE( pr)
 
 /******************************************************************************/

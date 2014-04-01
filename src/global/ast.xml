@@ -143,6 +143,13 @@
           <node name="FunCall" />
         </travuser>
       </traversal>
+      
+      <traversal id="TERNARY" name="Ternary" default="sons" include="ternary.h">
+        <travuser>
+          <node name="Cast" />
+          <node name="BinOp" />
+        </travuser>
+      </traversal>
 
       
       <traversal id="CODEGEN" name="CodeGen" default="sons" include="codegen.h">
@@ -175,6 +182,7 @@
         <node name="Bool" />
         <node name="Cast" />
         <node name="ArrayLit" />
+        <node name="Hoare" />
       </target>
     </nodeset>
     <nodeset name="Instr">
@@ -1173,6 +1181,54 @@
 		      		</target>
         		</targets>
         	</type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="Hoare">
+      <sons>
+        <son name="Cond">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Left">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Right">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
         </attribute>
       </attributes>
     </node>

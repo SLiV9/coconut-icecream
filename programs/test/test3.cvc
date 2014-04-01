@@ -1,5 +1,4 @@
-# 4 "hoi.h" 2
-a = (42 + 
-(13
-                * tutu));
-
+float a = -1.337;
+bool b = (bool) a;
+bool x = false && b;
+bool y = (true || x) && !x;
