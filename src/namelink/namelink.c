@@ -127,7 +127,7 @@ node* NAMELINKfundef(node *arg_node, info *arg_info)
 	
 	INFO_LEVEL( arg_info) = INFO_LEVEL( arg_info) - 1;
 	INFO_DEPTH( arg_info) = INFO_DEPTH( arg_info) - 1;
-  INFO_STACK( arg_info) = old;
+  popUntilNameDec(arg_info, old);
 
   DBUG_RETURN (arg_node);
 }
@@ -144,7 +144,7 @@ node* NAMELINKfundec(node *arg_node, info *arg_info)
 	
 	INFO_LEVEL( arg_info) = INFO_LEVEL( arg_info) - 1;
 	INFO_DEPTH( arg_info) = INFO_DEPTH( arg_info) - 1;
-  INFO_STACK( arg_info) = old;
+  popUntilNameDec(arg_info, old);
 
   DBUG_RETURN (arg_node);
 }
@@ -165,7 +165,7 @@ node* NAMELINKfor(node *arg_node, info *arg_info)
 	FOR_DO( arg_node) = TRAVopt( FOR_DO( arg_node), arg_info);
 	
 	INFO_LEVEL( arg_info) = INFO_LEVEL( arg_info) - 1;
-	INFO_STACK( arg_info) = old;
+  popUntilNameDec(arg_info, old);
 
   DBUG_RETURN (arg_node);
 }

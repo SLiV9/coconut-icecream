@@ -172,7 +172,7 @@ node *CODEGENdoCodegen(node *syntaxtree)
   code->consts = NULL;
   code->lines = 0;
   syntaxtree = TRAVdo( syntaxtree, code);
-
+  free(code);
   TRAVpop();
 
 

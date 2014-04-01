@@ -25,6 +25,7 @@ node *MYSCPdoScanParse(node *syntaxtree)
 {  
 	node *result = NULL;
   char *dirnm, *basenm, *filename;
+  char *buffer1, *buffer2;
   
   DBUG_ENTER("MYSCPdoScanParse");
 
@@ -32,13 +33,10 @@ node *MYSCPdoScanParse(node *syntaxtree)
                "MYSCPdoScapParse() called with existing syntax tree.");
   
   if (global.cpp) {
-    char *buffer;
-    buffer = STRcpy(global.infile);
-  	dirnm = dirname( buffer);
-    MEMfree(buffer);
-    buffer = STRcpy(global.infile);
-    basenm = basename( buffer);
-    MEMfree(buffer);
+    buffer1 = STRcpy(global.infile);
+    buffer2 = STRcpy(global.infile);
+  	dirnm = dirname( buffer1);
+    basenm = basename( buffer2);
   
     filename = STRcatn( 4,
                         dirnm,
@@ -58,8 +56,8 @@ node *MYSCPdoScanParse(node *syntaxtree)
 
   if (global.cpp)
   {
-    MEMfree(dirnm);
-    MEMfree(basenm);
+    MEMfree(buffer1);
+    MEMfree(buffer2);
   }
   MEMfree( filename);
   

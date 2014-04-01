@@ -6,6 +6,7 @@
 #include "memory.h"
 #include "str.h"
 #include "myglobals.h"
+#include "free.h"
 
 #include "namestackinfo.h"
 
@@ -27,6 +28,8 @@ info *MakeInfo()
 
 info *FreeInfo( info *info)
 {
+  popUntilNameDec(info, NULL);
+
   info = MEMfree( info);
 
   return info;
@@ -147,7 +150,23 @@ void pushNameDec(node *arg_node, info *arg_info, const char* name)
 		nd = NAMEDECS_NEXT( nd);
 	}
 	
-	INFO_STACK( arg_info) = TBmakeNamedecs( STRcpy( name), \
-			INFO_DEPTH( arg_info), INFO_LEVEL( arg_info), arg_node, \
-			INFO_STACK( arg_info));
+	nd = TBmakeNamedecs( arg_node, STRcpy( name), \
+			INFO_DEPTH( arg_info), INFO_LEVEL( arg_info));
+	NAMEDECS_NEXT( nd) = INFO_STACK( arg_info);
+	INFO_STACK( arg_info) = nd;
+}
+
+void popUntilNameDec(info* arg_info, node* end)
+{
+	node* nd = INFO_STACK( arg_info);
+	node* tmp;
+
+	while (nd != NULL && nd != end)
+	{
+		tmp = nd;
+		nd = NAMEDECS_NEXT( nd);
+		FREEdoFreeNode(tmp);
+	}
+
+	INFO_STACK( arg_info) = nd;
 }

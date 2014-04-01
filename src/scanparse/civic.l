@@ -91,7 +91,6 @@
 
 
 [A-Za-z][A-Za-z0-9_]*    	 { 
-														 MEMfree(yylval.id);
 														 yylval.id = STRcpy(yytext);
                              FILTER( ID);
                            }

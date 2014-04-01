@@ -45,8 +45,6 @@ node *MYCPPdoPreprocessing(node *syntaxtree)
 
   MEMfree(buffer1);
   MEMfree(buffer2);
-  MEMfree(dirnm);
-  MEMfree(basenm);
   MEMfree(cppcallstr);
 
   DBUG_RETURN( syntaxtree);

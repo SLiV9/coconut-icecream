@@ -403,29 +403,32 @@
       <attributes />
     </node>
     <node name="NameDecs">
-      <sons>
-        <son name="Dec">
-          <targets>
-            <target mandatory="yes">
-              <set name="NameDec" />
-              <phases>
-                <all />
-              </phases>
-            </target>
-          </targets>
-        </son>
-        <son name="Next">
-          <targets>
-            <target mandatory="no">
-              <node name="NameDecs" />
-              <phases>
-                <all />
-              </phases>
-            </target>
-          </targets>
-        </son>
-      </sons>
+      <sons />
       <attributes>
+        <attribute name="Dec">
+          <type name="Link">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Next">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
         <attribute name="Name">
           <type name="String">
             <targets>
