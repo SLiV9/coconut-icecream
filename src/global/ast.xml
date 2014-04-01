@@ -134,6 +134,15 @@
           <node name="Dim" />
         </travuser>
       </traversal>
+      
+      <traversal id="NESTRENAME" name="NestRename" default="sons" include="nestrename.h">
+        <travuser>
+          <node name="FunDef" />
+          <node name="FunDec" />
+          <node name="Header" />
+          <node name="FunCall" />
+        </travuser>
+      </traversal>
 
       
       <traversal id="CODEGEN" name="CodeGen" default="sons" include="codegen.h">
@@ -1057,7 +1066,7 @@
               <target mandatory="no">
                 <any />
                 <phases>
-                  <range from="cr" to="cg" />
+                  <all />
                 </phases>
               </target>
             </targets>
