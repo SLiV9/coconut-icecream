@@ -1,2 +1,4 @@
 float a = 2.0;
-bool b = (a != 0.0);
+bool b = ((bool) a || false) && true;
+int c = (int) b;
+int d = c + 1;

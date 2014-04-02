@@ -49,7 +49,7 @@ struct INFO {
   asmline * last;
   constant * consts;
   int lines;
-  int lablecount;
+  int labelcount;
 };
 
 
@@ -158,6 +158,21 @@ void printconst(info * inf)
 
 
 
+extern node* CODEGENhoare(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENhoare");
+  char * line;
+  int l_else, l_end;
+  HOARE_COND( arg_node) = TRAVdo( HOARE_COND( arg_node), arg_info);
+  l_else = arg_info->labelcount++;
+  mallocf(line,"    branch_f %d", l_else); addline(arg_info,line);
+  HOARE_LEFT( arg_node) = TRAVdo( HOARE_LEFT( arg_node), arg_info);
+  l_end = arg_info->labelcount++;
+  mallocf(line,"    jump %d", l_end); addline(arg_info,line);
+  mallocf(line,"%d:", l_else); addline(arg_info,line);
+  HOARE_RIGHT( arg_node) = TRAVdo( HOARE_RIGHT( arg_node), arg_info);
+  mallocf(line,"%d:", l_end); addline(arg_info,line);
+  DBUG_RETURN( arg_node);
+}
 extern node* CODEGENbinop(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENbinop");
   BINOP_LEFT( arg_node) = TRAVopt( BINOP_LEFT( arg_node), arg_info);
@@ -335,7 +350,7 @@ node *CODEGENdoCodegen(node *syntaxtree)
   code->first = code->last = NULL;
   code->consts = NULL;
   code->lines = 0;
-  code->lablecount = 0;
+  code->labelcount = 0;
   syntaxtree = TRAVdo( syntaxtree, code);
 
   TRAVpop();

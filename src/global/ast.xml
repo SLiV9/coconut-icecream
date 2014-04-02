@@ -160,6 +160,7 @@
 		<node name="Float" />
 		<node name="Bool" />
 		<node name="VarCall" />
+    <node name="Hoare" />
       	</travuser>
       </traversal>
 
