@@ -85,6 +85,12 @@ SUBPHASE( itersplit,
 					ALWAYS,
 					cr)
 
+SUBPHASE( ternary,
+					"Casts and SCL to ternaries",
+					TERNARYdoReplace,
+					ALWAYS,
+					cr)
+
 ENDPHASE( cr)
 
 /******************************************************************************/
@@ -117,12 +123,6 @@ SUBPHASE( varcount,
 SUBPHASE( nestrename,
 					"Renaming nested functions",
 					NESTRENAMEdoRename,
-					ALWAYS,
-					pr)
-
-SUBPHASE( ternary,
-					"Casts and SCL to ternaries",
-					TERNARYdoReplace,
 					ALWAYS,
 					pr)
 

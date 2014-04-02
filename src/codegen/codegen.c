@@ -15,6 +15,8 @@
 #include "memory.h"
 #include "print.h"
 
+#include "gettype.h"
+
 
 
 #define mallocf(res,...)                        \
@@ -210,8 +212,10 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
   BINOP_LEFT( arg_node) = TRAVopt( BINOP_LEFT( arg_node), arg_info);
   BINOP_RIGHT( arg_node) = TRAVopt( BINOP_RIGHT( arg_node), arg_info);
   char * line;
+  char * label;
+  int l_either, l_end;
 
-  switch(BINOP_TYPE(arg_node)){
+  switch(getType(BINOP_LEFT( arg_node))){
   case VT_int:
     switch(BINOP_OP(arg_node)){
     case BO_add:
@@ -317,9 +321,43 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
     break;
 
   case VT_bool:
-    mallocf(line,"boolstuff");
-    addline(arg_info,line,NULL);
+    switch(BINOP_OP(arg_node)){
+    case BO_add:
+      l_either = arg_info->labelcount++;
+      mallocf(line,"branch_t %d", l_either); addline(arg_info,line,NULL);
+      mallocf(line,"branch_t %d", l_either); addline(arg_info,line,NULL);
+      mallocf(line,"bloadc_f"); addline(arg_info,line,NULL);
+      l_end = arg_info->labelcount++;
+      mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_either); addlabel(arg_info,label);
+      mallocf(line,"bloadc_t"); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_end); addlabel(arg_info,label);
+      break;
+    case BO_mul:
+      l_either = arg_info->labelcount++;
+      mallocf(line,"branch_f %d", l_either); addline(arg_info,line,NULL);
+      mallocf(line,"branch_f %d", l_either); addline(arg_info,line,NULL);
+      mallocf(line,"bloadc_t"); addline(arg_info,line,NULL);
+      l_end = arg_info->labelcount++;
+      mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_either); addlabel(arg_info,label);
+      mallocf(line,"bloadc_f"); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_end); addlabel(arg_info,label);
+      break;
+    case BO_eq:
+      mallocf(line,"beq");
+      addline(arg_info,line,NULL);
+      break;
+    case BO_ne:
+      mallocf(line,"bne");
+      addline(arg_info,line,NULL);
+      break;
+    default:
+      break;
+    }
+
     break;
+
   default: break;
 
   }

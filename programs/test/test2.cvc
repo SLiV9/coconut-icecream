@@ -1,4 +1,4 @@
 float a = 2.0;
-bool b = ((bool) a || false) && true;
-int c = (int) b;
+bool b = (bool) a + true;
+int c = (int) (b * true);
 int d = c + 1;
