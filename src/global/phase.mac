@@ -91,7 +91,7 @@ ENDPHASE( cr)
 
 PHASE( co,
 			 "Code optimalisation",
-			 ALWAYS)
+			 NEVER)
 
 SUBPHASE( calcconst,
 					"Calculate Constants",

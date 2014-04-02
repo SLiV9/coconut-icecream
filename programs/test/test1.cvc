@@ -1,4 +1,7 @@
-a = (43-2);
-b = (true*7);
-
-b = 2*3 + 4*8;
+export int main(){
+	int b;
+        b = 3+4;        
+        b = 3-4;        
+        b = 5*(9-2);
+	return 0;
+}
