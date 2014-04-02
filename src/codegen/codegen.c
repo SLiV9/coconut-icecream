@@ -27,6 +27,8 @@
 
 typedef struct asmline{
   char * line;
+  char * comment;
+  bool islabel;
   struct asmline * next;
 }asmline;
 
@@ -61,10 +63,30 @@ char * mystrdup(char * str){
 }
 
 
-void addline(info * lines,char * str){
+void addline(info * lines,char * str,char * com){
 
   asmline * ln = malloc(sizeof(asmline));
   ln->line = str;
+  ln->comment = com;
+  ln->islabel = FALSE;
+  ln->next = NULL;
+
+  if(lines->first ==NULL){
+    lines->first = ln;
+  }else{
+    lines->last->next = ln;
+  }
+
+  lines->last = ln;
+  lines->lines++;
+}
+
+void addlabel(info * lines, char* str){
+
+  asmline * ln = malloc(sizeof(asmline));
+  ln->line = str;
+  ln->comment = NULL;
+  ln->islabel = TRUE;
   ln->next = NULL;
 
   if(lines->first ==NULL){
@@ -80,7 +102,16 @@ void addline(info * lines,char * str){
 void printlines(info * lines){
   asmline* current = lines->first;
   while(current!=NULL){
-    printf("%s\n",current->line);
+    if (!current->islabel){
+      printf("    %-40s",current->line);
+      if (current->comment != NULL) {
+        printf(";  %s",current->comment);
+      }
+      printf("\n");
+    }
+    else {
+      printf("%s:\n",current->line);
+    }
     current = current->next;
   }
 }
@@ -161,16 +192,17 @@ void printconst(info * inf)
 extern node* CODEGENhoare(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENhoare");
   char * line;
+  char * label;
   int l_else, l_end;
   HOARE_COND( arg_node) = TRAVdo( HOARE_COND( arg_node), arg_info);
   l_else = arg_info->labelcount++;
-  mallocf(line,"    branch_f %d", l_else); addline(arg_info,line);
+  mallocf(line,"branch_f %d", l_else); addline(arg_info,line,NULL);
   HOARE_LEFT( arg_node) = TRAVdo( HOARE_LEFT( arg_node), arg_info);
   l_end = arg_info->labelcount++;
-  mallocf(line,"    jump %d", l_end); addline(arg_info,line);
-  mallocf(line,"%d:", l_else); addline(arg_info,line);
+  mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
+  mallocf(label,"%d", l_else); addlabel(arg_info,label);
   HOARE_RIGHT( arg_node) = TRAVdo( HOARE_RIGHT( arg_node), arg_info);
-  mallocf(line,"%d:", l_end); addline(arg_info,line);
+  mallocf(label,"%d", l_end); addlabel(arg_info,label);
   DBUG_RETURN( arg_node);
 }
 extern node* CODEGENbinop(node *arg_node, info *arg_info){
@@ -183,51 +215,51 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
   case VT_int:
     switch(BINOP_OP(arg_node)){
     case BO_add:
-      mallocf(line,"    iadd");\
+      mallocf(line,"iadd");\
 
-      addline(arg_info,line);
+      addline(arg_info,line,NULL);
       break;
     case BO_sub:
-      mallocf(line,"    isub");
-      addline(arg_info,line);
+      mallocf(line,"isub");
+      addline(arg_info,line,NULL);
 
       break;
     case BO_mul:
-      mallocf(line,"    imul");
-      addline(arg_info,line);
+      mallocf(line,"imul");
+      addline(arg_info,line,NULL);
 
       break;
     case BO_div:
-      mallocf(line,"    idiv");
-      addline(arg_info,line);
+      mallocf(line,"idiv");
+      addline(arg_info,line,NULL);
       break;
     case BO_mod:
-      mallocf(line,"    irem");
-      addline(arg_info,line);
+      mallocf(line,"irem");
+      addline(arg_info,line,NULL);
       break;
     case BO_lt:
-      mallocf(line,"    ilt");
-      addline(arg_info,line);
+      mallocf(line,"ilt");
+      addline(arg_info,line,NULL);
       break;
     case BO_le:
-      mallocf(line,"    ile");
-      addline(arg_info,line);
+      mallocf(line,"ile");
+      addline(arg_info,line,NULL);
       break;
     case BO_gt:
-      mallocf(line,"    igt");
-      addline(arg_info,line);
+      mallocf(line,"igt");
+      addline(arg_info,line,NULL);
       break;
     case BO_ge:
-      mallocf(line,"    ige");
-      addline(arg_info,line);
+      mallocf(line,"ige");
+      addline(arg_info,line,NULL);
       break;
     case BO_eq:
-      mallocf(line,"    ieq");
-      addline(arg_info,line);
+      mallocf(line,"ieq");
+      addline(arg_info,line,NULL);
       break;
     case BO_ne:
-      mallocf(line,"    ine");
-      addline(arg_info,line);
+      mallocf(line,"ine");
+      addline(arg_info,line,NULL);
       break;
     default:
       break;
@@ -237,46 +269,46 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
   case VT_float:
     switch(BINOP_OP(arg_node)){
     case BO_add:
-      mallocf(line,"    fadd");\
-      addline(arg_info,line);
+      mallocf(line,"fadd");\
+      addline(arg_info,line,NULL);
       break;
     case BO_sub:
-      mallocf(line,"    fsub");
-      addline(arg_info,line);
+      mallocf(line,"fsub");
+      addline(arg_info,line,NULL);
 
       break;
     case BO_mul:
-      mallocf(line,"    fmul");
-      addline(arg_info,line);
+      mallocf(line,"fmul");
+      addline(arg_info,line,NULL);
 
       break;
     case BO_div:
-      mallocf(line,"    fdiv");
-      addline(arg_info,line);
+      mallocf(line,"fdiv");
+      addline(arg_info,line,NULL);
       break;
     case BO_lt:
-      mallocf(line,"    flt");
-      addline(arg_info,line);
+      mallocf(line,"flt");
+      addline(arg_info,line,NULL);
       break;
     case BO_le:
-      mallocf(line,"    fle");
-      addline(arg_info,line);
+      mallocf(line,"fle");
+      addline(arg_info,line,NULL);
       break;
     case BO_gt:
-      mallocf(line,"    fgt");
-      addline(arg_info,line);
+      mallocf(line,"fgt");
+      addline(arg_info,line,NULL);
       break;
     case BO_ge:
-      mallocf(line,"    fge");
-      addline(arg_info,line);
+      mallocf(line,"fge");
+      addline(arg_info,line,NULL);
       break;
     case BO_eq:
-      mallocf(line,"    feq");
-      addline(arg_info,line);
+      mallocf(line,"feq");
+      addline(arg_info,line,NULL);
       break;
     case BO_ne:
-      mallocf(line,"    fne");
-      addline(arg_info,line);
+      mallocf(line,"fne");
+      addline(arg_info,line,NULL);
       break;
     default:
       break;
@@ -285,8 +317,8 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
     break;
 
   case VT_bool:
-    mallocf(line,"    boolstuff");
-    addline(arg_info,line);
+    mallocf(line,"boolstuff");
+    addline(arg_info,line,NULL);
     break;
   default: break;
 
@@ -297,44 +329,50 @@ extern node* CODEGENmonop(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENmonop");
   MONOP_EXPR( arg_node) = TRAVopt( MONOP_EXPR( arg_node), arg_info);
   char * line;
-  mallocf(line,"    monop");
-  addline(arg_info,line);
+  mallocf(line,"monop");
+  addline(arg_info,line,NULL);
   DBUG_RETURN( arg_node);
 }
 extern node* CODEGENint(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENint");
   char * line;
+  char * comment;
   int cnum = addint(arg_info,INT_VALUE(arg_node));
-  mallocf(line,"    iloadc %i",cnum);
-  addline(arg_info,line);
+  mallocf(line,"iloadc %i",cnum);
+  mallocf(comment,"%d",INT_VALUE( arg_node));
+  addline(arg_info,line,comment);
   DBUG_RETURN( arg_node);
 }
 extern node* CODEGENfloat(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENfloat");
   char * line;
+  char * comment;
   int cnum = addint(arg_info,FLOAT_VALUE(arg_node));
-  mallocf(line,"    floadc %i",cnum);
-  addline(arg_info,line);
+  mallocf(line,"floadc %i",cnum);
+  mallocf(comment,"%f",FLOAT_VALUE( arg_node));
+  addline(arg_info,line,comment);
   DBUG_RETURN( arg_node);
 }
 extern node* CODEGENbool(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENbool");
   char * line;
   if(BOOL_VALUE(arg_node)){
-    mallocf(line,"    bloadc_t");
+    mallocf(line,"bloadc_t");
   }
   else{
-    mallocf(line,"    bloadc_f");
+    mallocf(line,"bloadc_f");
   }
-  addline(arg_info,line);
+  addline(arg_info,line,NULL);
 
   DBUG_RETURN( arg_node);
 }
 extern node* CODEGENvarcall(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENvarcall");
   char * line;
-  mallocf(line,"    varcal something");
-  addline(arg_info,line);
+  char * comment;
+  mallocf(line,"varcal something");
+  mallocf(comment,"%s",VARCALL_NAME( arg_node));
+  addline(arg_info,line,comment);
 
   DBUG_RETURN( arg_node);
 }
