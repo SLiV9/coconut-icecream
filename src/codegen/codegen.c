@@ -280,6 +280,7 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
 }
 extern node* CODEGENmonop(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENmonop");
+  MONOP_EXPR( arg_node) = TRAVopt( MONOP_EXPR( arg_node), arg_info);
   char * line;
   mallocf(line,"    monop");
   addline(arg_info,line);
@@ -296,7 +297,7 @@ extern node* CODEGENint(node *arg_node, info *arg_info){
 extern node* CODEGENfloat(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENfloat");
   char * line;
-  int cnum = addint(arg_info,INT_VALUE(arg_node));
+  int cnum = addint(arg_info,FLOAT_VALUE(arg_node));
   mallocf(line,"    floadc %i",cnum);
   addline(arg_info,line);
   DBUG_RETURN( arg_node);

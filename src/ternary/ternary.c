@@ -92,8 +92,6 @@ node* TERNARYbinop(node *arg_node, info *arg_info)
   node *newn = NULL;
   node *cond, *left, *right;
 
-  printf("@@@ %s @@@\n", binop_name[BINOP_OP( arg_node)]);
-
   if (BINOP_OP( arg_node) == BO_and)
   {
     cond = BINOP_LEFT( arg_node);

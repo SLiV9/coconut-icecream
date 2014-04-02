@@ -1,2 +1,2 @@
-int a = 2;
-int b = a;
+float a = 2.0;
+bool b = (a != 0.0);
