@@ -157,6 +157,9 @@
       
       <traversal id="ALITUNFOLD" name="AlitUnfold" default="sons" include="alitunfold.h">
         <travuser>
+          <node name="Body" />
+          <node name="Instrs" />
+          <node name="Assign" />
         </travuser>
       </traversal>
       

@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+extern node* ALITUNFOLDbody(node *arg_node, info *arg_info);
+extern node* ALITUNFOLDinstrs(node *arg_node, info *arg_info);
 extern node* ALITUNFOLDassign(node *arg_node, info *arg_info);
 
 extern node *ALITUNFOLDdoUnfold( node *syntaxtree);

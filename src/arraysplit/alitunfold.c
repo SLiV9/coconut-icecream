@@ -18,16 +18,14 @@
  * INFO structure
  */
 struct INFO {
-		node* indxhead;
-    node* indxlast;
-    node* alitstack;
-    node* assignstack;
+    node* head;
+    node* last;
+    int dirty;
 };
 
-#define INFO_INDXHEAD(n) ((n)->indxhead)
-#define INFO_INDXLAST(n) ((n)->indxlast)
-#define INFO_ALITS(n) ((n)->alitstack)
-#define INFO_ASSIGNS(n) ((n)->assignstack)
+#define INFO_HEAD(n) ((n)->head)
+#define INFO_LAST(n) ((n)->last)
+#define INFO_DIRTY(n) ((n)->dirty)
 
 static info *MakeInfo()
 {
@@ -35,10 +33,9 @@ static info *MakeInfo()
   
   result = MEMmalloc(sizeof(info));
 
-  INFO_INDXHEAD(result) = NULL;
-  INFO_INDXLAST(result) = NULL;
-  INFO_ALITS(result) = NULL;
-  INFO_ASSIGNS(result) = NULL;
+  INFO_HEAD(result) = NULL;
+  INFO_LAST(result) = NULL;
+  INFO_DIRTY(result) = 0;
   
   return result;
 }
@@ -50,74 +47,110 @@ static info *FreeInfo( info *info)
   return info;
 }
 
-static void pushIndx(info* arg_info, int x)
+static void add(node* oldlet, info* arg_info, int x, node* expr)
 {
-  node* intje = TBmakeInt(x);
-  node* indxs = TBmakeExprs( intje, NULL);
+  node* letje = COPYdoCopy( oldlet);
+  node* indxs = VARLET_INDX( letje);
 
-  if (INFO_INDXHEAD( arg_info) == NULL)
+  if (indxs != NULL)
   {
-    INFO_INDXHEAD( arg_info) = indxs;
-    INFO_INDXLAST( arg_info) = indxs;
+    node* ixs = indxs;
+    while (EXPRS_NEXT( ixs) != NULL)
+    {
+      ixs = EXPRS_NEXT( ixs);
+    }
+    EXPRS_NEXT( ixs) = TBmakeExprs( TBmakeInt(x), NULL);
   }
   else
   {
-    EXPRS_NEXT( INFO_INDXLAST( arg_info)) = indxs;
-    INFO_INDXLAST( arg_info) = indxs;
+    VARLET_INDX( letje) = TBmakeExprs( TBmakeInt(x), NULL);
+  }
+
+  node* ass = TBmakeAssign( letje, expr);
+  node* instrs = TBmakeInstrs( ass, NULL);
+
+  if (INFO_HEAD( arg_info) == NULL)
+  {
+    INFO_HEAD( arg_info) = instrs;
+    INFO_LAST( arg_info) = instrs;
+  }
+  else
+  {
+    INSTRS_NEXT( INFO_LAST( arg_info)) = instrs;
+    INFO_LAST( arg_info) = instrs;
   }
 }
 
-static int popIndx(info* arg_info)
-{
-  DBUG_ASSERT(INFO_INDXHEAD( arg_info) != NULL, \
-      "called pop on an empty stack!");
 
-  node* intje = EXPRS_EXPR( INFO_INDXLAST( arg_info));
-  return INT_VALUE( intje);
+
+node* ALITUNFOLDbody(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("ALITUNFOLDbody");
+  
+  if (BODY_INSTRS( arg_node) != NULL)
+  {
+    do
+    {
+      INFO_DIRTY( arg_info) = 0;
+      BODY_INSTRS( arg_node) = TRAVdo( BODY_INSTRS( arg_node), arg_info);
+    }
+    while (INFO_DIRTY( arg_info) > 0);
+  }
+
+  // no need to trav others
+
+  DBUG_RETURN( arg_node);
 }
 
-static node* cloneIndx(info* arg_info)
+node* ALITUNFOLDinstrs(node *arg_node, info *arg_info)
 {
-  DBUG_ASSERT(INFO_INDXHEAD( arg_info) != NULL, \
-      "called clone on an empty stack!");
+  DBUG_ENTER ("ALITUNFOLDinstrs");
+  
+  DBUG_ASSERT( INFO_HEAD( arg_info) == NULL, "nonempty info!");
+  INSTRS_NEXT( arg_node) = TRAVopt( INSTRS_NEXT( arg_node), arg_info);
+  DBUG_ASSERT( INFO_HEAD( arg_info) == NULL, "nonempty info!");
 
-  return COPYdoCopy(INFO_INDXHEAD( arg_info));
+  INSTRS_INSTR( arg_node) = TRAVdo( INSTRS_INSTR( arg_node), arg_info);
+
+  node* instrs = arg_node;
+
+  if (INFO_HEAD( arg_info) != NULL)
+  {
+    // skip instrs, it has been replaced by info_head-info_last
+    INSTRS_NEXT( INFO_LAST( arg_info)) = INSTRS_NEXT( arg_node);
+    instrs = INFO_HEAD( arg_info);
+    INFO_HEAD( arg_info) = NULL;
+    INFO_LAST( arg_info) = NULL;
+  }
+
+  DBUG_RETURN( instrs);
 }
 
 node* ALITUNFOLDassign(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("ALITUNFOLDassign");
   
-  node* expr = ASSIGN_EXPR( arg_node);
+  node* letje = ASSIGN_LET( arg_node);
+  node* alit = ASSIGN_EXPR( arg_node);
   
-  if (NODE_TYPE( expr) == N_arraylit)
+  if (NODE_TYPE( alit) == N_arraylit)
   {
-    /*int x = 0;
-    do
+    node* exprs = ARRAYLIT_EXPRS( alit);
+    int i = 0;
+    if (EXPRS_EXPR( exprs) != NULL)
     {
-      if (NODE_TYPE( expr) == N_arraylit)
+      if (NODE_TYPE( EXPRS_EXPR( exprs)) == N_arraylit)
       {
-        INFO_ALITS( arg_info) = TBmakeExprs( expr, INFO_ALITS( arg_info));
-        pushIndx(arg_info, x);
-        x = 0;
-        expr = EXPRS_EXPR( expr);
-      }
-      else
-      {
-        // make assignment
-        expr = INFO_ALITS( arg_info);
-        if (expr != NULL)
-        {
-          INFO_ALITS( arg_info) = EXPRS_NEXT( INFO_ALITS( arg_info));
-          x = popIndx(arg_info) + 1;
-        }
-        else
-        {
-        }
-        if (
+        INFO_DIRTY( arg_info)++;
       }
     }
-    while (expr != NULL);*/
+    while (exprs != NULL)
+    {
+      add( letje, arg_info, i, EXPRS_EXPR( exprs));
+
+      i++;
+      exprs = EXPRS_NEXT( exprs);
+    }
   }
 
   DBUG_RETURN( arg_node);

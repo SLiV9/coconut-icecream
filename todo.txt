@@ -2,7 +2,7 @@
 TODO: Extern arrays naar getters en setters.
 
 
-TODO: Arraylit unfolding.
+TODO: Array constant unfolding.
 
 
 TODO: Dimension reduction.
