@@ -16,13 +16,11 @@
  * INFO structure
  */
 struct INFO {
-		int local;
-		int global;
+		int count;
 		int import;
 };
 
-#define INFO_COUNT(n) ((n)->local)
-#define INFO_GLOBAL(n) ((n)->global)
+#define INFO_COUNT(n) ((n)->count)
 #define INFO_IMPORT(n) ((n)->import)
 
 static info *MakeInfo()
@@ -32,7 +30,6 @@ static info *MakeInfo()
   result = MEMmalloc(sizeof(info));
 
   INFO_COUNT(result) = 1;
-  INFO_GLOBAL(result) = 1;
   INFO_IMPORT(result) = 1;
   
   return result;
@@ -51,8 +48,10 @@ node* VARCOUNTglobdef(node *arg_node, info *arg_info)
 
 	DBUG_ASSERT( arg_info != NULL, "globdef entered without arg_info!");
 
-	GLOBDEF_GLOBALPOS( arg_node) = INFO_GLOBAL( arg_info);
-	INFO_GLOBAL( arg_info) = INFO_GLOBAL( arg_info) + 1;
+	GLOBDEF_GLOBALPOS( arg_node) = INFO_COUNT( arg_info);
+	INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 1;
+
+	// no need to trav
 
 	DBUG_RETURN (arg_node);
 }
@@ -138,15 +137,6 @@ node* VARCOUNTdim(node *arg_node, info *arg_info)
 		DIM_SCOPEPOS( arg_node) = INFO_COUNT( arg_info);
 		INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 1;
 	}
-
-	DBUG_RETURN (arg_node);
-}
-
-node* VARCOUNTglobdef(node *arg_node, info *arg_info)
-{
-	DBUG_ENTER ("VARCOUNTglobdef");
-
-	// do nothing
 
 	DBUG_RETURN (arg_node);
 }
