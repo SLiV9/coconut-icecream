@@ -13,9 +13,6 @@ extern node* ARRAYSPLITvardec(node *arg_node, info *arg_info);
 extern node* ARRAYSPLITparams(node *arg_node, info *arg_info);
 extern node* ARRAYSPLITparam(node *arg_node, info *arg_info);
 
-extern node* ARRAYSPLITexprs(node *arg_node, info *arg_info);
-extern node* ARRAYSPLITvarcall(node *arg_node, info *arg_info);
-
 extern node *ARRAYSPLITdoSplit( node *syntaxtree);
 
 #endif /* _ARRAYSPLIT_H_ */

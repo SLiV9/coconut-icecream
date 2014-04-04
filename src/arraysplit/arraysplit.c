@@ -13,35 +13,7 @@
 #include "print.h"
 #include "copy.h"
 
-/*
- * INFO structure
- */
-struct INFO {
-		node* head;
-		node* last;
-};
-
-#define INFO_HEAD(n) ((n)->head)
-#define INFO_LAST(n) ((n)->last)
-
-static info *MakeInfo()
-{
-  info *result;
-  
-  result = MEMmalloc(sizeof(info));
-
-  INFO_HEAD(result) = NULL;
-  INFO_LAST(result) = NULL;
-  
-  return result;
-}
-
-static info *FreeInfo( info *info)
-{
-  info = MEMfree( info);
-
-  return info;
-}
+#include "asplit_info.h"
 
 node* ARRAYSPLITdeclars(node *arg_node, info *arg_info)
 {
@@ -118,7 +90,7 @@ static void insertItems(node* arg_node, info* arg_info, node* dimdecs, \
   while (dimdecs != NULL)
   {
   	node* dim = DIMDECS_DIM( dimdecs);
-  	DIMDECS_DIM( dimdecs) = COPYdoCopy( dim);
+  	DIMDECS_DIM( dimdecs) = COPYdoCopy( dim); // dirty hack
   	DIM_DEC( dim) = arg_node;
 
 		node* itms;
@@ -209,20 +181,6 @@ node* ARRAYSPLITparam(node *arg_node, info *arg_info)
   DBUG_RETURN (arg_node);
 }
 
-node* ARRAYSPLITvarcall(node *arg_node, info *arg_info)
-{
-  DBUG_ENTER ("ARRAYSPLITvarcall");
-
-  // no need to travdo
-
-  /* HOLY FUCK als dec = vardec, dan VARDEC_DIMDECS zijn 'n KOPIE van
-   * wat ik wil, dus dan linking verkeerd. :c
-   * Varcalls moeten waarschijnlijk voor de rest van arraysplit. */
-  //insertItems(arg_node, arg_info, NULL, N_exprs);
-
-  DBUG_RETURN (arg_node);
-}
-
 node *ARRAYSPLITdoSplit(node *syntaxtree)
 {
   info* info;
@@ -230,13 +188,15 @@ node *ARRAYSPLITdoSplit(node *syntaxtree)
 	DBUG_ENTER("ARRAYSPLITdoSplit");
 
 	info = MakeInfo();
-
-  TRAVpush( TR_arraysplit);
-
+  TRAVpush( TR_asplitfcall);
   syntaxtree = TRAVdo( syntaxtree, info);
-
   TRAVpop();
+  info = FreeInfo(info);
 
+	info = MakeInfo();
+  TRAVpush( TR_arraysplit);
+  syntaxtree = TRAVdo( syntaxtree, info);
+  TRAVpop();
   info = FreeInfo(info);
 
   DBUG_RETURN( syntaxtree);

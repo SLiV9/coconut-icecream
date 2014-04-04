@@ -148,6 +148,13 @@
         </travuser>
       </traversal>
       
+      <traversal id="ASPLITFCALL" name="AsplitFcall" default="sons" include="asplitfcall.h">
+        <travuser>
+          <node name="Exprs" />
+          <node name="VarCall" />
+        </travuser>
+      </traversal>
+      
       <traversal id="ALITUNFOLD" name="AlitUnfold" default="sons" include="alitunfold.h">
         <travuser>
         </travuser>

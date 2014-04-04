@@ -6,6 +6,3 @@ TODO: Arraylit unfolding.
 
 
 TODO: Dimension reduction.
-
-
-TODO: Array dimensions als arguments in funcalls ervoor.
