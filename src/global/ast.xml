@@ -154,6 +154,8 @@
       
       <traversal id="CODEGEN" name="CodeGen" default="sons" include="codegen.h">
       	<travuser>
+    <node name="Assign" />
+    <node name="VarLet" />
                 <node name="MonOp" />
 		<node name="BinOp" />
 		<node name="Int" />

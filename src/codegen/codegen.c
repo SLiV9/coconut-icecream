@@ -190,7 +190,12 @@ void printconst(info * inf)
 
 
 
-
+extern node* CODEGENassign(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENassign");
+  ASSIGN_EXPR( arg_node) = TRAVdo( ASSIGN_EXPR( arg_node), arg_info);
+  ASSIGN_LET( arg_node) = TRAVdo( ASSIGN_LET( arg_node), arg_info);
+  DBUG_RETURN( arg_node);
+}
 extern node* CODEGENhoare(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENhoare");
   char * line;
@@ -408,10 +413,18 @@ extern node* CODEGENvarcall(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENvarcall");
   char * line;
   char * comment;
-  mallocf(line,"varcal something");
+  mallocf(line,"varcall something");
   mallocf(comment,"%s",VARCALL_NAME( arg_node));
   addline(arg_info,line,comment);
-
+  DBUG_RETURN( arg_node);
+}
+extern node* CODEGENvarlet(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENvarlet");
+  char * line;
+  char * comment;
+  mallocf(line,"varlet something");
+  mallocf(comment,"%s",VARLET_NAME( arg_node));
+  addline(arg_info,line,comment);
   DBUG_RETURN( arg_node);
 }
 
