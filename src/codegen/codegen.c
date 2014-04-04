@@ -280,6 +280,14 @@ extern node* CODEGENfuncall(node *arg_node, info *arg_info){
   char * line;
   char * comment;
   FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
+
+  if (STReq("__alloc", FUNCALL_NAME( arg_node)))
+  {
+    mallocf(line,"alloc something");
+    addline(arg_info,line,NULL);
+    DBUG_RETURN( arg_node);
+  }
+
   node * dec = FUNCALL_DEC( arg_node);
   char * name;
   node * args = FUNCALL_ARGS( arg_node);

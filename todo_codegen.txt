@@ -16,6 +16,7 @@ Iter: (is een vardec)
 FunState: klaar
 FunCall: klaar
 Assign: klaar (varcall en varlet moeten goed, dan klaar)
+Alloc: TODO
 
 VarLet: TODO
 VarCall: TODO
