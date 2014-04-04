@@ -4,6 +4,12 @@
 #include "types.h"
 
 extern node* CODEGENfundef(node *arg_node, info *arg_info);
+extern node* CODEGENbody(node *arg_node, info *arg_info);
+
+extern node* CODEGENfunstate(node *arg_node, info *arg_info);
+extern node* CODEGENfuncall(node *arg_node, info *arg_info);
+
+extern node* CODEGENhoare(node *arg_node, info *arg_info);
 extern node* CODEGENbinop(node *arg_node, info *arg_info);
 extern node* CODEGENmonop(node *arg_node, info *arg_info);
 extern node* CODEGENint(node *arg_node, info *arg_info);
@@ -11,6 +17,8 @@ extern node* CODEGENfloat(node *arg_node, info *arg_info);
 extern node* CODEGENbool(node *arg_node, info *arg_info);
 extern node* CODEGENvarcall(node *arg_node, info *arg_info);
 
+extern node* CODEGENvarlet(node *arg_node, info *arg_info);
+extern node* CODEGENassign(node *arg_node, info *arg_info);
 
 extern node *CODEGENdoCodegen( node *syntaxtree);
 

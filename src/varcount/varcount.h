@@ -3,6 +3,7 @@
 
 #include "types.h"
 
+extern node* VARCOUNTglobdef(node *arg_node, info *arg_info);
 extern node* VARCOUNTfundef(node *arg_node, info *arg_info);
 extern node* VARCOUNTfundec(node *arg_node, info *arg_info);
 extern node* VARCOUNTbody(node *arg_node, info *arg_info);

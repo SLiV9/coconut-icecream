@@ -16,10 +16,14 @@
  * INFO structure
  */
 struct INFO {
-		int count;
+		int local;
+		int global;
+		int import;
 };
 
-#define INFO_COUNT(n) ((n)->count)
+#define INFO_COUNT(n) ((n)->local)
+#define INFO_GLOBAL(n) ((n)->global)
+#define INFO_IMPORT(n) ((n)->import)
 
 static info *MakeInfo()
 {
@@ -28,6 +32,8 @@ static info *MakeInfo()
   result = MEMmalloc(sizeof(info));
 
   INFO_COUNT(result) = 1;
+  INFO_GLOBAL(result) = 1;
+  INFO_IMPORT(result) = 1;
   
   return result;
 }
@@ -39,11 +45,28 @@ static info *FreeInfo( info *info)
   return info;
 }
 
+node* VARCOUNTglobdef(node *arg_node, info *arg_info)
+{
+	DBUG_ENTER ("VARCOUNTglobdef");
+
+	DBUG_ASSERT( arg_info != NULL, "globdef entered without arg_info!");
+
+	GLOBDEF_GLOBALPOS( arg_node) = INFO_GLOBAL( arg_info);
+	INFO_GLOBAL( arg_info) = INFO_GLOBAL( arg_info) + 1;
+
+	DBUG_RETURN (arg_node);
+}
+
 node* VARCOUNTfundec(node *arg_node, info *arg_info)
 {
 	DBUG_ENTER ("VARCOUNTfundec");
 
-	// do nothing
+	DBUG_ASSERT( arg_info != NULL, "fundec entered without arg_info!");
+
+	FUNDEC_IMPORTPOS( arg_node) = INFO_IMPORT( arg_info);
+	INFO_IMPORT( arg_info) = INFO_IMPORT( arg_info) + 1;
+
+	// no need to trav
 
 	DBUG_RETURN (arg_node);
 }
@@ -52,17 +75,13 @@ node* VARCOUNTfundef(node *arg_node, info *arg_info)
 {
 	DBUG_ENTER ("VARCOUNTfundef");
 
-	DBUG_ASSERT( arg_info == NULL, "fundef entered with running arg_info!");
+	info* own_info = MakeInfo();
 
-	arg_info = MakeInfo();
+	FUNDEF_HEAD( arg_node) = TRAVopt( FUNDEF_HEAD( arg_node), own_info);
 
-	FUNDEF_HEAD( arg_node) = TRAVopt( FUNDEF_HEAD( arg_node), arg_info);
+	FUNDEF_BODY( arg_node) = TRAVdo( FUNDEF_BODY( arg_node), own_info);
 
-	FUNDEF_BODY( arg_node) = TRAVdo( FUNDEF_BODY( arg_node), arg_info);
-
-	arg_info = FreeInfo(arg_info);
-
-	DBUG_ASSERT( arg_info == NULL, "fundef left with running arg_info!");
+	own_info = FreeInfo(own_info);
 
 	DBUG_RETURN (arg_node);
 }
@@ -147,7 +166,11 @@ node *VARCOUNTdoCount(node *syntaxtree)
 
   TRAVpush( TR_varcount);
 
-  syntaxtree = TRAVdo( syntaxtree, NULL);
+  info* globimp = MakeInfo();
+
+  syntaxtree = TRAVdo( syntaxtree, globimp);
+
+  globimp = FreeInfo(globimp);
 
   TRAVpop();
 

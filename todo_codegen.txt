@@ -1,0 +1,34 @@
+FunDec: TODO
+	- moet net als constants een lijstje worden, in de goede volgorde
+	
+FunDef: klaar
+	
+GlobDef: TODO
+	- moet net als constants een lijstje worden, in de goede volgorde
+
+GlobDec: (kan niet in de VM)
+Header: (doet niets, gebeurt in fundef/fundec/funcall)
+Param: (doet niets)
+Body: klaar
+VarDec: (doet niets, gebeurt in varcall/fundef)
+Iter: (is een vardec)
+
+FunState: klaar
+FunCall: klaar
+Assign: klaar (varcall en varlet moeten goed, dan klaar)
+
+VarLet: TODO
+VarCall: TODO
+
+For: TODO
+While: TODO
+If: TODO
+
+Cast: TODO
+MonOp: TODO
+BinOp: klaar
+Hoare: klaar
+
+Int: klaar
+Float: klaar
+Bool: klaar

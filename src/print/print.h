@@ -54,6 +54,7 @@ extern node *PRTfloat (node * arg_node, info * arg_info);
 extern node *PRTint (node * arg_node, info * arg_info);
 extern node *PRTbool (node * arg_node, info * arg_info);
 extern node *PRTcast (node * arg_node, info * arg_info);
+extern node *PRThoare (node * arg_node, info * arg_info);
 extern node *PRTerror (node * arg_node, info * arg_info);
 
 extern node *PRTdoPrint( node *syntaxtree);

@@ -63,4 +63,3 @@ export void main()
 	printFloat(sum(z) + sum(y));
 	printFloat(getIth(x, 2));
 }
-

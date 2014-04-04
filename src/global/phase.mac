@@ -115,13 +115,19 @@ SUBPHASE( itersplit,
 					ALWAYS,
 					cr)
 
+SUBPHASE( ternary,
+					"Casts and SCL to ternaries",
+					TERNARYdoReplace,
+					ALWAYS,
+					cr)
+
 ENDPHASE( cr)
 
 /******************************************************************************/
 
 PHASE( co,
 			 "Code optimalisation",
-			 ALWAYS)
+			 NEVER)
 
 SUBPHASE( calcconst,
 					"Calculate Constants",
@@ -134,15 +140,30 @@ ENDPHASE( co)
 /******************************************************************************/
 
 
-PHASE( cg,
-       "Generating Code",
+PHASE( pr,
+       "Code Preparation",
        ALWAYS)
 
 SUBPHASE( varcount,
 					"Counting local variables",
 					VARCOUNTdoCount,
 					ALWAYS,
-					cg)
+					pr)
+
+SUBPHASE( nestrename,
+					"Renaming nested functions",
+					NESTRENAMEdoRename,
+					ALWAYS,
+					pr)
+
+ENDPHASE( pr)
+
+/******************************************************************************/
+
+
+PHASE( cg,
+       "Generating Code",
+       ALWAYS)
 
 SUBPHASE( prt, 
           "Print before generation",

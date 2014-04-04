@@ -22,3 +22,5 @@ node* findNameDec(node *arg_node, info *arg_info, const char* name);
 int getNameDecScopeDiff();
 
 void pushNameDec(node *arg_node, info *arg_info, const char* name);
+
+void popUntilNameDec(info* arg_info, node* end);

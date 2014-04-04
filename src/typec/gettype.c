@@ -32,6 +32,8 @@ vtype getType(node* arg_node)
 			return BINOP_TYPE( arg_node);
 		case N_monop:
 			return MONOP_TYPE( arg_node);
+		case N_hoare:
+			return HOARE_TYPE( arg_node);
 		case N_vardec:
 			return VARDEC_TYPE( arg_node);
 		case N_globdef:

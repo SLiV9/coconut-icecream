@@ -14,6 +14,7 @@
 #include "globals.h"
 #include "myglobals.h"
 #include "ctinfo.h"
+#include "memory.h"
 
 
 #define FILTER(token) \
@@ -89,7 +90,8 @@
 "void"										 { FILTER( VOID); }
 
 
-[A-Za-z][A-Za-z0-9_]*    	 { yylval.id = STRcpy(yytext);
+[A-Za-z][A-Za-z0-9_]*    	 { 
+														 yylval.id = STRcpy(yytext);
                              FILTER( ID);
                            }
 

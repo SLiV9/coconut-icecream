@@ -164,28 +164,40 @@ void printLink(node* dec, int scopediff)
 
   switch (NODE_TYPE(dec))
   {
+    case N_fundec:
+      if (FUNDEC_IMPORTPOS(dec))
+      {
+        printf(" #%d", FUNDEC_IMPORTPOS(dec) - 1);
+      }
+      break;
+    case N_globdef:
+      if (GLOBDEF_GLOBALPOS(dec))
+      {
+        printf(" #%d", GLOBDEF_GLOBALPOS(dec) - 1);
+      }
+      break;
     case N_vardec:
       if (VARDEC_SCOPEPOS(dec))
       {
-        printf(" #%d", VARDEC_SCOPEPOS(dec));
+        printf(" #%d", VARDEC_SCOPEPOS(dec) - 1);
       }
       break;
     case N_param:
       if (PARAM_SCOPEPOS(dec))
       {
-        printf(" #%d", PARAM_SCOPEPOS(dec));
+        printf(" #%d", PARAM_SCOPEPOS(dec) - 1);
       }
       break;
     case N_iter:
       if (ITER_SCOPEPOS(dec))
       {
-        printf(" #%d", ITER_SCOPEPOS(dec));
+        printf(" #%d", ITER_SCOPEPOS(dec) - 1);
       }
       break;
     case N_dim:
       if (DIM_SCOPEPOS(dec))
       {
-        printf(" #%d", DIM_SCOPEPOS(dec));
+        printf(" #%d", DIM_SCOPEPOS(dec) - 1);
       }
       break;
     default:
@@ -342,7 +354,7 @@ PRTdim (node * arg_node, info * arg_info)
 
   if (DIM_SCOPEPOS( arg_node))
   {
-    printf(" #%d", DIM_SCOPEPOS( arg_node));
+    printf(" #%d", DIM_SCOPEPOS( arg_node) - 1);
   }
 
   if (INFO_INDENT( arg_info) >= 0)
@@ -444,6 +456,28 @@ PRTbinop (node * arg_node, info * arg_info)
   printf( " %s ", tmp);
 
   BINOP_RIGHT( arg_node) = TRAVdo( BINOP_RIGHT( arg_node), arg_info);
+
+  printf( ")");
+
+  DBUG_RETURN (arg_node);
+}
+
+node *
+PRThoare (node * arg_node, info * arg_info)
+{
+  DBUG_ENTER ("PRThoare");
+
+  printf( "(");
+
+  HOARE_COND( arg_node) = TRAVdo( HOARE_COND( arg_node), arg_info);
+
+  printf(" ? ");
+
+  HOARE_LEFT( arg_node) = TRAVdo( HOARE_LEFT( arg_node), arg_info);
+
+  printf( " : ");
+
+  HOARE_RIGHT( arg_node) = TRAVdo( HOARE_RIGHT( arg_node), arg_info);
 
   printf( ")");
 
@@ -626,7 +660,7 @@ PRTvardec (node * arg_node, info * arg_info)
 
   if (VARDEC_SCOPEPOS( arg_node))
   {
-    printf(" #%d", VARDEC_SCOPEPOS( arg_node));
+    printf(" #%d", VARDEC_SCOPEPOS( arg_node) - 1);
   }
   
   if (VARDEC_ESCAPING( arg_node))
@@ -667,7 +701,14 @@ PRTglobdef (node * arg_node, info * arg_info)
   	GLOBDEF_EXPR( arg_node) = TRAVdo( GLOBDEF_EXPR( arg_node), arg_info);
   }
   
-  printf(";\n");
+  printf(";");
+
+  if (GLOBDEF_GLOBALPOS( arg_node))
+  {
+    printf(" #%d", GLOBDEF_GLOBALPOS( arg_node) - 1);
+  }
+
+  printf("\n");
 
   DBUG_RETURN (arg_node);
 }
@@ -712,7 +753,7 @@ PRTparam (node * arg_node, info * arg_info)
 
   if (PARAM_SCOPEPOS( arg_node))
   {
-    printf(" #%d", PARAM_SCOPEPOS( arg_node));
+    printf(" #%d", PARAM_SCOPEPOS( arg_node) - 1);
   }
   
   if (PARAM_ESCAPING( arg_node))
@@ -758,7 +799,14 @@ PRTfundec (node * arg_node, info * arg_info)
 
   FUNDEC_HEAD( arg_node) = TRAVdo( FUNDEC_HEAD( arg_node), arg_info);
 
-  printf(";\n");
+  printf(";");
+
+  if (FUNDEC_IMPORTPOS( arg_node))
+  {
+    printf(" #%d", FUNDEC_IMPORTPOS( arg_node) - 1);
+  }
+
+  printf("\n");
 
   DBUG_RETURN (arg_node);
 }
@@ -868,10 +916,18 @@ PRTfor (node * arg_node, info * arg_info)
 	DBUG_ENTER ("PRTfor");
 	
 	printIndent( arg_info);
-  printf("for (int ");
-  
-	printf("%s", ITER_NAME( FOR_ITER( arg_node)));
-	printf(" = ");
+  printf("for (");
+
+  if (FOR_ITERDEC( arg_node) == NULL)
+  {
+	  printf("int %s", ITER_NAME( FOR_ITER( arg_node)));
+	  printf(" = ");
+  }
+  else
+  {
+    printLink( FOR_ITERDEC( arg_node), NDSD_LOCAL());
+    printf(", ");
+  }
 	FOR_FROM( arg_node) = TRAVdo( FOR_FROM( arg_node), arg_info);
 	printf(", ");
 	FOR_TO( arg_node) = TRAVdo( FOR_TO( arg_node), arg_info);
@@ -912,7 +968,7 @@ PRTiter (node * arg_node, info * arg_info)
 
   if (ITER_SCOPEPOS( arg_node))
   {
-    printf(" #%d", ITER_SCOPEPOS( arg_node));
+    printf(" #%d", ITER_SCOPEPOS( arg_node) - 1);
   }
 
   printf("\n");
