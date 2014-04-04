@@ -388,7 +388,7 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
       addline(arg_info,line,NULL);
       break;
     default:
-      break;
+      DBUG_ASSERT(0, "illegal binary operator detected!");
     }
     break;
 
@@ -437,7 +437,7 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
       addline(arg_info,line,NULL);
       break;
     default:
-      break;
+      DBUG_ASSERT(0, "illegal binary operator detected!");
     }
 
     break;
@@ -475,7 +475,7 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
       addline(arg_info,line,NULL);
       break;
     default:
-      break;
+      DBUG_ASSERT(0, "illegal binary operator detected!");
     }
 
     break;
