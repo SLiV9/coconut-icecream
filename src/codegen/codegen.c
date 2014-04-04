@@ -497,20 +497,53 @@ extern node* CODEGENint(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENint");
   char * line;
   char * comment;
-  int cnum = addint(arg_info,INT_VALUE(arg_node));
-  mallocf(line,"iloadc %i",cnum);
-  mallocf(comment,"%d",INT_VALUE( arg_node));
-  addline(arg_info,line,comment);
+  int val = INT_VALUE(arg_node);
+  if (val == 0)
+  {
+    mallocf(line,"iloadc_0");
+    addline(arg_info,line,NULL);
+  }
+  else if (val == 1)
+  {
+    mallocf(line,"iloadc_1");
+    addline(arg_info,line,NULL);
+  }
+  else if (val == -1)
+  {
+    mallocf(line,"iloadc_m1");
+    addline(arg_info,line,NULL);
+  }
+  else
+  {
+    int cnum = addint(arg_info,INT_VALUE(arg_node));
+    mallocf(line,"iloadc %i",cnum);
+    mallocf(comment,"%d",INT_VALUE( arg_node));
+    addline(arg_info,line,comment);
+  }
   DBUG_RETURN( arg_node);
 }
 extern node* CODEGENfloat(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENfloat");
   char * line;
   char * comment;
-  int cnum = addint(arg_info,FLOAT_VALUE(arg_node));
-  mallocf(line,"floadc %i",cnum);
-  mallocf(comment,"%f",FLOAT_VALUE( arg_node));
-  addline(arg_info,line,comment);
+  float val = FLOAT_VALUE(arg_node);
+  if (val == 0.0)
+  {
+    mallocf(line,"floadc_0");
+    addline(arg_info,line,NULL);
+  }
+  else if (val == 1.0)
+  {
+    mallocf(line,"floadc_1");
+    addline(arg_info,line,NULL);
+  }
+  else
+  {
+    int cnum = addfloat(arg_info,FLOAT_VALUE(arg_node));
+    mallocf(line,"floadc %i",cnum);
+    mallocf(comment,"%f",FLOAT_VALUE( arg_node));
+    addline(arg_info,line,comment);
+  }
   DBUG_RETURN( arg_node);
 }
 extern node* CODEGENbool(node *arg_node, info *arg_info){

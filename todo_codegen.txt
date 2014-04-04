@@ -29,9 +29,6 @@ MonOp: TODO
 BinOp: klaar
 Hoare: klaar
 
-Int: TODO 
-	- 0, 1 en -1 niet als constantes maar als iload_0 etc
-Float: TODO
-	- 0.0, 1.0 en -1.0 evenzo
+Int: klaar
+Float: klaar
 Bool: klaar
-
