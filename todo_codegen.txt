@@ -1,0 +1,41 @@
+FunDec: TODO
+	- moet net als constants een lijstje worden
+	- moet net als local vardecs een getal hebben, in trav varcount
+	- funcall naar fundec moet juiste iterator hebben
+	
+FunDef: klaar
+	
+GlobDef: TODO
+	- moet net als constants een lijstje worden
+	- moet net als local vardecs een getal hebben, in trav varcount
+
+GlobDec: (kan niet in de VM)
+Header: (doet niets, gebeurt in fundef/fundec/funcall)
+Param: (doet niets)
+Body: klaar
+VarDec: (doet niets, gebeurt in varcall/fundef)
+Iter: (is een vardec)
+
+FunState: klaar
+FunCall: TODO
+	- funcall naar fundec moet juiste iterator hebben
+Assign: klaar (varcall en varlet moeten goed, dan klaar)
+
+VarLet: TODO
+VarCall: TODO
+
+For: TODO
+While: TODO
+If: TODO
+
+Cast: klaar
+MonOp: TODO
+BinOp: klaar
+Hoare: klaar
+
+Int: TODO 
+	- 0, 1 en -1 niet als constantes maar als iload_0 etc
+Float: TODO
+	- 0.0, 1.0 en -1.0 evenzo
+Bool: klaar
+
