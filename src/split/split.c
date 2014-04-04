@@ -26,7 +26,7 @@ static node* dimdefsToDimdecs( node* dimdefs, const char* name)
 
   while (defs != NULL)
   {
-    dim = TBmakeDim( STRcatn(4, "_", STRcpy( name), "_", STRitoa( i)));
+    dim = TBmakeDim( STRcatn(3, STRcpy( name), "^", STRitoa( i)));
     dimdecs = TBmakeDimdecs( dim, NULL);
 
     if (ddshead == NULL)

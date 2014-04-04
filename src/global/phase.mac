@@ -91,6 +91,12 @@ SUBPHASE( alitunfold,
 					ALWAYS,
 					cr)
 
+SUBPHASE( dimreduct,
+					"Dimension reduction",
+					DIMREDUCTdoReduct,
+					ALWAYS,
+					cr)
+
 SUBPHASE( arraysplit,
 					"Pulling array dims",
 					ARRAYSPLITdoSplit,

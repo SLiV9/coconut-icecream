@@ -163,6 +163,14 @@
         </travuser>
       </traversal>
       
+      <traversal id="DIMREDUCT" name="DimReduct" default="sons" include="dimreduct.h">
+        <travuser>
+          <node name="FunCall" />
+          <node name="VarCall" />
+          <node name="VarLet" />
+        </travuser>
+      </traversal>
+      
       <traversal id="VARCOUNT" name="VarCount" default="sons" include="varcount.h">
         <travuser>
           <node name="FunDef" />
