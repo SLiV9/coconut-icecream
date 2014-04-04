@@ -1,13 +1,10 @@
 FunDec: TODO
-	- moet net als constants een lijstje worden
-	- moet net als local vardecs een getal hebben, in trav varcount
-	- funcall naar fundec moet juiste iterator hebben
+	- moet net als constants een lijstje worden, in de goede volgorde
 	
 FunDef: klaar
 	
 GlobDef: TODO
-	- moet net als constants een lijstje worden
-	- moet net als local vardecs een getal hebben, in trav varcount
+	- moet net als constants een lijstje worden, in de goede volgorde
 
 GlobDec: (kan niet in de VM)
 Header: (doet niets, gebeurt in fundef/fundec/funcall)
@@ -17,8 +14,7 @@ VarDec: (doet niets, gebeurt in varcall/fundef)
 Iter: (is een vardec)
 
 FunState: klaar
-FunCall: TODO
-	- funcall naar fundec moet juiste iterator hebben
+FunCall: klaar
 Assign: klaar (varcall en varlet moeten goed, dan klaar)
 
 VarLet: TODO

@@ -125,6 +125,7 @@
       
       <traversal id="VARCOUNT" name="VarCount" default="sons" include="varcount.h">
         <travuser>
+          <node name="GlobDef" />
           <node name="FunDef" />
           <node name="FunDec" />
           <node name="Body" />
@@ -611,7 +612,20 @@
 		    	</targets>
       	</son>
       </sons>
-      <attributes />
+      <attributes>
+        <attribute name="ImportPos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
     </node>
     <node name="Header">
       <sons>
@@ -713,6 +727,18 @@
             </targets>
     			</type>
     		</attribute>
+        <attribute name="GlobalPos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
       </attributes>
     </node>
     <node name="GlobDec">

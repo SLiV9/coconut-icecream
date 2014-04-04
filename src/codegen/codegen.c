@@ -287,8 +287,7 @@ extern node* CODEGENfuncall(node *arg_node, info *arg_info){
   switch (NODE_TYPE( dec))
   {
     case N_fundec:
-      i = 0;
-      // TODO resolve fundec
+      i = FUNDEC_IMPORTPOS( dec) - 1;
       mallocf(line,"jsre %d", i);
       break;
     case N_fundef:

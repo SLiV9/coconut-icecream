@@ -141,28 +141,40 @@ void printLink(node* dec, int scopediff)
 
   switch (NODE_TYPE(dec))
   {
+    case N_fundec:
+      if (FUNDEC_IMPORTPOS(dec))
+      {
+        printf(" #%d", FUNDEC_IMPORTPOS(dec) - 1);
+      }
+      break;
+    case N_globdef:
+      if (GLOBDEF_GLOBALPOS(dec))
+      {
+        printf(" #%d", GLOBDEF_GLOBALPOS(dec) - 1);
+      }
+      break;
     case N_vardec:
       if (VARDEC_SCOPEPOS(dec))
       {
-        printf(" #%d", VARDEC_SCOPEPOS(dec));
+        printf(" #%d", VARDEC_SCOPEPOS(dec) - 1);
       }
       break;
     case N_param:
       if (PARAM_SCOPEPOS(dec))
       {
-        printf(" #%d", PARAM_SCOPEPOS(dec));
+        printf(" #%d", PARAM_SCOPEPOS(dec) - 1);
       }
       break;
     case N_iter:
       if (ITER_SCOPEPOS(dec))
       {
-        printf(" #%d", ITER_SCOPEPOS(dec));
+        printf(" #%d", ITER_SCOPEPOS(dec) - 1);
       }
       break;
     case N_dim:
       if (DIM_SCOPEPOS(dec))
       {
-        printf(" #%d", DIM_SCOPEPOS(dec));
+        printf(" #%d", DIM_SCOPEPOS(dec) - 1);
       }
       break;
     default:
@@ -317,7 +329,7 @@ PRTdim (node * arg_node, info * arg_info)
 
   if (DIM_SCOPEPOS( arg_node))
   {
-    printf(" #%d", DIM_SCOPEPOS( arg_node));
+    printf(" #%d", DIM_SCOPEPOS( arg_node) - 1);
   }
 
   DBUG_RETURN (arg_node);
@@ -616,7 +628,7 @@ PRTvardec (node * arg_node, info * arg_info)
 
   if (VARDEC_SCOPEPOS( arg_node))
   {
-    printf(" #%d", VARDEC_SCOPEPOS( arg_node));
+    printf(" #%d", VARDEC_SCOPEPOS( arg_node) - 1);
   }
   
   if (VARDEC_ESCAPING( arg_node))
@@ -655,7 +667,14 @@ PRTglobdef (node * arg_node, info * arg_info)
   	GLOBDEF_EXPR( arg_node) = TRAVdo( GLOBDEF_EXPR( arg_node), arg_info);
   }
   
-  printf(";\n");
+  printf(";");
+
+  if (GLOBDEF_GLOBALPOS( arg_node))
+  {
+    printf(" #%d", GLOBDEF_GLOBALPOS( arg_node) - 1);
+  }
+
+  printf("\n");
 
   DBUG_RETURN (arg_node);
 }
@@ -700,7 +719,7 @@ PRTparam (node * arg_node, info * arg_info)
 
   if (PARAM_SCOPEPOS( arg_node))
   {
-    printf(" #%d", PARAM_SCOPEPOS( arg_node));
+    printf(" #%d", PARAM_SCOPEPOS( arg_node) - 1);
   }
   
   if (PARAM_ESCAPING( arg_node))
@@ -746,7 +765,14 @@ PRTfundec (node * arg_node, info * arg_info)
 
   FUNDEC_HEAD( arg_node) = TRAVdo( FUNDEC_HEAD( arg_node), arg_info);
 
-  printf(";\n");
+  printf(";");
+
+  if (FUNDEC_IMPORTPOS( arg_node))
+  {
+    printf(" #%d", FUNDEC_IMPORTPOS( arg_node) - 1);
+  }
+
+  printf("\n");
 
   DBUG_RETURN (arg_node);
 }
@@ -900,7 +926,7 @@ PRTiter (node * arg_node, info * arg_info)
 
   if (ITER_SCOPEPOS( arg_node))
   {
-    printf(" #%d", ITER_SCOPEPOS( arg_node));
+    printf(" #%d", ITER_SCOPEPOS( arg_node) - 1);
   }
 
   printf("\n");
