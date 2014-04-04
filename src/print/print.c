@@ -882,10 +882,18 @@ PRTfor (node * arg_node, info * arg_info)
 	DBUG_ENTER ("PRTfor");
 	
 	printIndent( arg_info);
-  printf("for (int ");
-  
-	printf("%s", ITER_NAME( FOR_ITER( arg_node)));
-	printf(" = ");
+  printf("for (");
+
+  if (FOR_ITERDEC( arg_node) == NULL)
+  {
+	  printf("int %s", ITER_NAME( FOR_ITER( arg_node)));
+	  printf(" = ");
+  }
+  else
+  {
+    printLink( FOR_ITERDEC( arg_node), NDSD_LOCAL());
+    printf(", ");
+  }
 	FOR_FROM( arg_node) = TRAVdo( FOR_FROM( arg_node), arg_info);
 	printf(", ");
 	FOR_TO( arg_node) = TRAVdo( FOR_TO( arg_node), arg_info);
