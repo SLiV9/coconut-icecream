@@ -190,6 +190,99 @@ void printconst(info * inf)
 
 
 
+extern node* CODEGENfundef(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENfundef");
+  char * label;
+  mallocf(label,"%s", HEADER_NAME( FUNDEF_HEAD( arg_node)));
+  addlabel(arg_info,label);
+
+  // no need to trav to header
+
+  FUNDEF_BODY( arg_node) = TRAVdo( FUNDEF_BODY( arg_node), arg_info);
+
+  DBUG_RETURN( arg_node);
+}
+extern node* CODEGENbody(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENbody");
+  char * line;
+
+  int nlocs = 0;
+  node * vdecs = BODY_VARDECS( arg_node);
+  while (vdecs != NULL)
+  {
+    nlocs++;
+    vdecs = VARDECS_NEXT( vdecs);
+  }
+  mallocf(line,"esr %d", nlocs); addline(arg_info,line,NULL);
+
+  BODY_INSTRS( arg_node) = TRAVopt( BODY_INSTRS( arg_node), arg_info);
+
+  if (BODY_RETURN( arg_node) != NULL)
+  {
+    BODY_RETURN( arg_node) = TRAVopt( BODY_RETURN( arg_node), arg_info);
+    switch (getType( BODY_RETURN( arg_node)))
+    {
+      case VT_int:
+        mallocf(line,"ireturn");
+        addline(arg_info,line,NULL);
+        break;
+      case VT_float:
+        mallocf(line,"freturn");
+        addline(arg_info,line,NULL);
+        break;
+      case VT_bool:
+        mallocf(line,"breturn");
+        addline(arg_info,line,NULL);
+        break;
+      default:
+        DBUG_ASSERT( 0, "illegal return type detected!");
+    }
+  }
+  else
+  {
+    mallocf(line,"return"); addline(arg_info,line,NULL);
+  }
+
+  // local fundefs moeten eerst geextraheerd worden (denk ik?)
+  //BODY_FUNDEFS( arg_node) = TRAVdo( BODY_FUNDEFS( arg_node), arg_info);
+
+  DBUG_RETURN( arg_node);
+}
+extern node* CODEGENfunstate(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENfunstate");
+  char * line;
+  FUNSTATE_CALL( arg_node) = TRAVdo( FUNSTATE_CALL( arg_node), arg_info);
+  switch (FUNCALL_TYPE( FUNSTATE_CALL( arg_node)))
+  {
+    case VT_int:
+      mallocf(line,"ipop");
+      addline(arg_info,line,NULL);
+      break;
+    case VT_float:
+      mallocf(line,"fpop");
+      addline(arg_info,line,NULL);
+      break;
+    case VT_bool:
+      mallocf(line,"bpop");
+      addline(arg_info,line,NULL);
+      break;
+    case VT_void:
+      /* do nothing */;
+      break;
+    default:
+      DBUG_ASSERT( 0, "illegal funcall type detected!");
+  }
+  DBUG_RETURN( arg_node);
+}
+extern node* CODEGENfuncall(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENfuncall");
+  char * line;
+  char * comment;
+  mallocf(line,"funcall");
+  mallocf(comment,"%s", FUNCALL_NAME( arg_node));
+  addline(arg_info,line,comment);
+  DBUG_RETURN( arg_node);
+}
 extern node* CODEGENassign(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENassign");
   ASSIGN_EXPR( arg_node) = TRAVdo( ASSIGN_EXPR( arg_node), arg_info);

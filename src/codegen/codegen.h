@@ -4,6 +4,10 @@
 #include "types.h"
 
 extern node* CODEGENfundef(node *arg_node, info *arg_info);
+extern node* CODEGENbody(node *arg_node, info *arg_info);
+
+extern node* CODEGENfunstate(node *arg_node, info *arg_info);
+extern node* CODEGENfuncall(node *arg_node, info *arg_info);
 
 extern node* CODEGENhoare(node *arg_node, info *arg_info);
 extern node* CODEGENbinop(node *arg_node, info *arg_info);

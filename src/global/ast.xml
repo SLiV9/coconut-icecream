@@ -154,6 +154,10 @@
       
       <traversal id="CODEGEN" name="CodeGen" default="sons" include="codegen.h">
       	<travuser>
+    <node name="FunDef" />
+    <node name="Body" />
+    <node name="FunState" />
+    <node name="FunCall" />
     <node name="Assign" />
     <node name="VarLet" />
                 <node name="MonOp" />
