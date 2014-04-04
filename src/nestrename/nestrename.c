@@ -113,14 +113,7 @@ node* NESTRENAMEfuncall(node *arg_node, info *arg_info)
 {
 	DBUG_ENTER ("NESTRENAMEfuncall");
 
-	char* old = INFO_END( arg_info);
-
-	append(arg_info, FUNCALL_NAME( arg_node));
-
-	MEMfree( FUNCALL_NAME( arg_node));
-	FUNCALL_NAME( arg_node) = obtain(arg_info);
-
-	reset(arg_info, old);
+	// use declaration's name instead
 
 	DBUG_RETURN (arg_node);
 }

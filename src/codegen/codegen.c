@@ -243,8 +243,9 @@ extern node* CODEGENbody(node *arg_node, info *arg_info){
     mallocf(line,"return"); addline(arg_info,line,NULL);
   }
 
-  // local fundefs moeten eerst geextraheerd worden (denk ik?)
-  //BODY_FUNDEFS( arg_node) = TRAVdo( BODY_FUNDEFS( arg_node), arg_info);
+  mallocf(line," "); addline(arg_info,line,NULL); // empty line
+
+  BODY_FUNDEFS( arg_node) = TRAVopt( BODY_FUNDEFS( arg_node), arg_info);
 
   DBUG_RETURN( arg_node);
 }
@@ -278,7 +279,8 @@ extern node* CODEGENfuncall(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENfuncall");
   char * line;
   char * comment;
-  mallocf(line,"funcall");
+  FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
+  mallocf(line,"funcall something");
   mallocf(comment,"%s", FUNCALL_NAME( arg_node));
   addline(arg_info,line,comment);
   DBUG_RETURN( arg_node);

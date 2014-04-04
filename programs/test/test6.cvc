@@ -1,9 +1,13 @@
 int foo(int y)
 {
 	int z = x * y;
+	int bar(int x, int y)
+	{
+		return x + y;
+	}
 	foo(y);
-	x = foo(z);
-	return (x + y);
+	x = foo(z) + bar(z, y);
+	return x + y;
 }
 
 int x = 10;
