@@ -102,6 +102,9 @@ int getDepth(node* arg_node)
 		case N_bool:
 		case N_float:
 			return 0;
+		case N_arraylit:
+			// see arraylit's getType
+			return 0;
 		default:
 			DBUG_ASSERT( 0, "invalid getdepth type detected!");
 			return VT_unknown;
