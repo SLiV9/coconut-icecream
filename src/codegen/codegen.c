@@ -280,7 +280,30 @@ extern node* CODEGENfuncall(node *arg_node, info *arg_info){
   char * line;
   char * comment;
   FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
-  mallocf(line,"funcall something");
+  node * dec = FUNCALL_DEC( arg_node);
+  char * name;
+  node * args = FUNCALL_ARGS( arg_node);
+  int i, nargs;
+  switch (NODE_TYPE( dec))
+  {
+    case N_fundec:
+      i = 0;
+      // TODO resolve fundec
+      mallocf(line,"jsre %d", i);
+      break;
+    case N_fundef:
+      nargs = 0;
+      while (args != NULL)
+      {
+        nargs++;
+        args = EXPRS_NEXT( args);
+      }
+      name = HEADER_NAME( FUNDEF_HEAD( dec));
+      mallocf(line,"jsr %d %s", nargs, name);
+      break;
+    default:
+      DBUG_ASSERT( 0, "illegal funcall dec type detected!");
+  }
   mallocf(comment,"%s", FUNCALL_NAME( arg_node));
   addline(arg_info,line,comment);
   DBUG_RETURN( arg_node);
