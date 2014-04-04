@@ -163,6 +163,13 @@
         </travuser>
       </traversal>
       
+      <traversal id="ACONSTUNFOLD" name="AconstUnfold" default="sons" include="aconstunfold.h">
+        <travuser>
+          <node name="Instrs" />
+          <node name="Assign" />
+        </travuser>
+      </traversal>
+      
       <traversal id="DIMREDUCT" name="DimReduct" default="sons" include="dimreduct.h">
         <travuser>
           <node name="FunCall" />

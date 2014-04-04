@@ -14,74 +14,7 @@
 #include "print.h"
 #include "copy.h"
 
-/*
- * INFO structure
- */
-struct INFO {
-    node* head;
-    node* last;
-    int dirty;
-};
-
-#define INFO_HEAD(n) ((n)->head)
-#define INFO_LAST(n) ((n)->last)
-#define INFO_DIRTY(n) ((n)->dirty)
-
-static info *MakeInfo()
-{
-  info *result;
-  
-  result = MEMmalloc(sizeof(info));
-
-  INFO_HEAD(result) = NULL;
-  INFO_LAST(result) = NULL;
-  INFO_DIRTY(result) = 0;
-  
-  return result;
-}
-
-static info *FreeInfo( info *info)
-{
-  info = MEMfree( info);
-
-  return info;
-}
-
-static void add(node* oldlet, info* arg_info, int x, node* expr)
-{
-  node* letje = COPYdoCopy( oldlet);
-  node* indxs = VARLET_INDX( letje);
-
-  if (indxs != NULL)
-  {
-    node* ixs = indxs;
-    while (EXPRS_NEXT( ixs) != NULL)
-    {
-      ixs = EXPRS_NEXT( ixs);
-    }
-    EXPRS_NEXT( ixs) = TBmakeExprs( TBmakeInt(x), NULL);
-  }
-  else
-  {
-    VARLET_INDX( letje) = TBmakeExprs( TBmakeInt(x), NULL);
-  }
-
-  node* ass = TBmakeAssign( letje, expr);
-  node* instrs = TBmakeInstrs( ass, NULL);
-
-  if (INFO_HEAD( arg_info) == NULL)
-  {
-    INFO_HEAD( arg_info) = instrs;
-    INFO_LAST( arg_info) = instrs;
-  }
-  else
-  {
-    INSTRS_NEXT( INFO_LAST( arg_info)) = instrs;
-    INFO_LAST( arg_info) = instrs;
-  }
-}
-
-
+#include "aunfold_info.h"
 
 node* ALITUNFOLDbody(node *arg_node, info *arg_info)
 {
@@ -146,7 +79,8 @@ node* ALITUNFOLDassign(node *arg_node, info *arg_info)
     }
     while (exprs != NULL)
     {
-      add( letje, arg_info, i, EXPRS_EXPR( exprs));
+      node* instr = makeAssignInstrs(letje, TBmakeInt(i), EXPRS_EXPR( exprs));
+      addInstr( arg_info, instr);
 
       i++;
       exprs = EXPRS_NEXT( exprs);

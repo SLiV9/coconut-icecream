@@ -95,7 +95,7 @@ namelink 		= namelink.o funhead.o globnames.o namestackinfo.o
 typec				= tpinf.o tping.o tpmat.o gettype.o
 
 itersplit		= itersplit.o
-arraysplit	= arraysplit.o asplitfcall.o alitunfold.o dimreduct.o
+arraysplit	= arraysplit.o asplitfcall.o alitunfold.o aconstunfold.o dimreduct.o
 varcount		= varcount.o
 
 codegen			= codegen.o

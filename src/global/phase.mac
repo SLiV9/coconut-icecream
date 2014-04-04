@@ -103,6 +103,12 @@ SUBPHASE( arraysplit,
 					ALWAYS,
 					cr)
 
+SUBPHASE( aconstunfold,
+					"Unfolding arrayconsts",
+					ACONSTUNFOLDdoUnfold,
+					ALWAYS,
+					cr)
+
 SUBPHASE( itersplit,
 					"Pulling iterators from for loops",
 					ITERSPLITdoSplit,
