@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-extern node* GSVARCALLvarlet(node *arg_node, info *arg_info);
+extern node* GSVARCALLassign(node *arg_node, info *arg_info);
 extern node* GSVARCALLvarcall(node *arg_node, info *arg_info);
 
 extern node *GSVARCALLdoReplace( node *syntaxtree);

@@ -173,8 +173,8 @@
       
       <traversal id="GSVARCALL" name="GsVarcall" default="sons" include="gsvarcall.h">
         <travuser>
+          <node name="Assign" />
           <node name="VarCall" />
-          <node name="VarLet" />
         </travuser>
       </traversal>
       

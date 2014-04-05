@@ -3,5 +3,6 @@
 export void main()
 {
 	z = 1.337;
+	z = 2.0 * z;
 	reset();
 }
