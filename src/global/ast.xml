@@ -231,6 +231,7 @@
 		<node name="Float" />
 		<node name="Bool" />
 		<node name="VarCall" />
+		<node name="If" />
     <node name="Hoare" />
       	</travuser>
       </traversal>

@@ -1,7 +1,15 @@
+export int getme6(){
+   return 6;
+}
+
 export int main(){
-	int x = 1;
-        int a;
-        a = 1;
-        x = 1;
+	int x;
+        x = 6;
+        if(6 == x){
+          getme6();
+        }else{
+         getme6();
+        }
 	return 0;
 }
+

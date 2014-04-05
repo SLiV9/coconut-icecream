@@ -190,6 +190,34 @@ void printconst(info * inf)
 
 
 
+
+extern node* CODEGENif(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENif");
+
+  int l_else,l_end;
+  char * line;
+  char * label;
+
+  l_else = arg_info->labelcount++;
+
+
+  IF_COND( arg_node) = TRAVdo( IF_COND( arg_node), arg_info);
+  mallocf(line,"branch_f %d", l_else); addline(arg_info,line,NULL);
+  IF_THEN( arg_node) = TRAVdo( IF_THEN( arg_node), arg_info);
+
+  if(IF_ELSE( arg_node)!=NULL){
+    l_end = arg_info->labelcount++;
+    mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
+    mallocf(label,"%d", l_else); addlabel(arg_info,label);
+
+    IF_ELSE( arg_node) = TRAVdo( IF_ELSE( arg_node), arg_info);
+    mallocf(label,"%d", l_end); addlabel(arg_info,label);
+  }else{
+    mallocf(label,"%d", l_else); addlabel(arg_info,label);
+  }
+  DBUG_RETURN( arg_node);
+}
+
 extern node* CODEGENfundef(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENfundef");
   char * label;
@@ -322,7 +350,7 @@ extern node* CODEGENvarlet(node *arg_node, info *arg_info){
   int diff = -1-VARLET_SCOPEDIFF( arg_node);
   int pos;
   char * line;
-  char * comm; 
+  char * comm;
   mallocf(comm,"%s",VARLET_NAME(arg_node));
   if(NODE_TYPE(VARLET_DEC( arg_node)) == N_vardec){
     pos = VARDEC_SCOPEPOS(VARLET_DEC( arg_node))-1;
