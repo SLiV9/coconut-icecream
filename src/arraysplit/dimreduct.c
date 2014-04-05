@@ -13,6 +13,7 @@
 #include "memory.h"
 #include "print.h"
 #include "copy.h"
+#include "free.h"
 
 node* DIMREDUCTfuncall(node *arg_node, info *arg_info)
 {
@@ -31,6 +32,18 @@ node* DIMREDUCTfuncall(node *arg_node, info *arg_info)
       expr = TBmakeBinop( BO_mul, expr, EXPRS_EXPR( args));
       BINOP_TYPE( expr) = VT_int;
     }
+    
+    node* prev;
+    args = FUNCALL_ARGS( arg_node);
+    while (args != NULL)
+    {
+      prev = args;
+      args = EXPRS_NEXT( prev);
+      EXPRS_NEXT( prev) = NULL;
+      EXPRS_EXPR( prev) = NULL;
+      FREEdoFreeNode( prev);
+    }
+
     FUNCALL_ARGS( arg_node) = TBmakeExprs( expr, NULL);
   }
 
@@ -68,6 +81,7 @@ static node* indxsToIndx(node* arg_node, node* indxs, node* dec, int scopediff)
   DBUG_ASSERT(dimdecs != NULL, "no dimdecs!");
 
   node* newindx = EXPRS_EXPR( indxs);
+  node* curindxs = indxs;
   node* dim;
   node* dcall;
   node* bop = NULL;
@@ -84,9 +98,20 @@ static node* indxsToIndx(node* arg_node, node* indxs, node* dec, int scopediff)
     BINOP_TYPE( bop) = VT_int;
 
     dimdecs = DIMDECS_NEXT( dimdecs);
-    indxs = EXPRS_NEXT( indxs);
-    bop = TBmakeBinop( BO_add, bop, EXPRS_EXPR( indxs));
+    curindxs = EXPRS_NEXT( curindxs);
+    bop = TBmakeBinop( BO_add, bop, EXPRS_EXPR( curindxs));
     BINOP_TYPE( bop) = VT_int;
+  }
+
+  node* prev;
+  curindxs = indxs;
+  while (curindxs != NULL)
+  {
+    prev = curindxs;
+    curindxs = EXPRS_NEXT( prev);
+    EXPRS_NEXT( prev) = NULL;
+    EXPRS_EXPR( prev) = NULL;
+    FREEdoFreeNode( prev);
   }
 
   if (bop != NULL)

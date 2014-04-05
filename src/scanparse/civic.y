@@ -19,6 +19,8 @@ static node *parseresult = NULL;
 extern int yylex();
 static int yyerror( char *errname);
 
+#define IDGET(n) (n)
+
 //#define YYDEBUG 1
 
 %}
@@ -163,9 +165,9 @@ fundec:
 
 globdec:
 	EXTERN basictype ID SEMICOLON
-			{ $$ = TBmakeGlobdec( STRcpy( $3), $2, NULL); }
+			{ $$ = TBmakeGlobdec( IDGET($3), $2, NULL); }
 | EXTERN basictype BSL dimdecs BSR ID SEMICOLON
-			{ $$ = TBmakeGlobdec( STRcpy( $6), $2, $4); }
+			{ $$ = TBmakeGlobdec( IDGET($6), $2, $4); }
 ;
 
 block:
@@ -214,59 +216,59 @@ assign:
 ;
 
 varlet:
-	ID 										{ $$ = TBmakeVarlet( STRcpy( $1), NULL); }
-| ID BSL exprs BSR 			{ $$ = TBmakeVarlet( STRcpy( $1), $3); }
+	ID 										{ $$ = TBmakeVarlet( IDGET($1), NULL); }
+| ID BSL exprs BSR 			{ $$ = TBmakeVarlet( IDGET($1), $3); }
 ;
 
 varcall:
-	ID 										{ $$ = TBmakeVarcall( STRcpy( $1), NULL); }
-| ID BSL exprs BSR 			{ $$ = TBmakeVarcall( STRcpy( $1), $3); }
+	ID 										{ $$ = TBmakeVarcall( IDGET($1), NULL); }
+| ID BSL exprs BSR 			{ $$ = TBmakeVarcall( IDGET($1), $3); }
 ;
         
 funcall:
-	ID BRL BRR 						{ $$ = TBmakeFuncall( STRcpy( $1), NULL); }
-| ID BRL exprs BRR 			{ $$ = TBmakeFuncall( STRcpy( $1), $3); }
+	ID BRL BRR 						{ $$ = TBmakeFuncall( IDGET($1), NULL); }
+| ID BRL exprs BRR 			{ $$ = TBmakeFuncall( IDGET($1), $3); }
 ;
 
 globdef:
 	basictype ID SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $2), $1, FALSE, NULL, NULL, NULL); }
+			{ $$ = TBmakeGlobdef( IDGET($2), $1, FALSE, NULL, NULL, NULL); }
 | basictype ID LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $2), $1, FALSE, $4, NULL, NULL); }
+			{ $$ = TBmakeGlobdef( IDGET($2), $1, FALSE, $4, NULL, NULL); }
 | basictype BSL exprs BSR ID SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $5), $1, FALSE, NULL, $3, NULL); }
+			{ $$ = TBmakeGlobdef( IDGET($5), $1, FALSE, NULL, $3, NULL); }
 | basictype BSL exprs BSR ID LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $5), $1, FALSE, $7, $3, NULL); }
+			{ $$ = TBmakeGlobdef( IDGET($5), $1, FALSE, $7, $3, NULL); }
 |	EXPORT basictype ID SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $3), $2, TRUE, NULL, NULL, NULL); }
+			{ $$ = TBmakeGlobdef( IDGET($3), $2, TRUE, NULL, NULL, NULL); }
 | EXPORT basictype ID LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $3), $2, TRUE, $5, NULL, NULL); }
+			{ $$ = TBmakeGlobdef( IDGET($3), $2, TRUE, $5, NULL, NULL); }
 | EXPORT basictype BSL exprs BSR ID SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $6), $2, TRUE, NULL, $4, NULL); }
+			{ $$ = TBmakeGlobdef( IDGET($6), $2, TRUE, NULL, $4, NULL); }
 | EXPORT basictype BSL exprs BSR ID LET expr SEMICOLON
-			{ $$ = TBmakeGlobdef( STRcpy( $6), $2, TRUE, $8, $4, NULL); }
+			{ $$ = TBmakeGlobdef( IDGET($6), $2, TRUE, $8, $4, NULL); }
 ;
 
 vardec:
 	basictype ID SEMICOLON
-			{ $$ = TBmakeVardec( STRcpy( $2), $1, NULL, NULL, NULL); }
+			{ $$ = TBmakeVardec( IDGET($2), $1, NULL, NULL, NULL); }
 | basictype ID LET expr SEMICOLON
-			{ $$ = TBmakeVardec( STRcpy( $2), $1, $4, NULL, NULL); }
+			{ $$ = TBmakeVardec( IDGET($2), $1, $4, NULL, NULL); }
 | basictype BSL exprs BSR ID SEMICOLON
-			{ $$ = TBmakeVardec( STRcpy( $5), $1, NULL, $3, NULL); }
+			{ $$ = TBmakeVardec( IDGET($5), $1, NULL, $3, NULL); }
 | basictype BSL exprs BSR ID LET expr SEMICOLON
-			{ $$ = TBmakeVardec( STRcpy( $5), $1, $7, $3, NULL); }
+			{ $$ = TBmakeVardec( IDGET($5), $1, $7, $3, NULL); }
 ;
 
 header:
 	basictype ID BRL BRR
-			{ $$ = TBmakeHeader( STRcpy( $2), $1, NULL); }
+			{ $$ = TBmakeHeader( IDGET($2), $1, NULL); }
 | basictype ID BRL params BRR
-			{ $$ = TBmakeHeader( STRcpy( $2), $1, $4); }
+			{ $$ = TBmakeHeader( IDGET($2), $1, $4); }
 | VOID ID BRL BRR
-			{ $$ = TBmakeHeader( STRcpy( $2), VT_void, NULL); }
+			{ $$ = TBmakeHeader( IDGET($2), VT_void, NULL); }
 | VOID ID BRL params BRR
-			{ $$ = TBmakeHeader( STRcpy( $2), VT_void, $4); }
+			{ $$ = TBmakeHeader( IDGET($2), VT_void, $4); }
 ;
 
 params:
@@ -276,16 +278,16 @@ params:
 
 param:
 	basictype ID
-			{ $$ = TBmakeParam( STRcpy( $2), $1, NULL); }
+			{ $$ = TBmakeParam( IDGET($2), $1, NULL); }
 | basictype BSL dimdecs BSR ID
-			{ $$ = TBmakeParam( STRcpy( $5), $1, $3); }
+			{ $$ = TBmakeParam( IDGET($5), $1, $3); }
 ;
 
 dimdecs:
 	ID COMMA dimdecs
-			{ $$ = TBmakeDimdecs( TBmakeDim( STRcpy( $1)), $3); }
+			{ $$ = TBmakeDimdecs( TBmakeDim( IDGET($1)), $3); }
 | ID
-			{ $$ = TBmakeDimdecs( TBmakeDim( STRcpy( $1)), NULL); }
+			{ $$ = TBmakeDimdecs( TBmakeDim( IDGET($1)), NULL); }
 ;
 
 exprs:

@@ -5,6 +5,8 @@
 #include "dbug.h"
 #include "str.h"
 #include "copy.h"
+#include "memory.h"
+#include "free.h"
 #include <string.h>
 
 struct INFO{
@@ -26,8 +28,10 @@ static node* dimdefsToDimdecs( node* dimdefs, const char* name)
 
   while (defs != NULL)
   {
-    dim = TBmakeDim( STRcatn(3, STRitoa( i), "_", STRcpy( name)));
+    char* stri = STRitoa(i);
+    dim = TBmakeDim( STRcatn(4, "", stri, "_", name));
     dimdecs = TBmakeDimdecs( dim, NULL);
+    MEMfree( stri);
 
     if (ddshead == NULL)
     {
@@ -121,7 +125,7 @@ static node* dimdefsToInstrs( node* arg_node, const char* name, \
     VARLET_DEC( letje) = dim;
     VARLET_SCOPEDIFF( letje) = scopediff;
     instr = TBmakeInstrs( TBmakeAssign( letje, \
-        COPYdoCopy( EXPRS_EXPR( defs))), NULL);
+        EXPRS_EXPR( defs)), NULL);
 
     if (instrhead == NULL)
     {
@@ -133,6 +137,8 @@ static node* dimdefsToInstrs( node* arg_node, const char* name, \
       INSTRS_NEXT( instrlast) = instr;
       instrlast = instr;
     }
+
+    EXPRS_EXPR( defs) = NULL;
 
     decs = DIMDECS_NEXT( decs);
     defs = EXPRS_NEXT( defs);
@@ -170,6 +176,7 @@ node* SPLITglobdef(node *arg_node, info *arg_info){
         GLOBDEF_NAME( arg_node));
   	instr_alloc = dimdefsToInstrs( arg_node, GLOBDEF_NAME( arg_node), \
   			GLOBDEF_DIMDEFS( arg_node), GLOBDEF_DIMDECS( arg_node), TRUE);
+    FREEdoFreeNode( GLOBDEF_DIMDEFS( arg_node));
     GLOBDEF_DIMDEFS( arg_node) = NULL;
     last = instr_alloc;
     while (INSTRS_NEXT( last) != NULL)
@@ -247,6 +254,7 @@ node* SPLITvardec(node *arg_node, info *arg_info){
         VARDEC_NAME( arg_node));
   	instr_alloc = dimdefsToInstrs( arg_node, VARDEC_NAME( arg_node), \
   			VARDEC_DIMDEFS( arg_node), VARDEC_DIMDECS( arg_node), FALSE);
+    FREEdoFreeNode( VARDEC_DIMDEFS( arg_node));
     VARDEC_DIMDEFS( arg_node) = NULL;
     last = instr_alloc;
     while (INSTRS_NEXT( last) != NULL)

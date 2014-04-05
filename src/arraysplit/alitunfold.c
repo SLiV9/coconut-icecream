@@ -13,6 +13,7 @@
 #include "memory.h"
 #include "print.h"
 #include "copy.h"
+#include "free.h"
 
 #include "aunfold_info.h"
 
@@ -49,11 +50,16 @@ node* ALITUNFOLDinstrs(node *arg_node, info *arg_info)
 
   if (INFO_HEAD( arg_info) != NULL)
   {
-    // skip instrs, it has been replaced by info_head-info_last
+    // skip self, it has been replaced by info_head-info_last
     INSTRS_NEXT( INFO_LAST( arg_info)) = INSTRS_NEXT( arg_node);
     instrs = INFO_HEAD( arg_info);
     INFO_HEAD( arg_info) = NULL;
     INFO_LAST( arg_info) = NULL;
+
+    // free self, it has been replaced
+    INSTRS_NEXT( arg_node) = NULL;
+    INSTRS_INSTR( arg_node) = NULL;
+    FREEdoFreeNode( arg_node);
   }
 
   DBUG_RETURN( instrs);
@@ -85,6 +91,11 @@ node* ALITUNFOLDassign(node *arg_node, info *arg_info)
       i++;
       exprs = EXPRS_NEXT( exprs);
     }
+
+    FREEdoFreeNode( letje);
+    ASSIGN_LET( arg_node) = NULL;
+    ASSIGN_EXPR( arg_node) = NULL;
+    FREEdoFreeNode( arg_node);
   }
 
   DBUG_RETURN( arg_node);

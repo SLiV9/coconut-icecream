@@ -1,4 +1,4 @@
 export void main()
 {
-	int x = 2;
+	int[2] x = 3;
 }
