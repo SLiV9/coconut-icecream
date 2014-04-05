@@ -22,7 +22,19 @@ node* TPINFvarlet(node *arg_node, info *arg_info)
   
   VARLET_INDX( arg_node) = TRAVopt( VARLET_INDX( arg_node), arg_info);
 
-  DBUG_ASSERT( VARLET_DEC( arg_node) != NULL, "varlet dec is null!");
+  node* dec = VARLET_DEC( arg_node);
+  DBUG_ASSERT( dec != NULL, "varlet dec is null!");
+
+  if (NODE_TYPE( dec) == N_globdec)
+  {
+    if (VARLET_INDX( arg_node) == NULL && GLOBDEC_DIMDECS( dec) != NULL)
+    {
+      CTIerror("file %s, line %d\n"
+          "extern array variable '%s' used without dereference", \
+          myglobal.fn, NODE_LINE( arg_node), \
+          GLOBDEC_NAME( dec));
+    }
+  }
   
   VARLET_TYPE( arg_node) = getType( VARLET_DEC( arg_node));
   if (VARLET_INDX( arg_node) != NULL)
@@ -40,7 +52,6 @@ node* TPINFvarcall(node *arg_node, info *arg_info)
   VARCALL_INDX( arg_node) = TRAVopt( VARCALL_INDX( arg_node), arg_info);
   
   node* dec = VARCALL_DEC( arg_node);
-
   DBUG_ASSERT( dec != NULL, "varcall dec is null!");
 
   if (NODE_TYPE( dec) == N_globdec)

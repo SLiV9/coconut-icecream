@@ -1,2 +1,2 @@
-extern float z;
+extern float[a, b] z;
 extern void reset();

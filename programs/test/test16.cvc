@@ -1,5 +1,5 @@
 int n = 5;
-export float x = 0.0;
+export float[2, n] x;
 
 export void reset()
 {

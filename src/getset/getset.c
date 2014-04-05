@@ -100,11 +100,12 @@ node* GETSETglobdef(node *arg_node, info *arg_info)
   VARCALL_TYPE( call) = t;
   VARCALL_DEPTH( call) = 0;
 
-  head = TBmakeHeader( STRcat( "__get_", name), t, NULL);
+  params = NULL;
+  head = TBmakeHeader( STRcat( "__get_", name), t, params);
   body = TBmakeBody( NULL, NULL, NULL, call);
   getter = TBmakeFundef( TRUE, head, body);
 
-  param = TBmakeParam( STRcat( "~", name), t, NULL);
+  param = TBmakeParam( STRcpy("v"), t, NULL);
   params = TBmakeParams( param, NULL);
 
   call = TBmakeVarcall( STRcpy( PARAM_NAME( param)), NULL);
@@ -147,10 +148,11 @@ node* GETSETglobdec(node *arg_node, info *arg_info)
   vtype t = GLOBDEC_TYPE( arg_node);
   char* name = GLOBDEC_NAME( arg_node);
 
-  head = TBmakeHeader( STRcat( "__get_", name), t, NULL);
+  params = NULL;
+  head = TBmakeHeader( STRcat( "__get_", name), t, params);
   getter = TBmakeFundec( head);
 
-  param = TBmakeParam( STRcat( "~", name), t, NULL);
+  param = TBmakeParam( STRcpy("v"), t, NULL);
   params = TBmakeParams( param, NULL);
   head = TBmakeHeader( STRcat( "__set_", name), VT_void, params);
   setter = TBmakeFundec( head);
