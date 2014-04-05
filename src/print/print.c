@@ -960,10 +960,6 @@ PRTiter (node * arg_node, info * arg_info)
 
   printIndent( arg_info);
   printf( "itr");
-  if (ITER_FOR( arg_node) != NULL)
-  {
-    printf(":%d", NODE_LINE( ITER_FOR( arg_node)));
-  }
   printf( " %s;", ITER_NAME( arg_node));
 
   if (ITER_SCOPEPOS( arg_node))

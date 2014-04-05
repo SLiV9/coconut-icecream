@@ -75,11 +75,16 @@ node* ITERSPLITfor(node *arg_node, info *arg_info)
   DBUG_ENTER ("ITERSPLITfor");
 
   node* itr = FOR_ITER( arg_node);
-	FOR_ITER( arg_node) = COPYdoCopy( itr); // dirty hack
-	FOR_ITERDEC( arg_node) = itr;
 
-  ITER_FOR( itr) = arg_node;
-	node* vdecs = TBmakeVardecs( itr, NULL);
+	node* vdec = TBmakeVardec( STRcpy( ITER_NAME( itr)), \
+			VT_int, NULL, NULL, NULL);
+	VARDEC_DEPTH( vdec) = 0;
+	VARDEC_ESCAPING( vdec) = FALSE;
+	FOR_ITERDEC( arg_node) = vdec;
+
+	ITER_REPLACER( itr) = vdec;
+
+	node* vdecs = TBmakeVardecs( vdec, NULL);
 
 	if (INFO_HEAD( arg_info) == NULL)
 	{

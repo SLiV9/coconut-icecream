@@ -90,20 +90,50 @@ static void insertItems(node* arg_node, info* arg_info, node* dimdecs, \
   while (dimdecs != NULL)
   {
   	node* dim = DIMDECS_DIM( dimdecs);
-  	DIMDECS_DIM( dimdecs) = COPYdoCopy( dim); // dirty hack
-  	DIM_DEC( dim) = arg_node;
+
+		node* dec;
+  	switch (t)
+  	{
+  		case N_globdef:
+				dec = TBmakeGlobdef( STRcpy( DIM_NAME( dim)), \
+						VT_int, GLOBDEF_EXPORT( arg_node), NULL, NULL, NULL);
+				GLOBDEF_DEPTH( dec) = 0;
+				break;
+  		case N_globdec:
+				dec = TBmakeGlobdec( STRcpy( DIM_NAME( dim)), \
+						VT_int, NULL);
+				GLOBDEC_DEPTH( dec) = 0;
+				break;
+  		case N_vardec:
+				dec = TBmakeVardec( STRcpy( DIM_NAME( dim)), \
+						VT_int, NULL, NULL, NULL);
+				VARDEC_DEPTH( dec) = 0;
+				VARDEC_ESCAPING( dec) = VARDEC_ESCAPING( arg_node);
+				break;
+  		case N_param:
+				dec = TBmakeParam( STRcpy( DIM_NAME( dim)), \
+						VT_int, NULL);
+				PARAM_DEPTH( dec) = 0;
+				PARAM_ESCAPING( dec) = PARAM_ESCAPING( arg_node);
+				break;
+			default:
+  			DBUG_ASSERT(0, "insertItems called on illegal nodetype!");
+		}
+
+		DIM_REPLACER( dim) = dec;
 
 		node* itms;
 		switch (t)
 		{
-			case N_declars:
-		  	itms = TBmakeDeclars( dim, NULL);
+			case N_globdef:
+			case N_globdec:
+		  	itms = TBmakeDeclars( dec, NULL);
 		  	break;
-		  case N_vardecs:
-		  	itms = TBmakeVardecs( dim, NULL);
+		  case N_vardec:
+		  	itms = TBmakeVardecs( dec, NULL);
 		  	break;
-		  case N_params:
-		  	itms = TBmakeParams( dim, NULL);
+		  case N_param:
+		  	itms = TBmakeParams( dec, NULL);
 		  	break;
 			default:
   			DBUG_ASSERT(0, "insertItems called on illegal nodetype!");
@@ -118,13 +148,14 @@ static void insertItems(node* arg_node, info* arg_info, node* dimdecs, \
 		{
 			switch (t)
 			{
-				case N_declars:
+				case N_globdef:
+				case N_globdec:
 					DECLARS_NEXT( INFO_LAST( arg_info)) = itms;
 					break;
-				case N_vardecs:
+				case N_vardec:
 					VARDECS_NEXT( INFO_LAST( arg_info)) = itms;
 					break;
-				case N_params:
+				case N_param:
 					PARAMS_NEXT( INFO_LAST( arg_info)) = itms;
 					break;
 				default:
@@ -143,7 +174,7 @@ node* ARRAYSPLITglobdef(node *arg_node, info *arg_info)
 
   // no need to travdo
 
-  insertItems(arg_node, arg_info, GLOBDEF_DIMDECS( arg_node), N_declars);
+  insertItems(arg_node, arg_info, GLOBDEF_DIMDECS( arg_node), N_globdef);
 
   DBUG_RETURN (arg_node);
 }
@@ -154,7 +185,7 @@ node* ARRAYSPLITglobdec(node *arg_node, info *arg_info)
 
   // no need to travdo
 
-  insertItems(arg_node, arg_info, GLOBDEC_DIMDECS( arg_node), N_declars);
+  insertItems(arg_node, arg_info, GLOBDEC_DIMDECS( arg_node), N_globdec);
 
   DBUG_RETURN (arg_node);
 }
@@ -165,7 +196,7 @@ node* ARRAYSPLITvardec(node *arg_node, info *arg_info)
 
   // no need to travdo
 
-  insertItems(arg_node, arg_info, VARDEC_DIMDECS( arg_node), N_vardecs);
+  insertItems(arg_node, arg_info, VARDEC_DIMDECS( arg_node), N_vardec);
 
   DBUG_RETURN (arg_node);
 }
@@ -176,7 +207,7 @@ node* ARRAYSPLITparam(node *arg_node, info *arg_info)
 
   // no need to travdo
 
-  insertItems(arg_node, arg_info, PARAM_DIMDECS( arg_node), N_params);
+  insertItems(arg_node, arg_info, PARAM_DIMDECS( arg_node), N_param);
 
   DBUG_RETURN (arg_node);
 }

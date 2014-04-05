@@ -121,6 +121,13 @@
         </travuser>
       </traversal>
       
+      <traversal id="REPLACE" name="Replace" default="sons" include="replace.h">
+        <travuser>
+          <node name="VarCall" />
+          <node name="VarLet" />
+        </travuser>
+      </traversal>
+      
       <traversal id="ARRAYSPLIT" name="ArraySplit" default="sons" include="arraysplit.h">
         <travuser>
           <node name="Declars" />
@@ -270,7 +277,6 @@
     		<node name="FunDec" />
     		<node name="GlobDef" />
     		<node name="GlobDec" />
-        <node name="Dim" />
     	</target>
     </nodeset>
     <nodeset name="NameDec">
@@ -284,19 +290,6 @@
     		<node name="FunDef" />
     		<node name="FunDec" />
     	</target>
-    </nodeset>
-    <nodeset name="LocalDec">
-      <target>
-        <node name="VarDec" />
-        <node name="Iter" />
-        <node name="Dim" />
-      </target>
-    </nodeset>
-    <nodeset name="ParamOrDim">
-      <target>
-        <node name="Param" />
-        <node name="Dim" />
-      </target>
     </nodeset>
   </nodesets>
 
@@ -376,7 +369,7 @@
         <son name="Param">
           <targets>
             <target mandatory="yes">
-              <set name="ParamOrDim" />
+              <node name="Param" />
               <phases>
                 <all />
               </phases>
@@ -401,7 +394,7 @@
         <son name="Dec">
           <targets>
             <target mandatory="yes">
-              <set name="LocalDec" />
+              <node name="VarDec" />
               <phases>
                 <all />
               </phases>
@@ -601,8 +594,8 @@
             </targets>
           </type>
         </attribute>
-        <attribute name="Dec">
-          <type name="Link">
+        <attribute name="ScopePos">
+          <type name="Int">
             <targets>
               <target mandatory="no">
                 <any />
@@ -613,8 +606,8 @@
             </targets>
           </type>
         </attribute>
-        <attribute name="ScopePos">
-          <type name="Int">
+        <attribute name="Replacer">
+          <type name="Link">
             <targets>
               <target mandatory="no">
                 <any />
@@ -1336,20 +1329,20 @@
             </targets>
           </type>
         </attribute>
-        <attribute name="For">
-          <type name="Link">
+        <attribute name="ScopePos">
+          <type name="Int">
             <targets>
               <target mandatory="no">
                 <any />
                 <phases>
-                  <all />
+                  <range from="cr" to="cg" />
                 </phases>
-              </target>
+              </target>g
             </targets>
           </type>
         </attribute>
-        <attribute name="ScopePos">
-          <type name="Int">
+        <attribute name="Replacer">
+          <type name="Link">
             <targets>
               <target mandatory="no">
                 <any />
