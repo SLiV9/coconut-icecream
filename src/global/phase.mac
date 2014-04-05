@@ -91,12 +91,6 @@ SUBPHASE( aconstunfold,
 					ALWAYS,
 					cr)
 
-SUBPHASE( hoi, 
-          "Hallo",
-          PRTdoPrint, 
-          ALWAYS,
-          cr)
-
 SUBPHASE( arraysplit,
 					"Pulling array dims",
 					ARRAYSPLITdoSplit,
@@ -115,11 +109,23 @@ SUBPHASE( replace,
 					ALWAYS,
 					cr)
 
+SUBPHASE( hoi, 
+          "Hallo",
+          PRTdoPrint, 
+          ALWAYS,
+          cr)
+
 SUBPHASE( getset,
 					"Handling external variables",
 					GETSETdoReplace,
 					ALWAYS,
 					cr)
+
+SUBPHASE( hee, 
+          "Hoi hoi",
+          PRTdoPrint, 
+          ALWAYS,
+          cr)
 
 SUBPHASE( ternary,
 					"Casts and SCL to ternaries",

@@ -70,6 +70,7 @@ static node* indxsToIndx(node* arg_node, node* indxs, node* dec, int scopediff)
   node* newindx = EXPRS_EXPR( indxs);
   node* dim;
   node* dcall;
+  node* bop = NULL;
 
   while (DIMDECS_NEXT( dimdecs) != NULL)
   {
@@ -79,13 +80,18 @@ static node* indxsToIndx(node* arg_node, node* indxs, node* dec, int scopediff)
     VARCALL_SCOPEDIFF( dcall) = scopediff;
     VARCALL_TYPE( dcall) = VT_int;
 
-    newindx = TBmakeBinop( BO_mul, newindx, dcall);
-    BINOP_TYPE( newindx) = VT_int;
+    bop = TBmakeBinop( BO_mul, newindx, dcall);
+    BINOP_TYPE( bop) = VT_int;
 
     dimdecs = DIMDECS_NEXT( dimdecs);
     indxs = EXPRS_NEXT( indxs);
-    newindx = TBmakeBinop( BO_add, newindx, EXPRS_EXPR( indxs));
-    BINOP_TYPE( newindx) = VT_int;
+    bop = TBmakeBinop( BO_add, bop, EXPRS_EXPR( indxs));
+    BINOP_TYPE( bop) = VT_int;
+  }
+
+  if (bop != NULL)
+  {
+    newindx = TBmakeExprs( bop, NULL);
   }
 
   return newindx;

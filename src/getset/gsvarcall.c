@@ -16,6 +16,7 @@ node* GSVARCALLassign(node *arg_node, info *arg_info)
   DBUG_ENTER ("GSVARCALLassign");
 
   ASSIGN_EXPR( arg_node) = TRAVdo( ASSIGN_EXPR( arg_node), arg_info);
+  ASSIGN_LET( arg_node) = TRAVdo( ASSIGN_LET( arg_node), arg_info);
 
   node* dec = VARLET_DEC( ASSIGN_LET( arg_node));
   if (NODE_TYPE( dec) != N_globdec)
@@ -27,8 +28,10 @@ node* GSVARCALLassign(node *arg_node, info *arg_info)
   DBUG_ASSERT( setter != NULL, "no setter!");
   char* settername = HEADER_NAME( FUNDEC_HEAD( setter));
 
-  node* args = TBmakeExprs( ASSIGN_EXPR( arg_node), \
-  		VARLET_INDX( ASSIGN_LET( arg_node)));
+  node* args;
+  args = VARLET_INDX( ASSIGN_LET( arg_node));
+  DBUG_ASSERT( NODE_TYPE( args) == N_exprs, "neen");
+  args = TBmakeExprs( ASSIGN_EXPR( arg_node), args);
 
   node* fcall = TBmakeFuncall( STRcpy( settername), args);
   FUNCALL_DEC( fcall) = setter;
@@ -43,6 +46,8 @@ node* GSVARCALLassign(node *arg_node, info *arg_info)
 node* GSVARCALLvarcall(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("GSVARCALLvarcall");
+
+  VARCALL_INDX( arg_node) = TRAVopt( VARCALL_INDX( arg_node), arg_info);
 
   node* dec = VARCALL_DEC( arg_node);
   if (NODE_TYPE( dec) != N_globdec)

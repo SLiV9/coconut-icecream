@@ -2,7 +2,9 @@
 
 export void main()
 {
+	float y;
 	z[1,1] = 1.337;
-	z[a-1, 0] = 2.0 * z[0, b-1];
+	y = z[0, b-1];
+	z[a-1, 0] = 2.0 + y;
 	reset();
 }
