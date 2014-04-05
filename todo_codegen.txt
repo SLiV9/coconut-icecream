@@ -19,15 +19,17 @@ FunCall: klaar
 Assign: klaar (varcall en varlet moeten goed, dan klaar)
 Alloc: TODO
 
-VarLet: TODO
-VarCall: TODO
 
 For: TODO
 While: TODO
 If: TODO
 
-Cast: TODO
-MonOp: TODO
+VarLet: TODO
+VarCall: TODO
+
+
+Cast: klaar (?)
+MonOp: klaar
 BinOp: klaar
 Hoare: klaar
 

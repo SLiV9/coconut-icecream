@@ -226,6 +226,7 @@
     <node name="VarLet" />
                 <node name="MonOp" />
 		<node name="BinOp" />
+		<node name="Cast" />
 		<node name="Int" />
 		<node name="Float" />
 		<node name="Bool" />
@@ -1601,6 +1602,7 @@
         </attribute>
       </attributes>
     </node>
+
     <node name="VarCall">
       <sons>
       	<son name="Indx">
@@ -1639,7 +1641,7 @@
             </targets>
           </type>
         </attribute>
-        <attribute name="ScopeDiff">
+        <attribute name="Scopediff">
           <type name="Int">
             <targets>
               <target mandatory="no">
@@ -1658,7 +1660,7 @@
 		      			<any />
 		      			<phases>
 		      				<range from="tc" to="cg" />
-		      			</phases>
+	      			</phases>
 		      		</target>
         		</targets>
         	</type>
@@ -1677,6 +1679,7 @@
         </attribute>
       </attributes>
     </node>
+
     <node name="FunCall">
       <sons>
       	<son name="Args">

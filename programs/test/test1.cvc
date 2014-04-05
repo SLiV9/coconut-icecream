@@ -1,12 +1,7 @@
-void foo(int[k] a)
-{
-	foo([2, 3]);
-}
-
 export int main(){
-	int b;
-        b = 3+4;        
-        b = 3-4;        
-        b = 5*(9-2);
+	int x = 1;
+        int a;
+        a = 1;
+        x = 1;
 	return 0;
 }

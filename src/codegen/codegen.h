@@ -16,6 +16,7 @@ extern node* CODEGENint(node *arg_node, info *arg_info);
 extern node* CODEGENfloat(node *arg_node, info *arg_info);
 extern node* CODEGENbool(node *arg_node, info *arg_info);
 extern node* CODEGENvarcall(node *arg_node, info *arg_info);
+extern node* CODEGENcast(node *arg_node, info *arg_info);
 
 extern node* CODEGENvarlet(node *arg_node, info *arg_info);
 extern node* CODEGENassign(node *arg_node, info *arg_info);
