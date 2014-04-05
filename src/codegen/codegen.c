@@ -326,6 +326,14 @@ extern node* CODEGENvarcall(node *arg_node, info *arg_info){
       mallocf(line,"%cloadn %i %i",c,diff,pos);
     }
     addline(arg_info,line,NULL);
+  }else if(NODE_TYPE(VARCALL_DEC( arg_node)) == N_param){
+    pos = PARAM_SCOPEPOS(VARCALL_DEC( arg_node))-1;
+    if(diff == 0){
+      mallocf(line,"%cload %i",c,pos);
+    }else{
+      mallocf(line,"%cloadn %i %i",c,diff,pos);
+    }
+    addline(arg_info,line,NULL);
   }else{
     pos = GLOBDEF_GLOBALPOS(VARCALL_DEC( arg_node))-1;
     mallocf(line,"%cloadg %i",c,pos);
@@ -354,6 +362,14 @@ extern node* CODEGENvarlet(node *arg_node, info *arg_info){
   mallocf(comm,"%s",VARLET_NAME(arg_node));
   if(NODE_TYPE(VARLET_DEC( arg_node)) == N_vardec){
     pos = VARDEC_SCOPEPOS(VARLET_DEC( arg_node))-1;
+    if(diff == 0){
+      mallocf(line,"%cstore %i",c,pos);
+    }else{
+      mallocf(line,"%cstoren %i %i",c,diff,pos);
+    }
+    addline(arg_info,line,comm);
+  }else   if(NODE_TYPE(VARLET_DEC( arg_node)) == N_param){
+    pos = PARAM_SCOPEPOS(VARLET_DEC( arg_node))-1;
     if(diff == 0){
       mallocf(line,"%cstore %i",c,pos);
     }else{
