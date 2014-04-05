@@ -625,6 +625,18 @@
             </targets>
           </type>
         </attribute>
+        <attribute name="Getter">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
     	</attributes>
     </node>
     <node name="ArrayLit">
