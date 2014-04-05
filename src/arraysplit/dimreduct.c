@@ -14,36 +14,6 @@
 #include "print.h"
 #include "copy.h"
 
-/*
- * INFO structure
- */
-struct INFO {
-		node* head;
-		node* last;
-};
-
-#define INFO_HEAD(n) ((n)->head)
-#define INFO_LAST(n) ((n)->last)
-
-static info *MakeInfo()
-{
-  info *result;
-  
-  result = MEMmalloc(sizeof(info));
-
-  INFO_HEAD(result) = NULL;
-  INFO_LAST(result) = NULL;
-  
-  return result;
-}
-
-static info *FreeInfo( info *info)
-{
-  info = MEMfree( info);
-
-  return info;
-}
-
 node* DIMREDUCTfuncall(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("DIMREDUCTfuncall");
@@ -147,19 +117,13 @@ node* DIMREDUCTvarlet(node *arg_node, info *arg_info)
 
 node *DIMREDUCTdoReduct(node *syntaxtree)
 {
-  info* info;
-
 	DBUG_ENTER("DIMREDUCTdoReduct");
-
-	info = MakeInfo();
 
   TRAVpush( TR_dimreduct);
 
-  syntaxtree = TRAVdo( syntaxtree, info);
+  syntaxtree = TRAVdo( syntaxtree, NULL);
 
   TRAVpop();
-
-  info = FreeInfo(info);
 
   DBUG_RETURN( syntaxtree);
 }

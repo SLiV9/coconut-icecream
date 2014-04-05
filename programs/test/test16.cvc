@@ -1,0 +1,7 @@
+int n = 5;
+export float x = 0.0;
+
+export void reset()
+{
+	x = 0.0;
+}
