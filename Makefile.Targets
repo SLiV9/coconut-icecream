@@ -55,7 +55,7 @@
 
 src = global scanparse print framework \
 			mycpp myscp \
-			idpre namelink split \
+			namelink split \
 			typec calcconst \
 			itersplit arraysplit \
 			varcount nestrename ternary \
@@ -90,7 +90,6 @@ as4ac				= as4ac.o
 split				= split.o
 calcconst			= calcconst.o
 
-idpre				= idpre.o
 namelink 		= namelink.o funhead.o globnames.o namestackinfo.o
 typec				= tpinf.o tping.o tpmat.o gettype.o
 

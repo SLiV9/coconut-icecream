@@ -32,12 +32,6 @@ PHASE( ca,
 			 "Context Analysis",
 			 ALWAYS)
 
-SUBPHASE( idpre,
-					"Identifier Prefixing",
-					IDPREdoIdPrefix,
-					NEVER,
-					ca)
-
 SUBPHASE( namelink,
 					"Linking calls to names",
 					NAMELINKdoLinkNames,
@@ -97,15 +91,15 @@ SUBPHASE( dimreduct,
 					ALWAYS,
 					cr)
 
-SUBPHASE( arraysplit,
-					"Pulling array dims",
-					ARRAYSPLITdoSplit,
-					ALWAYS,
-					cr)
-
 SUBPHASE( aconstunfold,
 					"Unfolding arrayconsts",
 					ACONSTUNFOLDdoUnfold,
+					ALWAYS,
+					cr)
+
+SUBPHASE( arraysplit,
+					"Pulling array dims",
+					ARRAYSPLITdoSplit,
 					ALWAYS,
 					cr)
 

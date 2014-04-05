@@ -26,21 +26,6 @@
     	<traversal id="MYCPP" name="C Preprocessing" default="sons" include="mycpp.h" />
     	<traversal id="MYSCP" name="Scanning and Parsing" default="sons" include="myscp.h" />
     
-      <traversal id="IDPRE" name="Identifier Prefixing" default="sons" include="idpre.h">
-      	<travuser>
-      		<node name="VarLet" />
-      		<node name="VarCall" />
-		  		<node name="VarDec" />
-		  		<node name="GlobDef" />
-		  		<node name="GlobDec" />
-		  		<node name="Param" />
-		  		<node name="Iter" />
-		  		<node name="Dim" />
-		  		<node name="Header" />
-		  		<node name="FunCall" />
-      	</travuser>
-      </traversal>
-    
       <traversal id="NAMELINK" name="Linking calls to names" default="sons" include="namelink.h">
       	<travuser>
       		<node name="VarLet" />
