@@ -163,13 +163,22 @@
         </travuser>
       </traversal>
       
+      <traversal id="GETSET" name="GetSet" default="sons" include="getset.h">
+        <travuser>
+          <node name="Declars" />
+          <node name="GlobDef" />
+          <node name="GlobDec" />
+          <node name="VarCall" />
+          <node name="VarLet" />
+        </travuser>
+      </traversal>
+      
       <traversal id="VARCOUNT" name="VarCount" default="sons" include="varcount.h">
         <travuser>
           <node name="GlobDef" />
           <node name="FunDef" />
           <node name="FunDec" />
           <node name="Body" />
-          <node name="GlobDef" />
           <node name="GlobDec" />
           <node name="VarDec" />
           <node name="Param" />
@@ -847,6 +856,30 @@
             </targets>
           </type>
         </attribute>
+        <attribute name="Getter">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Setter">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
       </attributes>
     </node>
     <node name="GlobDec">
@@ -898,6 +931,30 @@
 		      		</target>
         		</targets>
         	</type>
+        </attribute>
+        <attribute name="Getter">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Setter">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
         </attribute>
       </attributes>
     </node>

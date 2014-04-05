@@ -103,6 +103,12 @@ SUBPHASE( arraysplit,
 					ALWAYS,
 					cr)
 
+SUBPHASE( getset,
+					"Handling external variables",
+					GETSETdoReplace,
+					ALWAYS,
+					cr)
+
 SUBPHASE( itersplit,
 					"Pulling iterators from for loops",
 					ITERSPLITdoSplit,
