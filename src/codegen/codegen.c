@@ -820,5 +820,26 @@ node *CODEGENdoCodegen(node *syntaxtree)
   printf("+-+-+-+-+-+-+-+-+-+-+-+-\n");
   printconst(code);
   printf("+-+-+-+-+-+-+-+-+-+-+-+-\n");
+
+  asmline *cur, *prv;
+  cur = code->first;
+  while (cur != NULL)
+  {
+    prv = cur;
+    cur = cur->next;
+    free(prv->line);
+    free(prv->comment);
+    free(prv);
+  }
+  constant *curc, *prvc;
+  curc = code->consts;
+  while (curc != NULL)
+  {
+    prvc = curc;
+    curc = curc->next;
+    free(prvc);
+  }
+  free(code);
+
   DBUG_RETURN( syntaxtree);
 }

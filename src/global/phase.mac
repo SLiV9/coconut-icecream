@@ -58,7 +58,6 @@ SUBPHASE( tpinf,
 					ALWAYS,
 					tc)
 
-
 SUBPHASE( tpmat,
 					"Type Matching",
 					TPMATdoMatching,
@@ -109,23 +108,11 @@ SUBPHASE( replace,
 					ALWAYS,
 					cr)
 
-SUBPHASE( hoi, 
-          "Hallo",
-          PRTdoPrint, 
-          ALWAYS,
-          cr)
-
 SUBPHASE( getset,
 					"Handling external variables",
 					GETSETdoReplace,
 					ALWAYS,
 					cr)
-
-SUBPHASE( hee, 
-          "Hoi hoi",
-          PRTdoPrint, 
-          ALWAYS,
-          cr)
 
 SUBPHASE( ternary,
 					"Casts and SCL to ternaries",
