@@ -329,39 +329,59 @@ extern node* CODEGENfunstate(node *arg_node, info *arg_info){
   DBUG_RETURN( arg_node);
 }
 
-extern node* CODEGENvarcall(node *arg_node, info *arg_info){
-  DBUG_ENTER("CODEGENvarCall");
-
-  char c;
-  if(VARCALL_TYPE(arg_node)==VT_int)
-    c = 'i';
-  else if(VARCALL_TYPE(arg_node)==VT_float)
-    c = 'f';
-  else
-    c = 'b';
-
-  int diff = VARCALL_SCOPEDIFF( arg_node);
+static void var( info* arg_info, char c, const char* op, node* dec, int diff)
+{
   int pos;
   char * line;
-  if(NODE_TYPE(VARCALL_DEC( arg_node)) == N_vardec){
-    pos = VARDEC_SCOPEPOS(VARCALL_DEC( arg_node))-1;
+  if(NODE_TYPE(dec) == N_vardec){
+    pos = VARDEC_SCOPEPOS(dec)-1;
     if(diff == NDSD_LOCAL()){
-      mallocf(line,"%cload %i",c,pos);
+      mallocf(line,"%c%s %i",c,op,pos);
     }else{
-      mallocf(line,"%cloadn %i %i",c,diff,pos);
+      mallocf(line,"%c%sn %i %i",c,op,diff,pos);
     }
     addline(arg_info,line,NULL);
-  }else if(NODE_TYPE(VARCALL_DEC( arg_node)) == N_param){
-    pos = PARAM_SCOPEPOS(VARCALL_DEC( arg_node))-1;
+  }else if(NODE_TYPE(dec) == N_param){
+    pos = PARAM_SCOPEPOS(dec)-1;
     if(diff == NDSD_LOCAL()){
-      mallocf(line,"%cload %i",c,pos);
+      mallocf(line,"%c%s %i",c,op,pos);
     }else{
-      mallocf(line,"%cloadn %i %i",c,diff,pos);
+      mallocf(line,"%c%sn %i %i",c,op,diff,pos);
     }
     addline(arg_info,line,NULL);
   }else{
-    pos = GLOBDEF_GLOBALPOS(VARCALL_DEC( arg_node))-1;
-    mallocf(line,"%cloadg %i",c,pos);
+    pos = GLOBDEF_GLOBALPOS(dec)-1;
+    mallocf(line,"%c%sg %i",c,op,pos);
+    addline(arg_info,line,NULL);
+  }
+}
+
+extern node* CODEGENvarcall(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENvarCall");
+
+  VARCALL_INDX( arg_node) = TRAVopt( VARCALL_INDX( arg_node), arg_info);
+
+  bool isArray = (getDepth( VARCALL_DEC( arg_node)) > 0);
+  char c, ct;
+  if(VARCALL_TYPE(arg_node)==VT_int)
+    ct = 'i';
+  else if(VARCALL_TYPE(arg_node)==VT_float)
+    ct = 'f';
+  else
+    ct = 'b';
+
+  if (isArray)
+    c = 'a';
+  else
+    c = ct;
+
+  var( arg_info, c, "load", \
+      VARCALL_DEC( arg_node), VARCALL_SCOPEDIFF( arg_node));
+
+  if (isArray)
+  {
+    char* line;
+    mallocf(line,"%cloada",ct);
     addline(arg_info,line,NULL);
   }
 
@@ -372,39 +392,34 @@ extern node* CODEGENvarcall(node *arg_node, info *arg_info){
 extern node* CODEGENvarlet(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENvarLet");
 
-  char c;
-  if(VARLET_TYPE(arg_node)==VT_int)
-    c = 'i';
-  else if(VARLET_TYPE(arg_node)==VT_float)
-    c = 'f';
-  else
-    c = 'b';
+  VARLET_INDX( arg_node) = TRAVopt( VARLET_INDX( arg_node), arg_info);
 
-  int diff = VARLET_SCOPEDIFF( arg_node);
-  int pos;
-  char * line;
-  char * comm;
-  mallocf(comm,"%s",VARLET_NAME(arg_node));
-  if(NODE_TYPE(VARLET_DEC( arg_node)) == N_vardec){
-    pos = VARDEC_SCOPEPOS(VARLET_DEC( arg_node))-1;
-    if(diff == NDSD_LOCAL()){
-      mallocf(line,"%cstore %i",c,pos);
-    }else{
-      mallocf(line,"%cstoren %i %i",c,diff,pos);
-    }
-    addline(arg_info,line,comm);
-  }else   if(NODE_TYPE(VARLET_DEC( arg_node)) == N_param){
-    pos = PARAM_SCOPEPOS(VARLET_DEC( arg_node))-1;
-    if(diff == NDSD_LOCAL()){
-      mallocf(line,"%cstore %i",c,pos);
-    }else{
-      mallocf(line,"%cstoren %i %i",c,diff,pos);
-    }
-    addline(arg_info,line,comm);
-  }else{
-    pos = GLOBDEF_GLOBALPOS(VARLET_DEC( arg_node))-1;
-    mallocf(line,"%cstoreg %i",c,pos);
-    addline(arg_info,line,comm);
+  bool isArray = (getDepth( VARLET_DEC( arg_node)) > 0);
+  char c, ct;
+  if(VARLET_TYPE(arg_node)==VT_int)
+    ct = 'i';
+  else if(VARLET_TYPE(arg_node)==VT_float)
+    ct = 'f';
+  else
+    ct = 'b';
+
+  if (isArray)
+    c = 'a';
+  else
+    c = ct;
+
+  char* op = "store";
+  if (isArray)
+    op = "load";
+
+  var( arg_info, c, op, \
+      VARLET_DEC( arg_node), VARLET_SCOPEDIFF( arg_node));
+
+  if (isArray)
+  {
+    char* line;
+    mallocf(line,"%cstorea",ct);
+    addline(arg_info,line,NULL);
   }
 
   DBUG_RETURN( arg_node);

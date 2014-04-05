@@ -24,9 +24,8 @@ For: TODO
 While: klaar
 If: klaar
 
-VarLet: TODO
-VarCall: TODO
-	- calls naar arrays
+VarLet: klaar
+VarCall: klaar
 
 
 Cast: klaar
