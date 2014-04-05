@@ -22,6 +22,13 @@ civic.tab.h
 
 ### pdf files
 assignments/
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.pdf
+*.synctex.gz
+*.toc
 
 ### hidden files
 *~

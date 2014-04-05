@@ -1,0 +1,49 @@
+\documentclass[a4paper,11pt]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+\title{Compiler Construction}
+\author{Sander in 't Veld \and Joran van Apeldoorn}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+%\begin{abstract}
+%\end{abstract}
+
+\chapter{Compiler Phases}
+The first three phases, `Loading', `Context Analysis' and `Type Checking', interpret the code and build the full abstract syntax tree. The next three phases restructure, optimise and prepare the AST, before the last phase, `Code Generation'. ZINNEN ZIJN LASTIG.
+
+\section{Loading the code}
+\subsection{Running the preprocessor}
+\subsection{Scanning}
+\subsection{Parsing}
+
+\section{Context Analysis}
+Namelinking happens before declaration splitting.
+\subsection{Namelinking}
+\subsection{Declaration splitting}
+
+\section{Type Checking}
+\subsection{Type Inference}
+\subsection{Type Matching}
+
+\section{Code Restructuring}
+\subsection{Iterator Splitting}
+\subsection{Array Splitting}
+\subsection{Getters and Setters}
+\subsection{Ternary Operators}
+
+\section{Code Optimisation}
+\subsection{Constant Calculating}
+
+\section{Code Preparation}
+\subsection{Variable Counting}
+\subsection{Nested Function Renaming}
+
+\section{Code Generation}
+
+\end{document}
