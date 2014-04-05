@@ -202,9 +202,9 @@ instr:
 | DO  block WHILE  BRL expr BRR SEMICOLON 
 			{$$ = TBmakeWhile(TRUE,$5,$2);} 
 | FOR  BRL INT ID LET expr COMMA expr BRR block 
-			{$$ = TBmakeFor( TBmakeIter(STRcpy($4)),$6,$8,NULL,$10);}
+			{$$ = TBmakeFor( TBmakeIter( IDGET($4)),$6,$8,NULL,$10);}
 | FOR  BRL INT ID LET expr COMMA expr COMMA expr BRR block 
-			{$$ = TBmakeFor( TBmakeIter(STRcpy($4)),$6,$8,$10,$12);}
+			{$$ = TBmakeFor( TBmakeIter( IDGET($4)),$6,$8,$10,$12);}
 ;
 
 funstate:
