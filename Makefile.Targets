@@ -95,7 +95,7 @@ typec				= tpinf.o tping.o tpmat.o gettype.o
 
 itersplit		= itersplit.o
 arraysplit	= arraysplit.o asplitfcall.o alitunfold.o aconstunfold.o dimreduct.o
-getset			= getset.o
+getset			= getset.o gsvarcall.o gscleanup.o
 
 varcount		= varcount.o
 nestrename	= nestrename.o

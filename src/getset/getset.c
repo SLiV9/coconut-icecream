@@ -41,6 +41,20 @@ static info *FreeInfo( info *info)
   return info;
 }
 
+static void add(info* arg_info, node* declars)
+{
+  if (INFO_HEAD( arg_info) == NULL)
+  {
+    INFO_HEAD( arg_info) = declars;
+    INFO_LAST( arg_info) = declars;
+  }
+  else
+  {
+    DECLARS_NEXT( INFO_LAST( arg_info)) = declars;
+    INFO_LAST( arg_info) = declars;
+  }
+}
+
 node* GETSETdeclars(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("GETSETdeclars");
@@ -55,8 +69,7 @@ node* GETSETdeclars(node *arg_node, info *arg_info)
 
   if (INFO_HEAD( arg_info) != NULL)
   {
-    // skip self, since info_head-info_last replaces it
-    DECLARS_NEXT( INFO_LAST( arg_info)) = DECLARS_NEXT( arg_node);
+    DECLARS_NEXT( INFO_LAST( arg_info)) = arg_node;
     declars = INFO_HEAD( arg_info);
     INFO_HEAD( arg_info) = NULL;
     INFO_LAST( arg_info) = NULL;
@@ -69,6 +82,58 @@ node* GETSETglobdef(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("GETSETglobdef");
 
+  if (!GLOBDEF_EXPORT( arg_node))
+  {
+    DBUG_RETURN (arg_node);
+  }
+
+  node *getter, *setter;
+  node *head, *param, *params;
+  node *body, *call, *let, *assign, *instrs;
+
+  vtype t = GLOBDEF_TYPE( arg_node);
+  char* name = GLOBDEF_NAME( arg_node);
+
+  call = TBmakeVarcall( STRcpy( name), NULL);
+  VARCALL_DEC( call) = arg_node;
+  VARCALL_SCOPEDIFF( call) = NDSD_GLOBAL();
+  VARCALL_TYPE( call) = t;
+  VARCALL_DEPTH( call) = 0;
+
+  head = TBmakeHeader( STRcat( "__get_", name), t, NULL);
+  body = TBmakeBody( NULL, NULL, NULL, call);
+  getter = TBmakeFundef( TRUE, head, body);
+
+  param = TBmakeParam( STRcat( "~", name), t, NULL);
+  params = TBmakeParams( param, NULL);
+
+  call = TBmakeVarcall( STRcpy( PARAM_NAME( param)), NULL);
+  VARCALL_DEC( call) = param;
+  VARCALL_SCOPEDIFF( call) = NDSD_GLOBAL();
+  VARCALL_TYPE( call) = t;
+  VARCALL_DEPTH( call) = 0;
+
+  let = TBmakeVarlet( STRcpy( name), NULL);
+  VARLET_DEC( let) = arg_node;
+  VARLET_SCOPEDIFF( let) = NDSD_GLOBAL();
+  VARLET_TYPE( let) = t;
+  VARLET_DEPTH( let) = 0;
+
+  assign = TBmakeAssign( let, call);
+  instrs = TBmakeInstrs( assign, NULL);
+
+  head = TBmakeHeader( STRcat( "__set_", name), VT_void, params);
+  body = TBmakeBody( NULL, NULL, instrs, NULL);
+  setter = TBmakeFundef( TRUE, head, body);
+
+  GLOBDEF_GETTER( arg_node) = getter;
+  GLOBDEF_SETTER( arg_node) = setter;
+
+  GLOBDEF_EXPORT( arg_node) = FALSE;
+
+  add( arg_info, TBmakeDeclars( getter, NULL));
+  add( arg_info, TBmakeDeclars( setter, NULL));
+
   DBUG_RETURN (arg_node);
 }
 
@@ -76,19 +141,25 @@ node* GETSETglobdec(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("GETSETglobdec");
 
-  DBUG_RETURN (arg_node);
-}
+  node *getter, *setter;
+  node *head, *param, *params;
 
-node* GETSETvarlet(node *arg_node, info *arg_info)
-{
-  DBUG_ENTER ("GETSETvarlet");
+  vtype t = GLOBDEC_TYPE( arg_node);
+  char* name = GLOBDEC_NAME( arg_node);
 
-  DBUG_RETURN (arg_node);
-}
+  head = TBmakeHeader( STRcat( "__get_", name), t, NULL);
+  getter = TBmakeFundec( head);
 
-node* GETSETvarcall(node *arg_node, info *arg_info)
-{
-  DBUG_ENTER ("GETSETvarcall");
+  param = TBmakeParam( STRcat( "~", name), t, NULL);
+  params = TBmakeParams( param, NULL);
+  head = TBmakeHeader( STRcat( "__set_", name), VT_void, params);
+  setter = TBmakeFundec( head);
+
+  GLOBDEC_GETTER( arg_node) = getter;
+  GLOBDEC_SETTER( arg_node) = setter;
+
+  add( arg_info, TBmakeDeclars( getter, NULL));
+  add( arg_info, TBmakeDeclars( setter, NULL));
 
   DBUG_RETURN (arg_node);
 }
@@ -100,12 +171,18 @@ node *GETSETdoReplace(node *syntaxtree)
   info* arg_info = MakeInfo();
 
   TRAVpush( TR_getset);
-
   syntaxtree = TRAVdo( syntaxtree, arg_info);
-
   TRAVpop();
 
   arg_info = FreeInfo( arg_info);
+
+  TRAVpush( TR_gsvarcall);
+  syntaxtree = TRAVdo( syntaxtree, arg_info);
+  TRAVpop();
+
+  TRAVpush( TR_gscleanup);
+  syntaxtree = TRAVdo( syntaxtree, arg_info);
+  TRAVpop();
 
   DBUG_RETURN( syntaxtree);
 }

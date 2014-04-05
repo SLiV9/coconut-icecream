@@ -163,13 +163,24 @@
         </travuser>
       </traversal>
       
-      <traversal id="GETSET" name="GetSet" default="sons" include="getset.h">
+      <traversal id="GETSET" name="GetSet" default="none" include="getset.h">
         <travuser>
           <node name="Declars" />
           <node name="GlobDef" />
           <node name="GlobDec" />
+        </travuser>
+      </traversal>
+      
+      <traversal id="GSVARCALL" name="GsVarcall" default="sons" include="gsvarcall.h">
+        <travuser>
           <node name="VarCall" />
           <node name="VarLet" />
+        </travuser>
+      </traversal>
+      
+      <traversal id="GSCLEANUP" name="GsCleanup" default="none" include="gscleanup.h">
+        <travuser>
+          <node name="Declars" />
         </travuser>
       </traversal>
       
