@@ -209,39 +209,39 @@ extern node* CODEGENbody(node *arg_node, info *arg_info){
   int nlocs = 0;
   node * vdecs = BODY_VARDECS( arg_node);
   while (vdecs != NULL)
-  {
-    nlocs++;
-    vdecs = VARDECS_NEXT( vdecs);
-  }
+    {
+      nlocs++;
+      vdecs = VARDECS_NEXT( vdecs);
+    }
   mallocf(line,"esr %d", nlocs); addline(arg_info,line,NULL);
 
   BODY_INSTRS( arg_node) = TRAVopt( BODY_INSTRS( arg_node), arg_info);
 
   if (BODY_RETURN( arg_node) != NULL)
-  {
-    BODY_RETURN( arg_node) = TRAVopt( BODY_RETURN( arg_node), arg_info);
-    switch (getType( BODY_RETURN( arg_node)))
     {
-      case VT_int:
-        mallocf(line,"ireturn");
-        addline(arg_info,line,NULL);
-        break;
-      case VT_float:
-        mallocf(line,"freturn");
-        addline(arg_info,line,NULL);
-        break;
-      case VT_bool:
-        mallocf(line,"breturn");
-        addline(arg_info,line,NULL);
-        break;
-      default:
-        DBUG_ASSERT( 0, "illegal return type detected!");
+      BODY_RETURN( arg_node) = TRAVopt( BODY_RETURN( arg_node), arg_info);
+      switch (getType( BODY_RETURN( arg_node)))
+        {
+        case VT_int:
+          mallocf(line,"ireturn");
+          addline(arg_info,line,NULL);
+          break;
+        case VT_float:
+          mallocf(line,"freturn");
+          addline(arg_info,line,NULL);
+          break;
+        case VT_bool:
+          mallocf(line,"breturn");
+          addline(arg_info,line,NULL);
+          break;
+        default:
+          DBUG_ASSERT( 0, "illegal return type detected!");
+        }
     }
-  }
   else
-  {
-    mallocf(line,"return"); addline(arg_info,line,NULL);
-  }
+    {
+      mallocf(line,"return"); addline(arg_info,line,NULL);
+    }
 
   mallocf(line," "); addline(arg_info,line,NULL); // empty line
 
@@ -254,7 +254,7 @@ extern node* CODEGENfunstate(node *arg_node, info *arg_info){
   char * line;
   FUNSTATE_CALL( arg_node) = TRAVdo( FUNSTATE_CALL( arg_node), arg_info);
   switch (FUNCALL_TYPE( FUNSTATE_CALL( arg_node)))
-  {
+    {
     case VT_int:
       mallocf(line,"ipop");
       addline(arg_info,line,NULL);
@@ -272,9 +272,75 @@ extern node* CODEGENfunstate(node *arg_node, info *arg_info){
       break;
     default:
       DBUG_ASSERT( 0, "illegal funcall type detected!");
-  }
+    }
   DBUG_RETURN( arg_node);
 }
+
+extern node* CODEGENvarcall(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENvarCall");
+
+  char c;
+  if(VARCALL_TYPE(arg_node)==VT_int)
+    c = 'i';
+  else if(VARCALL_TYPE(arg_node)==VT_float)
+    c = 'f';
+  else
+    c = 'b';
+
+  int diff = -1-VARCALL_SCOPEDIFF( arg_node);
+  int pos;
+  char * line;
+  if(NODE_TYPE(VARCALL_DEC( arg_node)) == N_vardec){
+    pos = VARDEC_SCOPEPOS(VARCALL_DEC( arg_node))-1;
+    if(diff == 0){
+      mallocf(line,"%cload %i",c,pos);
+    }else{
+      mallocf(line,"%cloadn %i %i",c,diff,pos);
+    }
+    addline(arg_info,line,NULL);
+  }else{
+    pos = GLOBDEF_GLOBALPOS(VARCALL_DEC( arg_node))-1;
+    mallocf(line,"%cloadg %i",c,pos);
+    addline(arg_info,line,NULL);
+  }
+
+  DBUG_RETURN( arg_node);
+}
+
+
+extern node* CODEGENvarlet(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENvarLet");
+
+  char c;
+  if(VARLET_TYPE(arg_node)==VT_int)
+    c = 'i';
+  else if(VARLET_TYPE(arg_node)==VT_float)
+    c = 'f';
+  else
+    c = 'b';
+
+  int diff = -1-VARLET_SCOPEDIFF( arg_node);
+  int pos;
+  char * line;
+  char * comm; 
+  mallocf(comm,"%s",VARLET_NAME(arg_node));
+  if(NODE_TYPE(VARLET_DEC( arg_node)) == N_vardec){
+    pos = VARDEC_SCOPEPOS(VARLET_DEC( arg_node))-1;
+    if(diff == 0){
+      mallocf(line,"%cstore %i",c,pos);
+    }else{
+      mallocf(line,"%cstoren %i %i",c,diff,pos);
+    }
+    addline(arg_info,line,comm);
+  }else{
+    pos = GLOBDEF_GLOBALPOS(VARLET_DEC( arg_node))-1;
+    mallocf(line,"%cstoreg %i",c,pos);
+    addline(arg_info,line,comm);
+  }
+
+  DBUG_RETURN( arg_node);
+}
+
 extern node* CODEGENfuncall(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENfuncall");
   char * line;
@@ -282,18 +348,18 @@ extern node* CODEGENfuncall(node *arg_node, info *arg_info){
   FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
 
   if (STReq("__alloc", FUNCALL_NAME( arg_node)))
-  {
-    mallocf(line,"alloc something");
-    addline(arg_info,line,NULL);
-    DBUG_RETURN( arg_node);
-  }
+    {
+      mallocf(line,"alloc something");
+      addline(arg_info,line,NULL);
+      DBUG_RETURN( arg_node);
+    }
 
   node * dec = FUNCALL_DEC( arg_node);
   char * name;
   node * args = FUNCALL_ARGS( arg_node);
   int i, nargs;
   switch (NODE_TYPE( dec))
-  {
+    {
     case N_fundec:
       i = FUNDEC_IMPORTPOS( dec) - 1;
       mallocf(line,"jsre %d", i);
@@ -301,16 +367,16 @@ extern node* CODEGENfuncall(node *arg_node, info *arg_info){
     case N_fundef:
       nargs = 0;
       while (args != NULL)
-      {
-        nargs++;
-        args = EXPRS_NEXT( args);
-      }
+        {
+          nargs++;
+          args = EXPRS_NEXT( args);
+        }
       name = HEADER_NAME( FUNDEF_HEAD( dec));
       mallocf(line,"jsr %d %s", nargs, name);
       break;
     default:
       DBUG_ASSERT( 0, "illegal funcall dec type detected!");
-  }
+    }
   mallocf(comment,"%s", FUNCALL_NAME( arg_node));
   addline(arg_info,line,comment);
   DBUG_RETURN( arg_node);
@@ -493,41 +559,180 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
   }
   DBUG_RETURN( arg_node);
 }
+
+extern node* CODEGENcast(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENcast");
+  CAST_EXPR( arg_node) = TRAVopt( CAST_EXPR( arg_node), arg_info);
+  char * line;
+  char * label;
+  int l_either, l_end;
+
+  switch(getType(CAST_EXPR( arg_node))){
+  case VT_int:
+    switch( CAST_TYPE(arg_node)){
+    case VT_int:
+      //nothing to do
+      break;
+    case VT_float:
+      //int -> float
+      mallocf(line,"i2f");
+      addline(arg_info,line,NULL);
+      break;
+    case VT_bool:
+      //int -> bool
+      l_either = arg_info->labelcount++;
+      mallocf(line,"iloadc_0"); addline(arg_info,line,";-x-x-x");
+      mallocf(line,"ieq"); addline(arg_info,line,NULL);
+      mallocf(line,"branch_f %d", l_either); addline(arg_info,line,NULL);
+      mallocf(line,"bloadc_f"); addline(arg_info,line,NULL);
+      l_end = arg_info->labelcount++;
+      mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_either); addlabel(arg_info,label);
+      mallocf(line,"bloadc_t"); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_end); addlabel(arg_info,label);
+      break;
+    default:
+      DBUG_ASSERT(0, "illegal cast detected!");
+    }
+    break;
+
+  case VT_float:
+    switch( CAST_TYPE(arg_node)){
+    case VT_int:
+      // float -> int
+      mallocf(line,"f2i");
+      addline(arg_info,line,NULL);
+      break;
+    case VT_float:
+      //nothing to be done
+      break;
+    case VT_bool:
+      //float -> bool
+      l_either = arg_info->labelcount++;
+      mallocf(line,"floadc_0"); addline(arg_info,line,NULL);
+      mallocf(line,"feq"); addline(arg_info,line,NULL);
+      mallocf(line,"branch_f %d", l_either); addline(arg_info,line,NULL);
+      mallocf(line,"bloadc_f"); addline(arg_info,line,NULL);
+      l_end = arg_info->labelcount++;
+      mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_either); addlabel(arg_info,label);
+      mallocf(line,"bloadc_t"); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_end); addlabel(arg_info,label);
+      break;
+    default:
+      DBUG_ASSERT(0, "illegal cast detected!");
+    }    break;
+
+  case VT_bool:
+    switch( CAST_TYPE(arg_node)){
+    case VT_int:
+      l_either = arg_info->labelcount++;
+      mallocf(line,"branch_f %d", l_either); addline(arg_info,line,NULL);
+      mallocf(line,"iloadc_1"); addline(arg_info,line,NULL);
+      l_end = arg_info->labelcount++;
+      mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_either); addlabel(arg_info,label);
+      mallocf(line,"iloadc_0"); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_end); addlabel(arg_info,label);
+      break;
+    case VT_float:
+      l_either = arg_info->labelcount++;
+      mallocf(line,"branch_f %d", l_either); addline(arg_info,line,NULL);
+      mallocf(line,"floadc_1"); addline(arg_info,line,NULL);
+      l_end = arg_info->labelcount++;
+      mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_either); addlabel(arg_info,label);
+      mallocf(line,"floadc_0"); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_end); addlabel(arg_info,label);
+      break;
+    case VT_bool:
+      // nothing to do
+      break;
+    default:
+      DBUG_ASSERT(0, "illegal cast detected!");
+    }
+    break;
+
+  default: break;
+
+  }
+  DBUG_RETURN( arg_node);
+}
+
 extern node* CODEGENmonop(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENmonop");
   MONOP_EXPR( arg_node) = TRAVopt( MONOP_EXPR( arg_node), arg_info);
   char * line;
-  mallocf(line,"monop");
-  addline(arg_info,line,NULL);
+  switch(getType(MONOP_EXPR( arg_node))){
+  case VT_int:
+    switch(MONOP_OP(arg_node)){
+    case MO_neg:
+      mallocf(line,"ineg");\
+      addline(arg_info,line,NULL);
+      break;
+    default:
+      DBUG_ASSERT(0, "illegal operator detected!");
+    }
+    break;
+
+  case VT_float:
+    switch(MONOP_OP(arg_node)){
+    case MO_neg:
+      mallocf(line,"fneg");\
+      addline(arg_info,line,NULL);
+      break;
+    default:
+      DBUG_ASSERT(0, "illegal operator detected!");
+    }
+
+    break;
+
+  case VT_bool:
+    switch(MONOP_OP(arg_node)){
+    case MO_not:
+      mallocf(line,"bnot");\
+      addline(arg_info,line,NULL);
+      break;
+    default:
+      DBUG_ASSERT(0, "illegal operator detected!");
+    }
+
+    break;
+
+  default: break;
+
+  }
   DBUG_RETURN( arg_node);
 }
+
+
 extern node* CODEGENint(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENint");
   char * line;
   char * comment;
   int val = INT_VALUE(arg_node);
   if (val == 0)
-  {
-    mallocf(line,"iloadc_0");
-    addline(arg_info,line,NULL);
-  }
+    {
+      mallocf(line,"iloadc_0");
+      addline(arg_info,line,NULL);
+    }
   else if (val == 1)
-  {
-    mallocf(line,"iloadc_1");
-    addline(arg_info,line,NULL);
-  }
+    {
+      mallocf(line,"iloadc_1");
+      addline(arg_info,line,NULL);
+    }
   else if (val == -1)
-  {
-    mallocf(line,"iloadc_m1");
-    addline(arg_info,line,NULL);
-  }
+    {
+      mallocf(line,"iloadc_m1");
+      addline(arg_info,line,NULL);
+    }
   else
-  {
-    int cnum = addint(arg_info,INT_VALUE(arg_node));
-    mallocf(line,"iloadc %i",cnum);
-    mallocf(comment,"%d",INT_VALUE( arg_node));
-    addline(arg_info,line,comment);
-  }
+    {
+      int cnum = addint(arg_info,INT_VALUE(arg_node));
+      mallocf(line,"iloadc %i",cnum);
+      mallocf(comment,"%d",INT_VALUE( arg_node));
+      addline(arg_info,line,comment);
+    }
   DBUG_RETURN( arg_node);
 }
 extern node* CODEGENfloat(node *arg_node, info *arg_info){
@@ -536,22 +741,22 @@ extern node* CODEGENfloat(node *arg_node, info *arg_info){
   char * comment;
   float val = FLOAT_VALUE(arg_node);
   if (val == 0.0)
-  {
-    mallocf(line,"floadc_0");
-    addline(arg_info,line,NULL);
-  }
+    {
+      mallocf(line,"floadc_0");
+      addline(arg_info,line,NULL);
+    }
   else if (val == 1.0)
-  {
-    mallocf(line,"floadc_1");
-    addline(arg_info,line,NULL);
-  }
+    {
+      mallocf(line,"floadc_1");
+      addline(arg_info,line,NULL);
+    }
   else
-  {
-    int cnum = addfloat(arg_info,FLOAT_VALUE(arg_node));
-    mallocf(line,"floadc %i",cnum);
-    mallocf(comment,"%f",FLOAT_VALUE( arg_node));
-    addline(arg_info,line,comment);
-  }
+    {
+      int cnum = addfloat(arg_info,FLOAT_VALUE(arg_node));
+      mallocf(line,"floadc %i",cnum);
+      mallocf(comment,"%f",FLOAT_VALUE( arg_node));
+      addline(arg_info,line,comment);
+    }
   DBUG_RETURN( arg_node);
 }
 extern node* CODEGENbool(node *arg_node, info *arg_info){
@@ -567,25 +772,6 @@ extern node* CODEGENbool(node *arg_node, info *arg_info){
 
   DBUG_RETURN( arg_node);
 }
-extern node* CODEGENvarcall(node *arg_node, info *arg_info){
-  DBUG_ENTER("CODEGENvarcall");
-  char * line;
-  char * comment;
-  mallocf(line,"varcall something");
-  mallocf(comment,"%s",VARCALL_NAME( arg_node));
-  addline(arg_info,line,comment);
-  DBUG_RETURN( arg_node);
-}
-extern node* CODEGENvarlet(node *arg_node, info *arg_info){
-  DBUG_ENTER("CODEGENvarlet");
-  char * line;
-  char * comment;
-  mallocf(line,"varlet something");
-  mallocf(comment,"%s",VARLET_NAME( arg_node));
-  addline(arg_info,line,comment);
-  DBUG_RETURN( arg_node);
-}
-
 
 node *CODEGENdoCodegen(node *syntaxtree)
 {

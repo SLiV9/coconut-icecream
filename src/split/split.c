@@ -235,6 +235,7 @@ node* SPLITvardec(node *arg_node, info *arg_info){
   if (VARDEC_EXPR(arg_node) != NULL){
   	node * letje = TBmakeVarlet( STRcpy( VARDEC_NAME(arg_node)), NULL);
   	VARLET_DEC(letje) = arg_node;
+    VARLET_SCOPEDIFF(letje) = NDSD_LOCAL();
     node * assign = TBmakeAssign( letje ,VARDEC_EXPR(arg_node));
     VARDEC_EXPR(arg_node) = NULL;
     instr_assign = TBmakeInstrs(assign, NULL);
