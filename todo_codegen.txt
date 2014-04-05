@@ -1,7 +1,8 @@
 FunDec: TODO
 	- moet net als constants een lijstje worden, in de goede volgorde
 	
-FunDef: klaar
+FunDef: TODO
+	- moet net als constants ook een lijstje worden, in de goede volgorde
 	
 GlobDef: TODO
 	- moet net als constants een lijstje worden, in de goede volgorde
