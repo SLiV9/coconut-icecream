@@ -23,4 +23,9 @@ extern node* CODEGENassign(node *arg_node, info *arg_info);
 
 extern node *CODEGENdoCodegen( node *syntaxtree);
 
+
+extern node* CODEGENif(node *arg_node, info *arg_info);
+extern node* CODEGENfor(node *arg_node, info *arg_info);
+extern node* CODEGENwhile(node *arg_node, info *arg_info);
+
 #endif /* _CODEGEN_H_ */

@@ -24,11 +24,11 @@ For: TODO
 While: TODO
 If: TODO
 
-VarLet: TODO
-VarCall: TODO
+VarLet: done
+VarCall: done
 
 
-Cast: klaar (?)
+Cast: klaar
 MonOp: klaar
 BinOp: klaar
 Hoare: klaar
