@@ -76,6 +76,7 @@ node* ALITUNFOLDassign(node *arg_node, info *arg_info)
   {
     node* exprs = ARRAYLIT_EXPRS( alit);
     int i = 0;
+
     if (EXPRS_EXPR( exprs) != NULL)
     {
       if (NODE_TYPE( EXPRS_EXPR( exprs)) == N_arraylit)
@@ -83,18 +84,20 @@ node* ALITUNFOLDassign(node *arg_node, info *arg_info)
         INFO_DIRTY( arg_info)++;
       }
     }
+
     while (exprs != NULL)
     {
       node* instr = makeAssignInstrs(letje, TBmakeInt(i), EXPRS_EXPR( exprs));
       addInstr( arg_info, instr);
 
+      EXPRS_EXPR( exprs) = NULL;
       i++;
       exprs = EXPRS_NEXT( exprs);
     }
 
     FREEdoFreeNode( letje);
     ASSIGN_LET( arg_node) = NULL;
-    ASSIGN_EXPR( arg_node) = NULL;
+    //ASSIGN_EXPR( arg_node) = NULL;
     FREEdoFreeNode( arg_node);
   }
 

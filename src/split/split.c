@@ -176,7 +176,7 @@ node* SPLITglobdef(node *arg_node, info *arg_info){
         GLOBDEF_NAME( arg_node));
   	instr_alloc = dimdefsToInstrs( arg_node, GLOBDEF_NAME( arg_node), \
   			GLOBDEF_DIMDEFS( arg_node), GLOBDEF_DIMDECS( arg_node), TRUE);
-    FREEdoFreeNode( GLOBDEF_DIMDEFS( arg_node));
+    FREEdoFreeTree( GLOBDEF_DIMDEFS( arg_node));
     GLOBDEF_DIMDEFS( arg_node) = NULL;
     last = instr_alloc;
     while (INSTRS_NEXT( last) != NULL)
@@ -254,7 +254,7 @@ node* SPLITvardec(node *arg_node, info *arg_info){
         VARDEC_NAME( arg_node));
   	instr_alloc = dimdefsToInstrs( arg_node, VARDEC_NAME( arg_node), \
   			VARDEC_DIMDEFS( arg_node), VARDEC_DIMDECS( arg_node), FALSE);
-    FREEdoFreeNode( VARDEC_DIMDEFS( arg_node));
+    FREEdoFreeTree( VARDEC_DIMDEFS( arg_node));
     VARDEC_DIMDEFS( arg_node) = NULL;
     last = instr_alloc;
     while (INSTRS_NEXT( last) != NULL)
