@@ -168,6 +168,7 @@
           <node name="Declars" />
           <node name="GlobDef" />
           <node name="GlobDec" />
+          <node name="Dim" />
         </travuser>
       </traversal>
       
@@ -626,6 +627,18 @@
           </type>
         </attribute>
         <attribute name="Getter">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Setter">
           <type name="Link">
             <targets>
               <target mandatory="no">

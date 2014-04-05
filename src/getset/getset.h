@@ -6,6 +6,7 @@
 extern node* GETSETdeclars(node *arg_node, info *arg_info);
 extern node* GETSETglobdef(node *arg_node, info *arg_info);
 extern node* GETSETglobdec(node *arg_node, info *arg_info);
+extern node* GETSETdim(node *arg_node, info *arg_info);
 
 extern node *GETSETdoReplace( node *syntaxtree);
 

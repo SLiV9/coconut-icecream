@@ -201,6 +201,17 @@ node* GETSETglobdec(node *arg_node, info *arg_info)
   DBUG_RETURN (arg_node);
 }
 
+
+
+node* GETSETdim(node *arg_node, info *arg_info)
+{
+  DBUG_ENTER ("GETSETdim");
+
+  // what to do, what to do
+
+  DBUG_RETURN (arg_node);
+}
+
 node *GETSETdoReplace(node *syntaxtree)
 {
 	DBUG_ENTER("GETSETdoReplace");

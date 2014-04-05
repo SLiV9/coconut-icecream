@@ -392,12 +392,6 @@ node* TPMATvarlet(node *arg_node, info *arg_info)
 				myglobal.fn, NODE_LINE( arg_node), \
 				VARLET_NAME( arg_node));
 			break;
-		case N_dim:
-			CTIerror("file %s, line %d\n"
-				"illegal assignment to dimension '%s'",\
-				myglobal.fn, NODE_LINE( arg_node), \
-				VARLET_NAME( arg_node));
-			break;
 		default:
 			/* nothing */;
 	}
