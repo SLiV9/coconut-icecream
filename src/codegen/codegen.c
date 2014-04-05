@@ -218,6 +218,31 @@ extern node* CODEGENif(node *arg_node, info *arg_info){
   DBUG_RETURN( arg_node);
 }
 
+
+extern node* CODEGENwhile(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENif");
+
+  int l_begin,l_end;
+  char * line;
+  char * label;
+
+
+  l_begin = arg_info->labelcount++;
+  l_end = arg_info->labelcount++;
+
+  mallocf(label,"%d", l_begin); addlabel(arg_info,label);
+
+  WHILE_COND( arg_node) = TRAVdo( WHILE_COND( arg_node), arg_info);
+  mallocf(line,"branch_f %d", l_end); addline(arg_info,line,NULL);
+
+  WHILE_DO( arg_node) = TRAVdo( WHILE_DO( arg_node), arg_info);
+  mallocf(line,"jump %d", l_begin); addline(arg_info,line,NULL);
+  mallocf(label,"%d", l_end); addlabel(arg_info,label);
+
+  DBUG_RETURN( arg_node);
+}
+
+
 extern node* CODEGENfundef(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENfundef");
   char * label;
@@ -840,21 +865,21 @@ node *CODEGENdoCodegen(node *syntaxtree)
   asmline *cur, *prv;
   cur = code->first;
   while (cur != NULL)
-  {
-    prv = cur;
-    cur = cur->next;
-    free(prv->line);
-    free(prv->comment);
-    free(prv);
-  }
+    {
+      prv = cur;
+      cur = cur->next;
+      free(prv->line);
+      free(prv->comment);
+      free(prv);
+    }
   constant *curc, *prvc;
   curc = code->consts;
   while (curc != NULL)
-  {
-    prvc = curc;
-    curc = curc->next;
-    free(prvc);
-  }
+    {
+      prvc = curc;
+      curc = curc->next;
+      free(prvc);
+    }
   free(code);
 
   DBUG_RETURN( syntaxtree);

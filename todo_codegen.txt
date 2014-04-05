@@ -21,8 +21,8 @@ Alloc: TODO
 
 
 For: TODO
-While: TODO
-If: TODO
+While: klaar
+If: klaar
 
 VarLet: done
 VarCall: done
