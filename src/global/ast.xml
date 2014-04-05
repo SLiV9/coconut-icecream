@@ -238,6 +238,7 @@
 		<node name="Bool" />
 		<node name="VarCall" />
 		<node name="If" />
+		<node name="While" />
     <node name="Hoare" />
       	</travuser>
       </traversal>
