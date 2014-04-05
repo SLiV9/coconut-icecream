@@ -51,7 +51,7 @@ static node* dimdefsToDimdecs( node* dimdefs, const char* name)
   return ddshead;
 }
 
-static node* dimdecsToAlloc( node* dimdecs, int scopediff)
+static node* dimdecsToAlloc( node* dimdecs, int scopediff, vtype t)
 {
 	DBUG_ASSERT( NODE_TYPE(dimdecs) == N_dimdecs, "dimdefsToAlloc called on "
 			"something other than dimdecs!");
@@ -86,11 +86,14 @@ static node* dimdecsToAlloc( node* dimdecs, int scopediff)
     decs = DIMDECS_NEXT( decs);
   }
 
-	return TBmakeFuncall( STRcpy("__alloc"), argshead);
+	node * fcall = TBmakeFuncall( STRcpy("__alloc"), argshead);
+  FUNCALL_TYPE( fcall) = t;
+
+  return fcall;
 }
 
 static node* dimdefsToInstrs( node* arg_node, const char* name, \
-    node* dimdefs, node* dimdecs, bool isglobal)
+    node* dimdefs, node* dimdecs, bool isglobal, vtype t)
 {
   DBUG_ASSERT( dimdefs != NULL, "dimdefsToAlloc called on null dimdefs!");
   DBUG_ASSERT( NODE_TYPE(dimdefs) == N_exprs, "dimdefsToAlloc called on "
@@ -108,7 +111,7 @@ static node* dimdefsToInstrs( node* arg_node, const char* name, \
   VARLET_DEC( letje) = arg_node;
   VARLET_SCOPEDIFF( letje) = scopediff;
 	node * instrs = TBmakeInstrs( TBmakeAssign( letje, \
-					dimdecsToAlloc( dimdecs, scopediff)), NULL);
+					dimdecsToAlloc( dimdecs, scopediff, t)), NULL);
 
   node * decs = dimdecs;
   node * defs = dimdefs;
@@ -175,7 +178,8 @@ node* SPLITglobdef(node *arg_node, info *arg_info){
     GLOBDEF_DIMDECS( arg_node) = dimdefsToDimdecs( GLOBDEF_DIMDEFS( arg_node), \
         GLOBDEF_NAME( arg_node));
   	instr_alloc = dimdefsToInstrs( arg_node, GLOBDEF_NAME( arg_node), \
-  			GLOBDEF_DIMDEFS( arg_node), GLOBDEF_DIMDECS( arg_node), TRUE);
+  			GLOBDEF_DIMDEFS( arg_node), GLOBDEF_DIMDECS( arg_node), TRUE, \
+        GLOBDEF_TYPE( arg_node));
     FREEdoFreeTree( GLOBDEF_DIMDEFS( arg_node));
     GLOBDEF_DIMDEFS( arg_node) = NULL;
     last = instr_alloc;
@@ -253,7 +257,8 @@ node* SPLITvardec(node *arg_node, info *arg_info){
     VARDEC_DIMDECS( arg_node) = dimdefsToDimdecs( VARDEC_DIMDEFS( arg_node), \
         VARDEC_NAME( arg_node));
   	instr_alloc = dimdefsToInstrs( arg_node, VARDEC_NAME( arg_node), \
-  			VARDEC_DIMDEFS( arg_node), VARDEC_DIMDECS( arg_node), FALSE);
+  			VARDEC_DIMDEFS( arg_node), VARDEC_DIMDECS( arg_node), FALSE, \
+        VARDEC_TYPE( arg_node));
     FREEdoFreeTree( VARDEC_DIMDEFS( arg_node));
     VARDEC_DIMDEFS( arg_node) = NULL;
     last = instr_alloc;

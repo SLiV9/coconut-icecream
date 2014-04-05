@@ -17,15 +17,16 @@ Iter: (is een vardec)
 FunState: klaar
 FunCall: klaar
 Assign: klaar (varcall en varlet moeten goed, dan klaar)
-Alloc: TODO
+Alloc: klaar
 
 
 For: TODO
 While: klaar
 If: klaar
 
-VarLet: done
-VarCall: done
+VarLet: TODO
+VarCall: TODO
+	- calls naar arrays
 
 
 Cast: klaar

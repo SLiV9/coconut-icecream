@@ -418,8 +418,18 @@ extern node* CODEGENfuncall(node *arg_node, info *arg_info){
 
   if (STReq("__alloc", FUNCALL_NAME( arg_node)))
     {
-      mallocf(line,"alloc something");
-      addline(arg_info,line,NULL);
+      char c;
+      switch (FUNCALL_TYPE( arg_node))
+      {
+        case VT_int:    c = 'i'; break;
+        case VT_float:  c = 'f'; break;
+        case VT_bool:   c = 'b'; break;
+        default:
+          DBUG_ASSERT(0, "illegal alloc type!");
+      }
+      mallocf(line,"%cnewa 1", c);
+      mallocf(comment,"alloc");
+      addline(arg_info,line,comment);
       DBUG_RETURN( arg_node);
     }
 
