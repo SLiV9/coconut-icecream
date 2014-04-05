@@ -8,6 +8,7 @@
 #include "memory.h"
 #include "str.h"
 #include "myglobals.h"
+#include "copy.h"
 
 #include "getset.h"
 
@@ -89,36 +90,58 @@ node* GETSETglobdef(node *arg_node, info *arg_info)
 
   node *getter, *setter;
   node *head, *param, *params;
-  node *body, *call, *let, *assign, *instrs;
+  node *body, *call, *assign, *instrs;
+  node *let, *indxp, *indxc, *indxs;
 
   vtype t = GLOBDEF_TYPE( arg_node);
   char* name = GLOBDEF_NAME( arg_node);
 
-  call = TBmakeVarcall( STRcpy( name), NULL);
+  // Getter:
+
+  params = NULL;
+  indxs = NULL; 
+  if (GLOBDEF_DIMDECS( arg_node) > 0)
+  {
+    indxp = TBmakeParam( STRcpy("i"), VT_int, NULL);
+    params = TBmakeParams( indxp, params);
+
+    indxc = TBmakeVarcall( STRcpy( PARAM_NAME( indxp)), NULL);
+    VARCALL_DEC( indxc) = indxp;
+    VARCALL_SCOPEDIFF( indxc) = NDSD_LOCAL();
+    VARCALL_TYPE( indxc) = VT_int;
+    VARCALL_DEPTH( indxc) = 0;
+    indxs = TBmakeExprs( indxc, NULL);
+  }
+
+  call = TBmakeVarcall( STRcpy( name), indxs);
   VARCALL_DEC( call) = arg_node;
   VARCALL_SCOPEDIFF( call) = NDSD_GLOBAL();
   VARCALL_TYPE( call) = t;
   VARCALL_DEPTH( call) = 0;
 
-  params = NULL;
   head = TBmakeHeader( STRcat( "__get_", name), t, params);
   body = TBmakeBody( NULL, NULL, NULL, call);
   getter = TBmakeFundef( TRUE, head, body);
 
-  param = TBmakeParam( STRcpy("v"), t, NULL);
-  params = TBmakeParams( param, NULL);
+  // Setter:
 
-  call = TBmakeVarcall( STRcpy( PARAM_NAME( param)), NULL);
-  VARCALL_DEC( call) = param;
-  VARCALL_SCOPEDIFF( call) = NDSD_GLOBAL();
-  VARCALL_TYPE( call) = t;
-  VARCALL_DEPTH( call) = 0;
+  params = COPYdoCopy( params);
+  indxs = COPYdoCopy( indxs);
 
-  let = TBmakeVarlet( STRcpy( name), NULL);
+  let = TBmakeVarlet( STRcpy( name), indxs);
   VARLET_DEC( let) = arg_node;
   VARLET_SCOPEDIFF( let) = NDSD_GLOBAL();
   VARLET_TYPE( let) = t;
   VARLET_DEPTH( let) = 0;
+
+  param = TBmakeParam( STRcpy("v"), t, NULL);
+  params = TBmakeParams( param, params);
+
+  call = TBmakeVarcall( STRcpy( PARAM_NAME( param)), NULL);
+  VARCALL_DEC( call) = param;
+  VARCALL_SCOPEDIFF( call) = NDSD_LOCAL();
+  VARCALL_TYPE( call) = t;
+  VARCALL_DEPTH( call) = 0;
 
   assign = TBmakeAssign( let, call);
   instrs = TBmakeInstrs( assign, NULL);
@@ -144,16 +167,28 @@ node* GETSETglobdec(node *arg_node, info *arg_info)
 
   node *getter, *setter;
   node *head, *param, *params;
+  node *indxp;
 
   vtype t = GLOBDEC_TYPE( arg_node);
   char* name = GLOBDEC_NAME( arg_node);
 
+  // Getter:
+
   params = NULL;
+  if (GLOBDEC_DIMDECS( arg_node) > 0)
+  {
+    indxp = TBmakeParam( STRcpy("i"), VT_int, NULL);
+    params = TBmakeParams( indxp, params);
+  }
+
   head = TBmakeHeader( STRcat( "__get_", name), t, params);
   getter = TBmakeFundec( head);
 
+  // Setter:
+
+  params = COPYdoCopy( params);
   param = TBmakeParam( STRcpy("v"), t, NULL);
-  params = TBmakeParams( param, NULL);
+  params = TBmakeParams( param, params);
   head = TBmakeHeader( STRcat( "__set_", name), VT_void, params);
   setter = TBmakeFundec( head);
 

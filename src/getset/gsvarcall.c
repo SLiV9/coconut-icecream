@@ -27,7 +27,8 @@ node* GSVARCALLassign(node *arg_node, info *arg_info)
   DBUG_ASSERT( setter != NULL, "no setter!");
   char* settername = HEADER_NAME( FUNDEC_HEAD( setter));
 
-  node* args = TBmakeExprs( ASSIGN_EXPR( arg_node), NULL);
+  node* args = TBmakeExprs( ASSIGN_EXPR( arg_node), \
+  		VARLET_INDX( ASSIGN_LET( arg_node)));
 
   node* fcall = TBmakeFuncall( STRcpy( settername), args);
   FUNCALL_DEC( fcall) = setter;
@@ -53,7 +54,7 @@ node* GSVARCALLvarcall(node *arg_node, info *arg_info)
   DBUG_ASSERT( getter != NULL, "no getter!");
   char* gettername = HEADER_NAME( FUNDEC_HEAD( getter));
 
-  node* fcall = TBmakeFuncall( STRcpy( gettername), NULL);
+  node* fcall = TBmakeFuncall( STRcpy( gettername), VARCALL_INDX( arg_node));
   FUNCALL_DEC( fcall) = getter;
   FUNCALL_TYPE( fcall) = VARCALL_TYPE( arg_node);
   FUNCALL_SCOPEDIFF( fcall) = NDSD_GLOBAL();
