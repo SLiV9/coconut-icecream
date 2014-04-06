@@ -47,11 +47,19 @@ typedef struct constant{
   struct constant * next;
 }constant;
 
+typedef struct entry{
+  char * line;
+  struct entry * next;
+}entry;
+
 
 struct INFO {
   asmline * first;
   asmline * last;
   constant * consts;
+  entry * globals;
+  entry * imports;
+  entry * exports;
   int lines;
   int labelcount;
 };
@@ -187,8 +195,78 @@ void printconst(info * inf)
   }
 }
 
+int addentry(info* inf, char* ln, entry** reg)
+{
+  entry* nw = malloc(sizeof(entry));
+  nw->line = ln;
+  nw->next = NULL;
 
+  if (*reg == NULL)
+  {
+    *reg = nw;
+    return 1;
+  }
 
+  int i = 2;
+
+  entry* e = *reg;
+  while (e->next != NULL)
+  {
+    e = e->next;
+    i++;
+  }
+  e->next = nw;
+
+  return i;
+}
+
+void addglobal(node* arg_node, info* inf, int pos)
+{
+  char* ln;
+  vtype t = GLOBDEF_TYPE( arg_node);
+  mallocf(ln,".global %s\n",vtype_name[t]);
+  int i = addentry(inf, ln, &(inf->globals));
+  DBUG_ASSERT(i == pos, "globals out of order!");
+}
+
+char* beheader(node* header)
+{
+  char* name = HEADER_NAME(header);
+  vtype t = HEADER_TYPE(header);
+  char* types = STRcpy( vtype_name[t]);
+  node* params = HEADER_PARAMS(header);
+  while (params != NULL)
+  {
+    t = PARAM_TYPE( PARAMS_PARAM( params));
+    char* newtypes = STRcatn(3, types, " ", vtype_name[t]);
+    MEMfree(types);
+    types = newtypes;
+    params = PARAMS_NEXT( params);
+  }
+  char* ln;
+  mallocf(ln,"\"%s\" %s %s", name, types, name);
+  MEMfree(types);
+  return ln;
+}
+
+void addimport(node* arg_node, info* inf, int pos)
+{
+  char* ln;
+  char* behead = beheader(FUNDEC_HEAD(arg_node));
+  mallocf(ln,".import %s\n", behead);
+  free(behead);
+  int i = addentry(inf, ln, &(inf->imports));
+  DBUG_ASSERT(i == pos, "imports out of order!");
+}
+
+void addexport(node* arg_node, info* inf)
+{
+  char* ln;
+  char* behead = beheader(FUNDEF_HEAD(arg_node));
+  mallocf(ln,".export %s\n", behead);
+  free(behead);
+  addentry(inf, ln, &(inf->exports));
+}
 
 
 extern node* CODEGENif(node *arg_node, info *arg_info){
@@ -242,9 +320,28 @@ extern node* CODEGENwhile(node *arg_node, info *arg_info){
   DBUG_RETURN( arg_node);
 }
 
+extern node* CODEGENglobdef(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENglobdef");
 
+  addglobal( arg_node, arg_info, GLOBDEF_GLOBALPOS( arg_node));
+
+  DBUG_RETURN( arg_node);
+}
+extern node* CODEGENfundec(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENfundec");
+
+  addimport( arg_node, arg_info, FUNDEC_IMPORTPOS( arg_node));
+
+  DBUG_RETURN( arg_node);
+}
 extern node* CODEGENfundef(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENfundef");
+
+  if (FUNDEF_EXPORT( arg_node))
+  {
+    addexport( arg_node, arg_info);
+  }
+
   char * label;
   mallocf(label,"%s", HEADER_NAME( FUNDEF_HEAD( arg_node)));
   addlabel(arg_info,label);
@@ -876,35 +973,69 @@ node *CODEGENdoCodegen(node *syntaxtree)
   info * code = malloc(sizeof(info));
   code->first = code->last = NULL;
   code->consts = NULL;
+  code->globals = NULL;
+  code->imports = NULL;
+  code->exports = NULL;
   code->lines = 0;
   code->labelcount = 0;
   syntaxtree = TRAVdo( syntaxtree, code);
-
   TRAVpop();
+
   printf("+-+-+-+-+-+-+-+-+-+-+-+-\n");
   printlines(code);
-  printf("+-+-+-+-+-+-+-+-+-+-+-+-\n");
+  printf("\n");
+  printf("\n");
+  entry* e;
+  e = code->globals; while (e != NULL) { printf("%s", e->line); e = e->next; }
+  e = code->imports; while (e != NULL) { printf("%s", e->line); e = e->next; }
+  e = code->exports; while (e != NULL) { printf("%s", e->line); e = e->next; }
   printconst(code);
   printf("+-+-+-+-+-+-+-+-+-+-+-+-\n");
 
   asmline *cur, *prv;
   cur = code->first;
   while (cur != NULL)
-    {
-      prv = cur;
-      cur = cur->next;
-      free(prv->line);
-      free(prv->comment);
-      free(prv);
-    }
+  {
+    prv = cur;
+    cur = cur->next;
+    free(prv->line);
+    free(prv->comment);
+    free(prv);
+  }
   constant *curc, *prvc;
   curc = code->consts;
   while (curc != NULL)
-    {
-      prvc = curc;
-      curc = curc->next;
-      free(prvc);
-    }
+  {
+    prvc = curc;
+    curc = curc->next;
+    free(prvc);
+  }
+  entry *cure, *prve;
+  cure = code->globals;
+  while (cure != NULL)
+  {
+    prve = cure;
+    cure = cure->next;
+    free(prve->line);
+    free(prve);
+  }
+  cure = code->imports;
+  while (cure != NULL)
+  {
+    prve = cure;
+    cure = cure->next;
+    free(prve->line);
+    free(prve);
+  }
+  cure = code->exports;
+  while (cure != NULL)
+  {
+    prve = cure;
+    cure = cure->next;
+    free(prve->line);
+    free(prve);
+  }
+
   free(code);
 
   DBUG_RETURN( syntaxtree);

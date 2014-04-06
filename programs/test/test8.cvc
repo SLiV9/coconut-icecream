@@ -1,3 +1,12 @@
+extern void printInt(int v);
+
+export int y = 2;
+
+export bool foo(float a, float b)
+{
+	return (a < b);
+}
+
 export void main()
 {
 	int x = 3;
@@ -6,4 +15,6 @@ export void main()
 	{
 		return -x;
 	}
+
+	printInt(foo(x));
 }

@@ -224,6 +224,8 @@
 
       <traversal id="CODEGEN" name="CodeGen" default="sons" include="codegen.h">
         <travuser>
+          <node name="GlobDef" />
+          <node name="FunDec" />
           <node name="FunDef" />
           <node name="Body" />
           <node name="FunState" />

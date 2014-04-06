@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+extern node* CODEGENglobdef(node *arg_node, info *arg_info);
+extern node* CODEGENfundec(node *arg_node, info *arg_info);
 extern node* CODEGENfundef(node *arg_node, info *arg_info);
 extern node* CODEGENbody(node *arg_node, info *arg_info);
 
