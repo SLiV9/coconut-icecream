@@ -321,18 +321,18 @@ extern node* CODEGENif(node *arg_node, info *arg_info){
 
 
   IF_COND( arg_node) = TRAVdo( IF_COND( arg_node), arg_info);
-  mallocf(line,"branch_f %d", l_else); addline(arg_info,line,NULL);
+  mallocf(line,"branch_f L%d", l_else); addline(arg_info,line,NULL);
   IF_THEN( arg_node) = TRAVdo( IF_THEN( arg_node), arg_info);
 
   if(IF_ELSE( arg_node)!=NULL){
     l_end = arg_info->labelcount++;
-    mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
-    mallocf(label,"%d", l_else); addlabel(arg_info,label);
+    mallocf(line,"jump L%d", l_end); addline(arg_info,line,NULL);
+    mallocf(label,"L%d", l_else); addlabel(arg_info,label);
 
     IF_ELSE( arg_node) = TRAVdo( IF_ELSE( arg_node), arg_info);
-    mallocf(label,"%d", l_end); addlabel(arg_info,label);
+    mallocf(label,"L%d", l_end); addlabel(arg_info,label);
   }else{
-    mallocf(label,"%d", l_else); addlabel(arg_info,label);
+    mallocf(label,"L%d", l_else); addlabel(arg_info,label);
   }
   DBUG_RETURN( arg_node);
 }
@@ -379,7 +379,7 @@ extern node* CODEGENfor(node *arg_node, info *arg_info){
   l_begin = arg_info->labelcount++;
   l_end = arg_info->labelcount++;
 
-  mallocf(label,"%d", l_begin); addlabel(arg_info,label);
+  mallocf(label,"L%d", l_begin); addlabel(arg_info,label);
   var(arg_info, 'i', "load", ITER_NAME( FOR_ITER( arg_node)), \
       FOR_ITERDEC( arg_node), NDSD_LOCAL());
   mallocf(line,"iload %i", pos);
@@ -393,19 +393,19 @@ extern node* CODEGENfor(node *arg_node, info *arg_info){
     mallocf(line,"bload %i", pos + 2);
     mallocf(comment,"desc");
     addline(arg_info,line,comment);
-    mallocf(line,"branch_t %d", l_else); addline(arg_info,line,NULL);
+    mallocf(line,"branch_t L%d", l_else); addline(arg_info,line,NULL);
     mallocf(line,"ilt"); addline(arg_info,line,NULL);
-    mallocf(line,"jump %d", l_end2); addline(arg_info,line,NULL);
-    mallocf(label,"%d", l_else); addlabel(arg_info,label);
+    mallocf(line,"jump L%d", l_end2); addline(arg_info,line,NULL);
+    mallocf(label,"L%d", l_else); addlabel(arg_info,label);
     mallocf(line,"igt"); addline(arg_info,line,NULL);
-    mallocf(label,"%d", l_end2); addlabel(arg_info,label);
+    mallocf(label,"L%d", l_end2); addlabel(arg_info,label);
   }
   else
   {
     mallocf(line,"ilt"); addline(arg_info,line,NULL);
   }
 
-  mallocf(line,"branch_f %d", l_end); addline(arg_info,line,NULL);
+  mallocf(line,"branch_f L%d", l_end); addline(arg_info,line,NULL);
 
   FOR_DO( arg_node) = TRAVdo( FOR_DO( arg_node), arg_info);
   if (FOR_INCR( arg_node) != NULL)
@@ -425,8 +425,8 @@ extern node* CODEGENfor(node *arg_node, info *arg_info){
     mallocf(comment,"%s++",VARDEC_NAME(FOR_ITERDEC(arg_node)));
     addline(arg_info,line,comment);
   }
-  mallocf(line,"jump %d", l_begin); addline(arg_info,line,NULL);
-  mallocf(label,"%d", l_end); addlabel(arg_info,label);
+  mallocf(line,"jump L%d", l_begin); addline(arg_info,line,NULL);
+  mallocf(label,"L%d", l_end); addlabel(arg_info,label);
 
   DBUG_RETURN( arg_node);
 }
@@ -442,14 +442,14 @@ extern node* CODEGENwhile(node *arg_node, info *arg_info){
   l_begin = arg_info->labelcount++;
   l_end = arg_info->labelcount++;
 
-  mallocf(label,"%d", l_begin); addlabel(arg_info,label);
+  mallocf(label,"L%d", l_begin); addlabel(arg_info,label);
 
   WHILE_COND( arg_node) = TRAVdo( WHILE_COND( arg_node), arg_info);
-  mallocf(line,"branch_f %d", l_end); addline(arg_info,line,NULL);
+  mallocf(line,"branch_f L%d", l_end); addline(arg_info,line,NULL);
 
   WHILE_DO( arg_node) = TRAVdo( WHILE_DO( arg_node), arg_info);
-  mallocf(line,"jump %d", l_begin); addline(arg_info,line,NULL);
-  mallocf(label,"%d", l_end); addlabel(arg_info,label);
+  mallocf(line,"jump L%d", l_begin); addline(arg_info,line,NULL);
+  mallocf(label,"L%d", l_end); addlabel(arg_info,label);
 
   DBUG_RETURN( arg_node);
 }
@@ -487,30 +487,13 @@ extern node* CODEGENfundef(node *arg_node, info *arg_info){
 
   DBUG_RETURN( arg_node);
 }
+
 extern node* CODEGENbody(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENbody");
   char * line;
 
-  int nlocs = 0;
-  node * vdecs = BODY_VARDECS( arg_node);
-  while (vdecs != NULL)
-    {
-      nlocs++;
-      vdecs = VARDECS_NEXT( vdecs);
-    }
-  node * instrs = BODY_INSTRS( arg_node);
-  while (instrs != NULL)
-    {
-      node* instr = INSTRS_INSTR( instrs);
-      if (NODE_TYPE( instr) == N_for)
-      {
-        if (FOR_INCR( instr) == NULL)
-          nlocs += 1;
-        else
-          nlocs += 3;
-      }
-      instrs = INSTRS_NEXT( instrs);
-    }
+  int nlocs = BODY_NLOCS( arg_node);
+  
   mallocf(line,"esr %d", nlocs); addline(arg_info,line,NULL);
 
   BODY_INSTRS( arg_node) = TRAVopt( BODY_INSTRS( arg_node), arg_info);
@@ -731,13 +714,13 @@ extern node* CODEGENhoare(node *arg_node, info *arg_info){
   int l_else, l_end;
   HOARE_COND( arg_node) = TRAVdo( HOARE_COND( arg_node), arg_info);
   l_else = arg_info->labelcount++;
-  mallocf(line,"branch_f %d", l_else); addline(arg_info,line,NULL);
+  mallocf(line,"branch_f L%d", l_else); addline(arg_info,line,NULL);
   HOARE_LEFT( arg_node) = TRAVdo( HOARE_LEFT( arg_node), arg_info);
   l_end = arg_info->labelcount++;
-  mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
-  mallocf(label,"%d", l_else); addlabel(arg_info,label);
+  mallocf(line,"jump L%d", l_end); addline(arg_info,line,NULL);
+  mallocf(label,"L%d", l_else); addlabel(arg_info,label);
   HOARE_RIGHT( arg_node) = TRAVdo( HOARE_RIGHT( arg_node), arg_info);
-  mallocf(label,"%d", l_end); addlabel(arg_info,label);
+  mallocf(label,"L%d", l_end); addlabel(arg_info,label);
   DBUG_RETURN( arg_node);
 }
 extern node* CODEGENbinop(node *arg_node, info *arg_info){
@@ -858,30 +841,30 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
     case BO_add:
       l_either1 = arg_info->labelcount++;
       l_either2 = arg_info->labelcount++;
-      mallocf(line,"branch_t %d", l_either1); addline(arg_info,line,NULL);
-      mallocf(line,"branch_t %d", l_either2); addline(arg_info,line,NULL);
+      mallocf(line,"branch_t L%d", l_either1); addline(arg_info,line,NULL);
+      mallocf(line,"branch_t L%d", l_either2); addline(arg_info,line,NULL);
       mallocf(line,"bloadc_f"); addline(arg_info,line,NULL);
       l_end = arg_info->labelcount++;
-      mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_either1); addlabel(arg_info,label);
+      mallocf(line,"jump L%d", l_end); addline(arg_info,line,NULL);
+      mallocf(label,"L%d", l_either1); addlabel(arg_info,label);
       mallocf(line,"bpop"); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_either2); addlabel(arg_info,label);
+      mallocf(label,"L%d", l_either2); addlabel(arg_info,label);
       mallocf(line,"bloadc_t"); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_end); addlabel(arg_info,label);
+      mallocf(label,"L%d", l_end); addlabel(arg_info,label);
       break;
     case BO_mul:
       l_either1 = arg_info->labelcount++;
       l_either2 = arg_info->labelcount++;
-      mallocf(line,"branch_f %d", l_either1); addline(arg_info,line,NULL);
-      mallocf(line,"branch_f %d", l_either2); addline(arg_info,line,NULL);
+      mallocf(line,"branch_f L%d", l_either1); addline(arg_info,line,NULL);
+      mallocf(line,"branch_f L%d", l_either2); addline(arg_info,line,NULL);
       mallocf(line,"bloadc_t"); addline(arg_info,line,NULL);
       l_end = arg_info->labelcount++;
-      mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_either1); addlabel(arg_info,label);
+      mallocf(line,"jump L%d", l_end); addline(arg_info,line,NULL);
+      mallocf(label,"L%d", l_either1); addlabel(arg_info,label);
       mallocf(line,"bpop"); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_either2); addlabel(arg_info,label);
+      mallocf(label,"L%d", l_either2); addlabel(arg_info,label);
       mallocf(line,"bloadc_f"); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_end); addlabel(arg_info,label);
+      mallocf(label,"L%d", l_end); addlabel(arg_info,label);
       break;
     case BO_eq:
       mallocf(line,"beq");
@@ -926,13 +909,13 @@ extern node* CODEGENcast(node *arg_node, info *arg_info){
       l_either = arg_info->labelcount++;
       mallocf(line,"iloadc_0"); addline(arg_info,line,";-x-x-x");
       mallocf(line,"ieq"); addline(arg_info,line,NULL);
-      mallocf(line,"branch_f %d", l_either); addline(arg_info,line,NULL);
+      mallocf(line,"branch_f L%d", l_either); addline(arg_info,line,NULL);
       mallocf(line,"bloadc_f"); addline(arg_info,line,NULL);
       l_end = arg_info->labelcount++;
-      mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_either); addlabel(arg_info,label);
+      mallocf(line,"jump L%d", l_end); addline(arg_info,line,NULL);
+      mallocf(label,"L%d", l_either); addlabel(arg_info,label);
       mallocf(line,"bloadc_t"); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_end); addlabel(arg_info,label);
+      mallocf(label,"L%d", l_end); addlabel(arg_info,label);
       break;
     default:
       DBUG_ASSERT(0, "illegal cast detected!");
@@ -954,13 +937,13 @@ extern node* CODEGENcast(node *arg_node, info *arg_info){
       l_either = arg_info->labelcount++;
       mallocf(line,"floadc_0"); addline(arg_info,line,NULL);
       mallocf(line,"feq"); addline(arg_info,line,NULL);
-      mallocf(line,"branch_f %d", l_either); addline(arg_info,line,NULL);
+      mallocf(line,"branch_f L%d", l_either); addline(arg_info,line,NULL);
       mallocf(line,"bloadc_f"); addline(arg_info,line,NULL);
       l_end = arg_info->labelcount++;
-      mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_either); addlabel(arg_info,label);
+      mallocf(line,"jump L%d", l_end); addline(arg_info,line,NULL);
+      mallocf(label,"L%d", l_either); addlabel(arg_info,label);
       mallocf(line,"bloadc_t"); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_end); addlabel(arg_info,label);
+      mallocf(label,"L%d", l_end); addlabel(arg_info,label);
       break;
     default:
       DBUG_ASSERT(0, "illegal cast detected!");
@@ -970,23 +953,23 @@ extern node* CODEGENcast(node *arg_node, info *arg_info){
     switch( CAST_TYPE(arg_node)){
     case VT_int:
       l_either = arg_info->labelcount++;
-      mallocf(line,"branch_f %d", l_either); addline(arg_info,line,NULL);
+      mallocf(line,"branch_f L%d", l_either); addline(arg_info,line,NULL);
       mallocf(line,"iloadc_1"); addline(arg_info,line,NULL);
       l_end = arg_info->labelcount++;
-      mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_either); addlabel(arg_info,label);
+      mallocf(line,"jump L%d", l_end); addline(arg_info,line,NULL);
+      mallocf(label,"L%d", l_either); addlabel(arg_info,label);
       mallocf(line,"iloadc_0"); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_end); addlabel(arg_info,label);
+      mallocf(label,"L%d", l_end); addlabel(arg_info,label);
       break;
     case VT_float:
       l_either = arg_info->labelcount++;
-      mallocf(line,"branch_f %d", l_either); addline(arg_info,line,NULL);
+      mallocf(line,"branch_f L%d", l_either); addline(arg_info,line,NULL);
       mallocf(line,"floadc_1"); addline(arg_info,line,NULL);
       l_end = arg_info->labelcount++;
-      mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_either); addlabel(arg_info,label);
+      mallocf(line,"jump L%d", l_end); addline(arg_info,line,NULL);
+      mallocf(label,"L%d", l_either); addlabel(arg_info,label);
       mallocf(line,"floadc_0"); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_end); addlabel(arg_info,label);
+      mallocf(label,"L%d", l_end); addlabel(arg_info,label);
       break;
     case VT_bool:
       // nothing to do

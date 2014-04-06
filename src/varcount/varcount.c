@@ -92,10 +92,11 @@ node* VARCOUNTbody(node *arg_node, info *arg_info)
 	DBUG_ASSERT( arg_info != NULL, "body entered without arg_info!");
 
 	BODY_VARDECS( arg_node) = TRAVopt( BODY_VARDECS( arg_node), arg_info);
+	BODY_INSTRS( arg_node) = TRAVopt( BODY_INSTRS( arg_node), arg_info);
+
+	BODY_NLOCS( arg_node) = INFO_COUNT( arg_info) + 1;
 
 	BODY_FUNDEFS( arg_node) = TRAVopt( BODY_FUNDEFS( arg_node), NULL);
-
-	BODY_INSTRS( arg_node) = TRAVopt( BODY_INSTRS( arg_node), arg_info);
 
 	DBUG_RETURN (arg_node);
 }
