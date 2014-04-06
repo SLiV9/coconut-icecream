@@ -80,7 +80,10 @@ node* TPINFfuncall(node *arg_node, info *arg_info)
   
   FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
   
-  FUNCALL_TYPE( arg_node) = getType( FUNCALL_DEC( arg_node));
+  if (! STReq("__alloc", FUNCALL_NAME( arg_node)))
+  {
+    FUNCALL_TYPE( arg_node) = getType( FUNCALL_DEC( arg_node));
+  }
 
   DBUG_RETURN (arg_node);
 }

@@ -200,8 +200,7 @@
           <node name="GlobDec" />
           <node name="VarDec" />
           <node name="Param" />
-          <node name="Iter" />
-          <node name="Dim" />
+          <node name="For" />
         </travuser>
       </traversal>
 
@@ -224,6 +223,8 @@
 
       <traversal id="CODEGEN" name="CodeGen" default="sons" include="codegen.h">
         <travuser>
+          <node name="GlobDef" />
+          <node name="FunDec" />
           <node name="FunDef" />
           <node name="Body" />
           <node name="FunState" />
@@ -239,6 +240,7 @@
           <node name="VarCall" />
           <node name="If" />
           <node name="While" />
+          <node name="For" />
           <node name="Hoare" />
         </travuser>
       </traversal>
@@ -592,18 +594,6 @@
                 <any />
                 <phases>
                   <all />
-                </phases>
-              </target>
-            </targets>
-          </type>
-        </attribute>
-        <attribute name="ScopePos">
-          <type name="Int">
-            <targets>
-              <target mandatory="no">
-                <any />
-                <phases>
-                  <range from="cr" to="cg" />
                 </phases>
               </target>
             </targets>
@@ -1047,7 +1037,7 @@
               <target mandatory="no">
                 <any />
                 <phases>
-                  <range from="cr" to="cg" />
+                  <range from="cp" to="cg" />
                 </phases>
               </target>
             </targets>
@@ -1143,7 +1133,7 @@
               <target mandatory="no">
                 <any />
                 <phases>
-                  <range from="cr" to="cg" />
+                  <range from="cp" to="cg" />
                 </phases>
               </target>
             </targets>
@@ -1315,6 +1305,18 @@
             </targets>
           </type>
         </attribute>
+        <attribute name="ScopePos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cp" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
       </attributes>
     </node>
     <node name="Iter">
@@ -1329,18 +1331,6 @@
                   <all />
                 </phases>
               </target>
-            </targets>
-          </type>
-        </attribute>
-        <attribute name="ScopePos">
-          <type name="Int">
-            <targets>
-              <target mandatory="no">
-                <any />
-                <phases>
-                  <range from="cr" to="cg" />
-                </phases>
-                </target>g
             </targets>
           </type>
         </attribute>

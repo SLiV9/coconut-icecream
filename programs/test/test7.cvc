@@ -1,19 +1,10 @@
-export int main()
+export void main()
 {	
-	void foo()
-	{
-		//hoi
-	}
-	
-	void bar(int x)
-	{
-		//hey
-	}
-	
-	foo(2, 1);
-	bar();
-	bar(3, 4);
-	bar(true);
-	
-	return 0;
+	int i;
+	float f;
+	bool b;
+
+	i = 2 + 3;
+	b = true && false;
+	b = true + false;
 }
