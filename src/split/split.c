@@ -312,13 +312,17 @@ node
 
   TRAVpop();
 
-  node * header = TBmakeHeader(STRcpy("__init"),VT_void,NULL);
-  node * body = TBmakeBody(NULL,NULL,info.head,NULL);
-  node * fun = TBmakeFundef(TRUE,header,body);
-  NODE_LINE(fun) = -1;
+  node * decl = syntaxtree;
 
-  node * decl = TBmakeDeclars(fun, syntaxtree);
+  if (info.head != NULL)
+  {
+    node * header = TBmakeHeader(STRcpy("__init"),VT_void,NULL);
+    node * body = TBmakeBody(NULL,NULL,info.head,NULL);
+    node * fun = TBmakeFundef(TRUE,header,body);
+    NODE_LINE(fun) = -1;
 
+    decl = TBmakeDeclars(fun, syntaxtree);
+  }
 
   DBUG_RETURN( decl);
 
