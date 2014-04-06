@@ -17,10 +17,12 @@
  */
 struct INFO {
 		int count;
+		int countlocs;
 		int import;
 };
 
 #define INFO_COUNT(n) ((n)->count)
+#define INFO_COUNTLOCS(n) ((n)->countlocs)
 #define INFO_IMPORT(n) ((n)->import)
 
 static info *MakeInfo()
@@ -30,6 +32,7 @@ static info *MakeInfo()
   result = MEMmalloc(sizeof(info));
 
   INFO_COUNT(result) = 1;
+  INFO_COUNTLOCS(result) = 1;
   INFO_IMPORT(result) = 1;
   
   return result;
@@ -92,10 +95,11 @@ node* VARCOUNTbody(node *arg_node, info *arg_info)
 	DBUG_ASSERT( arg_info != NULL, "body entered without arg_info!");
 
 	BODY_VARDECS( arg_node) = TRAVopt( BODY_VARDECS( arg_node), arg_info);
+	BODY_INSTRS( arg_node) = TRAVopt( BODY_INSTRS( arg_node), arg_info);
+
+	BODY_NLOCS( arg_node) = INFO_COUNTLOCS( arg_info) - 1;
 
 	BODY_FUNDEFS( arg_node) = TRAVopt( BODY_FUNDEFS( arg_node), NULL);
-
-	BODY_INSTRS( arg_node) = TRAVopt( BODY_INSTRS( arg_node), arg_info);
 
 	DBUG_RETURN (arg_node);
 }
@@ -106,6 +110,7 @@ node* VARCOUNTvardec(node *arg_node, info *arg_info)
 
 	VARDEC_SCOPEPOS( arg_node) = INFO_COUNT( arg_info);
 	INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 1;
+	INFO_COUNTLOCS( arg_info) = INFO_COUNTLOCS( arg_info) + 1;
 
 	DBUG_RETURN (arg_node);
 }
@@ -125,10 +130,11 @@ node* VARCOUNTfor(node *arg_node, info *arg_info)
 	DBUG_ENTER ("VARCOUNTfor");
 
 	FOR_SCOPEPOS( arg_node) = INFO_COUNT( arg_info);
-	if (FOR_INCR( arg_node) == NULL)
-		INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 1;
-	else
-		INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 3;
+	int nlocs = 1;
+	if (FOR_INCR( arg_node) != NULL)
+		nlocs = 3;
+	INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + nlocs;
+	INFO_COUNTLOCS( arg_info) = INFO_COUNTLOCS( arg_info) + nlocs;
 
 	FOR_DO( arg_node) = TRAVopt( FOR_DO( arg_node), arg_info);
 

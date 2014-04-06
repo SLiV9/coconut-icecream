@@ -52,6 +52,7 @@
 #include "dbug.h"
 #include "phase.h"
 #include "globals.h"
+#include "myglobals.h"
 
 
 

@@ -19,7 +19,12 @@ The first three phases, `Loading', `Context Analysis' and `Type Checking', inter
 
 \section{Loading the code}
 \subsection{Running the preprocessor}
+Our compiler runs the \texttt{CPP} preprocessor and saves the resulting code in a hidden file called `\texttt{dir/.code.cvc.cpp}', if the original code was called `\texttt{dir/code.cvc}'. This step removes single- and multi-line comments, while retaining line and column numbers. It also links header files. The flag \texttt{-I path} can be used to search for header files in the directory \texttt{path}.
+
+The resulting code is used as input for the next phase.
+
 \subsection{Scanning}
+
 \subsection{Parsing}
 
 \section{Context Analysis}

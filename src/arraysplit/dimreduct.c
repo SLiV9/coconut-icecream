@@ -19,7 +19,7 @@ node* DIMREDUCTfuncall(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("DIMREDUCTfuncall");
 
-  // no need to travdo
+  FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
 
   if (STReq("__alloc", FUNCALL_NAME( arg_node)))
   {
@@ -88,6 +88,7 @@ static node* indxsToIndx(node* arg_node, node* indxs, node* dec, int scopediff)
 
   while (DIMDECS_NEXT( dimdecs) != NULL)
   {
+    dimdecs = DIMDECS_NEXT( dimdecs);
     dim = DIMDECS_DIM( dimdecs);
     dcall = TBmakeVarcall( STRcpy( DIM_NAME( dim)), NULL);
     VARCALL_DEC( dcall) = dim;
@@ -97,7 +98,6 @@ static node* indxsToIndx(node* arg_node, node* indxs, node* dec, int scopediff)
     bop = TBmakeBinop( BO_mul, bop, dcall);
     BINOP_TYPE( bop) = VT_int;
 
-    dimdecs = DIMDECS_NEXT( dimdecs);
     curindxs = EXPRS_NEXT( curindxs);
     bop = TBmakeBinop( BO_add, bop, EXPRS_EXPR( curindxs));
     BINOP_TYPE( bop) = VT_int;

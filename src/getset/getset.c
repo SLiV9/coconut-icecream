@@ -125,8 +125,20 @@ node* GETSETglobdef(node *arg_node, info *arg_info)
 
   // Setter:
 
-  params = COPYdoCopy( params);
-  indxs = COPYdoCopy( indxs);
+  params = NULL;
+  indxs = NULL;
+  if (GLOBDEF_DIMDECS( arg_node) > 0)
+  {
+    indxp = TBmakeParam( STRcpy("i"), VT_int, NULL);
+    params = TBmakeParams( indxp, params);
+
+    indxc = TBmakeVarcall( STRcpy( PARAM_NAME( indxp)), NULL);
+    VARCALL_DEC( indxc) = indxp;
+    VARCALL_SCOPEDIFF( indxc) = NDSD_LOCAL();
+    VARCALL_TYPE( indxc) = VT_int;
+    VARCALL_DEPTH( indxc) = 0;
+    indxs = TBmakeExprs( indxc, NULL);
+  }
 
   let = TBmakeVarlet( STRcpy( name), indxs);
   VARLET_DEC( let) = arg_node;

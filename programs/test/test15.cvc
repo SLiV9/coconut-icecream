@@ -1,10 +1,10 @@
 #include "test16.h"
 
-export void main()
+extern void printFloat(float f);
+
+export int main()
 {
-	float y;
-	z[1,1] = 1.337;
-	y = z[0, b-1];
-	z[a-1, 0] = 2.0 + y;
-	reset();
+	x[1,1] = 1.337;
+	printFloat(x[1,1]);
+	return 0;
 }

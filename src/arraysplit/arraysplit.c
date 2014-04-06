@@ -185,6 +185,21 @@ node* ARRAYSPLITglobdec(node *arg_node, info *arg_info)
 
   // no need to travdo
 
+  /* rename dimdecs */
+  node* dimdecs = GLOBDEC_DIMDECS( arg_node);
+  int i = 0;
+  while (dimdecs != NULL)
+  {
+  	node* dim = DIMDECS_DIM( dimdecs);
+  	MEMfree(DIM_NAME( dim));
+    char* stri = STRitoa(i);
+  	DIM_NAME( dim) = STRcatn(4, "", stri, "_", GLOBDEC_NAME( arg_node));
+  	MEMfree(stri);
+
+  	dimdecs = DIMDECS_NEXT( dimdecs);
+  	i++;
+  }
+
   insertItems(arg_node, arg_info, GLOBDEC_DIMDECS( arg_node), N_globdec);
 
   DBUG_RETURN (arg_node);

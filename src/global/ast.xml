@@ -375,7 +375,20 @@
           </targets>
         </son>
       </sons>
-      <attributes />
+      <attributes>
+        <attribute name="Nlocs">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cp" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
     </node>
     <node name="Params">
       <sons>
