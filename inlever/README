@@ -1,0 +1,4 @@
+Running make in the root of this tar should build the compiler.
+The compiler will go into bin.
+The documentation of the AST in doc.
+ 

@@ -1,0 +1,1849 @@
+
+<?xml-stylesheet href="ast.html.xsl" type="text/xsl" name="HTML" media="screen"?>
+<definition version="0.9" >
+  <attributetypes>
+    <type name="String" ctype="char*" init="NULL" copy="function" />
+    <type name="Int" ctype="int" init="0" copy="literal" />
+    <type name="Bool" ctype="bool" init="FALSE" copy="literal" />
+    <type name="Float" ctype="float" init="0.0" copy="literal" />
+    <type name="ValueType" ctype="vtype" init="VT_unknown" copy="literal" />
+    <type name="MonOp" ctype="monop" init="MO_unknown" copy="literal" />
+    <type name="BinOp" ctype="binop" init="BO_unknown" copy="literal" />
+    <type name="Link" ctype="node*" init="NULL" copy="lookup" />
+    <type name="CompilerPhase" ctype="compiler_phase_t" init="PH_initial" copy="literal" />
+  </attributetypes>
+  <phases>
+    <!-- id is the short id of the traversal
+         name is a descriptive name
+         default gives the default traversal mode
+         user  a user defined function
+         sons  TravSons
+         none  TravNone
+         error TravError
+         include the include file needed for the traversal
+    -->
+    <general>
+      <traversal id="MYCPP" name="C Preprocessing" default="sons" include="mycpp.h" />
+      <traversal id="MYSCP" name="Scanning and Parsing" default="sons" include="myscp.h" />
+
+      <traversal id="NAMELINK" name="Linking calls to names" default="sons" include="namelink.h">
+        <travuser>
+          <node name="VarLet" />
+          <node name="VarCall" />
+          <node name="FunCall" />
+          <node name="VarDec" />
+          <node name="GlobDef" />
+          <node name="GlobDec" />
+          <node name="Param" />
+          <node name="Iter" />
+          <node name="Dim" />
+          <node name="FunDef" />
+          <node name="FunDec" />
+          <node name="For" />
+          <node name="Body" />
+        </travuser>
+      </traversal>
+
+      <traversal id="NAMELINKFUNHEAD" name="Linking funheads" default="sons" include="funhead.h">
+        <travuser>
+          <node name="FunDef" />
+          <node name="FunDec" />
+          <node name="GlobDef" />
+          <node name="GlobDec" />
+        </travuser>
+      </traversal>
+
+      <traversal id="NAMELINKGLOBNAMES" name="Linking global vars" default="sons" include="globnames.h">
+        <travuser>
+          <node name="FunDef" />
+          <node name="FunDec" />
+          <node name="GlobDef" />
+          <node name="GlobDec" />
+        </travuser>
+      </traversal>
+
+      <traversal id="TPINF" name="Type inference" default="sons" include="tpinf.h">
+        <travuser>
+          <node name="MonOp" />
+          <node name="BinOp" />
+          <node name="Cast" />
+          <node name="VarLet" />
+          <node name="VarCall" />
+          <node name="FunCall" />
+          <node name="ArrayLit" />
+          <node name="VarDec" />
+          <node name="Param" />
+        </travuser>
+      </traversal>
+
+      <traversal id="TPING" name="Type inference global" default="sons" include="tping.h">
+        <travuser>
+          <node name="GlobDef" />
+          <node name="GlobDec" />
+        </travuser>
+      </traversal>
+
+      <traversal id="UNROLL" name="Unroll for loops" default="sons" include="unroll.h">
+        <travuser>
+          <node name="For" />
+          <node name="VarCall" />
+          <node name="Instrs" />
+        </travuser>
+      </traversal>
+
+      <traversal id="TPMAT" name="Type matching" default="sons" include="tpmat.h">
+        <travuser>
+          <node name="FunDef" />
+          <node name="FunCall" />
+          <node name="Assign" />
+          <node name="VarLet" />
+          <node name="If" />
+          <node name="For" />
+          <node name="While" />
+          <node name="VarLet" />
+          <node name="VarCall" />
+        </travuser>
+      </traversal>
+
+
+      <traversal id="SPLIT" name="Split" default="sons" include="split.h">
+        <travuser>
+          <node name="VarDec" />
+          <node name="Body" />
+          <node name="GlobDef" />
+        </travuser>
+      </traversal>
+
+      <traversal id="CALCCONST" name="CalcConst" default="sons" include="calcconst.h">
+        <travuser>
+          <node name="Cast" />
+          <node name="MonOp" />
+          <node name="BinOp" />
+        </travuser>
+      </traversal>
+
+      <traversal id="ITERSPLIT" name="IterSplit" default="sons" include="itersplit.h">
+        <travuser>
+          <node name="Body" />
+          <node name="For" />
+        </travuser>
+      </traversal>
+
+      <traversal id="REPLACE" name="Replace" default="sons" include="replace.h">
+        <travuser>
+          <node name="VarCall" />
+          <node name="VarLet" />
+        </travuser>
+      </traversal>
+
+      <traversal id="ARRAYSPLIT" name="ArraySplit" default="sons" include="arraysplit.h">
+        <travuser>
+          <node name="Declars" />
+          <node name="GlobDef" />
+          <node name="GlobDec" />
+          <node name="VarDecs" />
+          <node name="VarDec" />
+          <node name="Params" />
+          <node name="Param" />
+        </travuser>
+      </traversal>
+
+      <traversal id="ASPLITFCALL" name="AsplitFcall" default="sons" include="asplitfcall.h">
+        <travuser>
+          <node name="Exprs" />
+          <node name="VarCall" />
+        </travuser>
+      </traversal>
+
+      <traversal id="ALITUNFOLD" name="AlitUnfold" default="sons" include="alitunfold.h">
+        <travuser>
+          <node name="Body" />
+          <node name="Instrs" />
+          <node name="Assign" />
+        </travuser>
+      </traversal>
+
+      <traversal id="ACONSTUNFOLD" name="AconstUnfold" default="sons" include="aconstunfold.h">
+        <travuser>
+          <node name="Instrs" />
+          <node name="Assign" />
+        </travuser>
+      </traversal>
+
+      <traversal id="DIMREDUCT" name="DimReduct" default="sons" include="dimreduct.h">
+        <travuser>
+          <node name="FunCall" />
+          <node name="VarCall" />
+          <node name="VarLet" />
+        </travuser>
+      </traversal>
+
+      <traversal id="GETSET" name="GetSet" default="none" include="getset.h">
+        <travuser>
+          <node name="Declars" />
+          <node name="GlobDef" />
+          <node name="GlobDec" />
+        </travuser>
+      </traversal>
+
+      <traversal id="GSVARCALL" name="GsVarcall" default="sons" include="gsvarcall.h">
+        <travuser>
+          <node name="Assign" />
+          <node name="VarCall" />
+        </travuser>
+      </traversal>
+
+      <traversal id="GSCLEANUP" name="GsCleanup" default="none" include="gscleanup.h">
+        <travuser>
+          <node name="Declars" />
+        </travuser>
+      </traversal>
+
+      <traversal id="VARCOUNT" name="VarCount" default="sons" include="varcount.h">
+        <travuser>
+          <node name="GlobDef" />
+          <node name="FunDef" />
+          <node name="FunDec" />
+          <node name="Body" />
+          <node name="GlobDec" />
+          <node name="VarDec" />
+          <node name="Param" />
+          <node name="For" />
+        </travuser>
+      </traversal>
+
+      <traversal id="NESTRENAME" name="NestRename" default="sons" include="nestrename.h">
+        <travuser>
+          <node name="FunDef" />
+          <node name="FunDec" />
+          <node name="Header" />
+          <node name="FunCall" />
+        </travuser>
+      </traversal>
+
+      <traversal id="TERNARY" name="Ternary" default="sons" include="ternary.h">
+        <travuser>
+          <node name="Cast" />
+          <node name="BinOp" />
+        </travuser>
+      </traversal>
+
+
+      <traversal id="CODEGEN" name="CodeGen" default="sons" include="codegen.h">
+        <travuser>
+          <node name="GlobDef" />
+          <node name="FunDec" />
+          <node name="FunDef" />
+          <node name="Body" />
+          <node name="FunState" />
+          <node name="FunCall" />
+          <node name="Assign" />
+          <node name="VarLet" />
+          <node name="MonOp" />
+          <node name="BinOp" />
+          <node name="Cast" />
+          <node name="Int" />
+          <node name="Float" />
+          <node name="Bool" />
+          <node name="VarCall" />
+          <node name="If" />
+          <node name="While" />
+          <node name="For" />
+          <node name="Hoare" />
+        </travuser>
+      </traversal>
+
+      <traversal id="PRT" name="Print Syntax Tree" default="user" include="print.h" />
+
+      <traversal id="COPY" name="Copy Syntax Tree" default="user" include="copy_node.h" />
+      <traversal id="FREE" name="Free Syntax Tree" default="user" include="free_node.h" />
+      <traversal id="CHK" name="Check the Tree" default="user" include="check.h" />
+    </general>
+  </phases>
+  <nodesets>
+    <nodeset name="Expr">
+      <target>
+        <node name="MonOp" />
+        <node name="BinOp" />
+        <node name="VarCall" />
+        <node name="FunCall" />
+        <node name="Int" />
+        <node name="Float" />
+        <node name="Bool" />
+        <node name="Cast" />
+        <node name="ArrayLit" />
+        <node name="Hoare" />
+      </target>
+    </nodeset>
+    <nodeset name="Instr">
+      <target>
+        <node name="Assign" />
+        <node name="FunState" />
+        <node name="If" />
+        <node name="While" />
+        <node name="For" />
+      </target>
+    </nodeset>
+    <nodeset name="Declar">
+      <target>
+        <node name="FunDef" />
+        <node name="FunDec" />
+        <node name="GlobDef" />
+        <node name="GlobDec" />
+      </target>
+    </nodeset>
+    <nodeset name="NameDec">
+      <target>
+        <node name="VarDec" />
+        <node name="GlobDef" />
+        <node name="GlobDec" />
+        <node name="Param" />
+        <node name="Iter" />
+        <node name="Dim" />
+        <node name="FunDef" />
+        <node name="FunDec" />
+      </target>
+    </nodeset>
+  </nodesets>
+
+  <syntaxtree>
+    <node name="Declars">
+      <sons>
+        <son name="Declar">
+          <targets>
+            <target mandatory="yes">
+              <set name="Declar" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="Declars" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="Body">
+      <sons>
+        <son name="VarDecs">
+          <targets>
+            <target mandatory="no">
+              <node name="VarDecs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="FunDefs">
+          <targets>
+            <target mandatory="no">
+              <node name="FunDefs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Instrs">
+          <targets>
+            <target mandatory="no">
+              <node name="Instrs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Return">
+          <targets>
+            <target mandatory="no">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Nlocs">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cp" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="Params">
+      <sons>
+        <son name="Param">
+          <targets>
+            <target mandatory="yes">
+              <node name="Param" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="Params" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="VarDecs">
+      <sons>
+        <son name="Dec">
+          <targets>
+            <target mandatory="yes">
+              <node name="VarDec" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="VarDecs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="FunDefs">
+      <sons>
+        <son name="FunDef">
+          <targets>
+            <target mandatory="yes">
+              <node name="FunDef" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="FunDefs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="Instrs">
+      <sons>
+        <son name="Instr">
+          <targets>
+            <target mandatory="yes">
+              <set name="Instr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="Instrs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="Exprs">
+      <sons>
+        <son name="Expr">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="Exprs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="NameDecs">
+      <sons />
+      <attributes>
+        <attribute name="Dec">
+          <type name="Link">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Next">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Depth">
+          <type name="Int">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Level">
+          <type name="Int">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="DimDecs">
+      <sons>
+        <son name="Dim">
+          <targets>
+            <target mandatory="yes">
+              <node name="Dim" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Next">
+          <targets>
+            <target mandatory="no">
+              <node name="DimDecs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="Dim">
+      <sons />
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Replacer">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="ArrayLit">
+      <sons>
+        <son name="Exprs">
+          <targets>
+            <target mandatory="yes">
+              <node name="Exprs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Depth">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="FunDef">
+      <sons>
+        <son name="Head">
+          <targets>
+            <target mandatory="yes">
+              <node name="Header" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Body">
+          <targets>
+            <target mandatory="yes">
+              <node name="Body" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Export">
+          <type name="Bool">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="FunDec">
+      <sons>
+        <son name="Head">
+          <targets>
+            <target mandatory="yes">
+              <node name="Header" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="ImportPos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="Header">
+      <sons>
+        <son name="Params">
+          <targets>
+            <target mandatory="no">
+              <node name="Params" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="GlobDef">
+      <sons>
+        <son name="Expr">
+          <targets>
+            <target mandatory="no">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="DimDefs">
+          <targets>
+            <target mandatory="no">
+              <node name="Exprs" />
+              <phases>
+                <range from="ld" to="ca" />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="DimDecs">
+          <targets>
+            <target mandatory="no">
+              <node name="DimDecs" />
+              <phases>
+                <range from="ca" to="cg" />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Depth">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Export">
+          <type name="Bool">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="GlobalPos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Getter">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Setter">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="GlobDec">
+      <sons>
+        <son name="DimDecs">
+          <targets>
+            <target mandatory="no">
+              <node name="DimDecs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Depth">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Getter">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Setter">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="FunState">
+      <sons>
+        <son name="Call">
+          <targets>
+            <target mandatory="yes">
+              <node name="FunCall" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+    </node>
+    <node name="Param">
+      <sons>
+        <son name="DimDecs">
+          <targets>
+            <target mandatory="no">
+              <node name="DimDecs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Depth">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Escaping">
+          <type name="Bool">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="ca" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="ScopePos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cp" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="VarDec">
+      <sons>
+        <son name="Expr">
+          <targets>
+            <target mandatory="no">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="DimDefs">
+          <targets>
+            <target mandatory="no">
+              <node name="Exprs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="DimDecs">
+          <targets>
+            <target mandatory="no">
+              <node name="DimDecs" />
+              <phases>
+                <range from="ca" to="cg" />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Depth">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Escaping">
+          <type name="Bool">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="ca" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="ScopePos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cp" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="Assign">
+      <sons>
+        <son name="Let">
+          <targets>
+            <target mandatory="yes">
+              <node name="VarLet" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Expr">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="If">
+      <sons>
+        <son name="Cond">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Then">
+          <targets>
+            <target mandatory="no">
+              <node name="Instrs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Else">
+          <targets>
+            <target mandatory="no">
+              <node name="Instrs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes />
+    </node>
+    <node name="While">
+      <sons>
+        <son name="Cond">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Do">
+          <targets>
+            <target mandatory="no">
+              <node name="Instrs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="DoFirst">
+          <type name="Bool">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="For">
+      <sons>
+        <son name="Iter">
+          <targets>
+            <target mandatory="yes">
+              <node name="Iter" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="From">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="To">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Incr">
+          <targets>
+            <target mandatory="no">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Do">
+          <targets>
+            <target mandatory="no">
+              <node name="Instrs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="IterDec">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="ScopePos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cp" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="Iter">
+      <sons />
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Replacer">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cr" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="MonOp">
+      <sons>
+        <son name="Expr">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Op">
+          <type name="MonOp">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="BinOp">
+      <sons>
+        <son name="Left">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Right">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Op">
+          <type name="BinOp">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="Hoare">
+      <sons>
+        <son name="Cond">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Left">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+        <son name="Right">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="VarLet">
+      <sons>
+        <son name="Indx">
+          <targets>
+            <target mandatory="no">
+              <node name="Exprs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Dec">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="ScopeDiff">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="ca" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Depth">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+
+    <node name="VarCall">
+      <sons>
+        <son name="Indx">
+          <targets>
+            <target mandatory="no">
+              <node name="Exprs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Dec">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Scopediff">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="ca" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Depth">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+
+    <node name="FunCall">
+      <sons>
+        <son name="Args">
+          <targets>
+            <target mandatory="no">
+              <node name="Exprs" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Name">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Dec">
+          <type name="Link">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="ScopeDiff">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="ca" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="tc" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="Int">
+      <sons />
+      <attributes>
+        <attribute name="Value">
+          <type name="Int">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="Float">
+      <sons />
+      <attributes>
+        <attribute name="Value">
+          <type name="Float">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="Bool">
+      <sons />
+      <attributes>
+        <attribute name="Value">
+          <type name="Bool">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="Cast">
+      <sons>
+        <son name="Expr">
+          <targets>
+            <target mandatory="yes">
+              <set name="Expr" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="Type">
+          <type name="ValueType">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+    </node>
+    <node name="Error">
+      <sons>
+        <son name="Next">
+          <targets>
+            <target mandatory="no" >
+              <node name="Error" />
+              <phases>
+                <all />
+              </phases>
+            </target>
+          </targets>
+        </son>
+      </sons>
+      <attributes>
+        <attribute name="message">
+          <type name="String">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+        <attribute name="anyphase">
+          <type name="CompilerPhase">
+            <targets>
+              <target mandatory="yes">
+                <any />
+                <phases>
+                  <all />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
+      </attributes>
+      <flags></flags>
+    </node>
+  </syntaxtree>
+</definition>
