@@ -22,11 +22,12 @@ struct INFO{
 node* UNROLLfor(node *arg_node, info *arg_info){
   DBUG_ENTER ("UNROLLfor");
 
+  
   FOR_FROM( arg_node) = TRAVdo( FOR_FROM( arg_node), arg_info);
   int incr;
   FOR_TO( arg_node) = TRAVdo( FOR_TO( arg_node), arg_info);
 
-  if(FOR_INCR( arg_node) != NULL){
+  if(FOR_INCR( arg_node) != NULL  && NODE_TYPE(FOR_INCR( arg_node)) == N_int){
     FOR_INCR( arg_node) = TRAVdo( FOR_INCR( arg_node), arg_info);
     incr = INT_VALUE(FOR_INCR( arg_node));
   }else{
@@ -53,14 +54,11 @@ node* UNROLLfor(node *arg_node, info *arg_info){
     rep->iter = FOR_ITERDEC( arg_node);
     arg_info->first = rep;
     node * loopbody;
-    printf("incr: %i\n",incr);
     for(int i  = from;(incr < 0 && i > to)||(incr>0 && i < to);i+=incr){
-      printf("Now: %i\n",i);
 
       if((incr < 0 && i+incr > to)||(incr>0 && i+incr < to)){
         loopbody = COPYdoCopy(FOR_DO( arg_node));
       }else{
-        printf("last: %i\n",i);
         loopbody = FOR_DO( arg_node);
       }
 
