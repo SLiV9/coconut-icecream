@@ -54,14 +54,11 @@ node* UNROLLfor(node *arg_node, info *arg_info){
     rep->iter = FOR_ITERDEC( arg_node);
     arg_info->first = rep;
     node * loopbody;
-    printf("incr: %i\n",incr);
     for(int i  = from;(incr < 0 && i > to)||(incr>0 && i < to);i+=incr){
-      printf("Now: %i\n",i);
 
       if((incr < 0 && i+incr > to)||(incr>0 && i+incr < to)){
         loopbody = COPYdoCopy(FOR_DO( arg_node));
       }else{
-        printf("last: %i\n",i);
         loopbody = FOR_DO( arg_node);
       }
 
