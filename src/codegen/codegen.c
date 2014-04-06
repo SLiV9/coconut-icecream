@@ -1029,6 +1029,11 @@ node *CODEGENdoCodegen(node *syntaxtree)
   printcode(stdout, code, TRUE);
   printf("+-+-+-+-+-+-+-+-+-+-+-+-\n");
 
+  if (global.outfile == NULL)
+  {
+    global.outfile = "out.s";
+  }
+  
   FILE* out = fopen(global.outfile, "w+");
   if (out == NULL)
   {
