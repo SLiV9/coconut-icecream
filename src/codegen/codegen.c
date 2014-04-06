@@ -220,7 +220,7 @@ extern node* CODEGENif(node *arg_node, info *arg_info){
 
 
 extern node* CODEGENwhile(node *arg_node, info *arg_info){
-  DBUG_ENTER("CODEGENif");
+  DBUG_ENTER("CODEGENwhile");
 
   int l_begin,l_end;
   char * line;
@@ -241,6 +241,8 @@ extern node* CODEGENwhile(node *arg_node, info *arg_info){
 
   DBUG_RETURN( arg_node);
 }
+
+
 
 
 extern node* CODEGENfundef(node *arg_node, info *arg_info){
