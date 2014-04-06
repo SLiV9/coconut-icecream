@@ -56,12 +56,11 @@ An exception to this rule is the global scope. First, the global functions are s
 The iterators of \texttt{for}-loops are also linked in this phase. Iterators are considered to be part of the \texttt{for}-loop's subscope, and thus are namelinked \emph{after} the \emph{from}, \emph{to} and \emph{incr} fields of the loop. Nested \texttt{for}-loops may have the same iterator name, with each new iterator shadowing calls to previous iterators.
 
 \section{Type Checking}
-\subsection{Type Inference}
-\subsection{Type Matching}
+First, types are inferenced for binops, monops, casts, calls to variables, function calls, and array literals. If this cannot be done, for example if a binop is called on expressions of different types, or the array literal is non-homogenous, an error is prompted. This includes calls to void-returning functions used not as function statements, as well as array literals used outside of array assignments.
+
+Then, types are matched using the \emph{getType} and \emph{getDepth} functions. Array dimensions are checked now as well, prompting dimensionality errors if they do not match. This way, no problems arise when unfolding array literals and reducing dimensions later on.
 
 \section{Code Restructuring}
-\subsection{Iterator Splitting}
-In this phase, iterators are moved to the back of the local variable list.
 
 \subsection{Array Splitting}
 \subsubsection{Array Literal Unfolding}
@@ -85,7 +84,14 @@ a[0, 1] = 6;
 a[1, 0] = 7;
 a[1, 1] = 8;
 \end{verbatim}
-Note that the intermediate stages are not valid code, but this is of no significance, since the phase never stops until it is finished.
+Note that the intermediate stages are not valid code, but this is of no significance, since the phase never stops until it is finished. Incomplete array literals will leave some values uninitialised, and too large array literals (that is, too many entries) will yield run time errors, since they are undetectable at this stage.
+
+\subsubsection{Dimension Reduction and Constant Unfolding}
+Now, the dimensions of all arrays are reduced to 1. This is done after Array Literal Unfolding, to allow incomplete array literals to initialise the correct entries, and before Array Constant Unfolding, which then requires only 1 \texttt{for} statement. 
+
+\subsubsection{Array Splitting and Iterator Splitting}
+In these phases, iterators are moved to the back of the local variable list, and dimensions are moved to right before the array declaration they belong to. This includes arguments in function calls and parameters in function headers.
+
 \subsection{Getters and Setters}
 Creating getters and setters out of global variables happens in three phases. First, a getter and setter is created for each exported global variable and each external global variable. Then, calls to external variables become calls to getters, and assignments to them become setter-statements. Finally, the external global variables are removed from the AST, as they have been fully replaced. Exported variables are not removed, as they are still used locally.
 \subsection{Ternary Operators}
