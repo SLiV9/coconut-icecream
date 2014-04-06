@@ -26,6 +26,8 @@ void OPTcheckOptions( int argc, char **argv)
 
   ARGS_FLAG( "noopt", myglobal.optlevel = 0);
 
+  ARGS_FLAG( "nopre", myglobal.preprocessing = FALSE);
+
   ARGS_FLAG( "tc", global.treecheck = TRUE);
 
   ARGS_OPTION( "#", DBUG_PUSH( STRcpy( ARG)));

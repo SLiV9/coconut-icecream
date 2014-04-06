@@ -15,7 +15,7 @@ PHASE( ld,
 SUBPHASE( mycpp,
           "Running C preprocessor",
           MYCPPdoPreprocessing, 
-          ALWAYS,
+          myglobal.preprocessing,
           ld)
 
 SUBPHASE( myscp,
@@ -126,7 +126,7 @@ ENDPHASE( cr)
 
 PHASE( co,
 			 "Code optimalisation",
-			 ALWAYS)
+			 myglobal.optlevel > 0)
 
 SUBPHASE( calcconst,
 					"Calculate Constants",

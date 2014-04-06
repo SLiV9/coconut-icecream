@@ -25,6 +25,7 @@ GLOBAL( type, name, init)
 GLOBAL( char *, fn, NULL)
 GLOBAL( int, optlevel, 1)
 GLOBAL( char *, cpp_I, NULL)
+GLOBAL( bool, preprocessing, TRUE)
 
 
 #undef GLOBALtype
