@@ -109,18 +109,18 @@ void addlabel(info * lines, char* str){
   lines->lines++;
 }
 
-void printlines(info * lines){
+void printlines(FILE* out, info * lines, bool verbose){
   asmline* current = lines->first;
   while(current!=NULL){
     if (!current->islabel){
-      printf("    %-40s",current->line);
-      if (current->comment != NULL) {
-        printf(";  %s",current->comment);
+      fprintf(out,"    %-40s",current->line);
+      if (verbose && current->comment != NULL) {
+        fprintf(out,";  %s",current->comment);
       }
-      printf("\n");
+      fprintf(out,"\n");
     }
     else {
-      printf("%s:\n",current->line);
+      fprintf(out,"%s:\n",current->line);
     }
     current = current->next;
   }
@@ -181,15 +181,15 @@ int addfloat(info * inf,float i)
 }
 
 
-void printconst(info * inf)
+void printconst(FILE* out, info * inf)
 {
   constant * now = inf->consts;
   while(now!=NULL){
     if(now->isfloat){
-      printf(".const float %f\n",now->val.f);
+      fprintf(out,".const float %f\n",now->val.f);
     }else{
 
-      printf(".const int %i\n",now->val.i);
+      fprintf(out,".const int %i\n",now->val.i);
     }
     now = now->next;
   }
@@ -244,7 +244,7 @@ char* beheader(node* header)
     params = PARAMS_NEXT( params);
   }
   char* ln;
-  mallocf(ln,"\"%s\" %s %s", name, types, name);
+  mallocf(ln,"\"%s\" %s", name, types);
   MEMfree(types);
   return ln;
 }
@@ -263,7 +263,7 @@ void addexport(node* arg_node, info* inf)
 {
   char* ln;
   char* behead = beheader(FUNDEF_HEAD(arg_node));
-  mallocf(ln,".export %s\n", behead);
+  mallocf(ln,".export %s %s\n", behead, HEADER_NAME(FUNDEF_HEAD(arg_node)));
   free(behead);
   addentry(inf, ln, &(inf->exports));
 }
@@ -992,6 +992,22 @@ extern node* CODEGENbool(node *arg_node, info *arg_info){
   DBUG_RETURN( arg_node);
 }
 
+
+static void printcode(FILE* out, info* code, bool verbose)
+{
+  printlines(out,code,verbose);
+  fprintf(out,"\n");
+  fprintf(out,"\n");
+  entry* e;
+  e = code->globals; while (e != NULL) 
+      { fprintf(out,"%s", e->line); e = e->next; }
+  e = code->imports; while (e != NULL) 
+      { fprintf(out,"%s", e->line); e = e->next; }
+  e = code->exports; while (e != NULL) 
+      { fprintf(out,"%s", e->line); e = e->next; }
+  printconst(out,code);
+}
+
 node *CODEGENdoCodegen(node *syntaxtree)
 {
 
@@ -1010,15 +1026,16 @@ node *CODEGENdoCodegen(node *syntaxtree)
   TRAVpop();
 
   printf("+-+-+-+-+-+-+-+-+-+-+-+-\n");
-  printlines(code);
-  printf("\n");
-  printf("\n");
-  entry* e;
-  e = code->globals; while (e != NULL) { printf("%s", e->line); e = e->next; }
-  e = code->imports; while (e != NULL) { printf("%s", e->line); e = e->next; }
-  e = code->exports; while (e != NULL) { printf("%s", e->line); e = e->next; }
-  printconst(code);
+  printcode(stdout, code, TRUE);
   printf("+-+-+-+-+-+-+-+-+-+-+-+-\n");
+
+  FILE* out = fopen(global.outfile, "w+");
+  if (out == NULL)
+  {
+    CTIabort("Cannot open file '%s'.", global.outfile);
+  }
+
+  printcode(out, code, FALSE);
 
   asmline *cur, *prv;
   cur = code->first;
