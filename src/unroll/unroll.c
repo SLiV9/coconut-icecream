@@ -22,11 +22,12 @@ struct INFO{
 node* UNROLLfor(node *arg_node, info *arg_info){
   DBUG_ENTER ("UNROLLfor");
 
+  
   FOR_FROM( arg_node) = TRAVdo( FOR_FROM( arg_node), arg_info);
   int incr;
   FOR_TO( arg_node) = TRAVdo( FOR_TO( arg_node), arg_info);
 
-  if(FOR_INCR( arg_node) != NULL){
+  if(FOR_INCR( arg_node) != NULL  && NODE_TYPE(FOR_INCR( arg_node)) == N_int){
     FOR_INCR( arg_node) = TRAVdo( FOR_INCR( arg_node), arg_info);
     incr = INT_VALUE(FOR_INCR( arg_node));
   }else{
