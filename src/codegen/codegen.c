@@ -443,11 +443,18 @@ extern node* CODEGENwhile(node *arg_node, info *arg_info){
   l_end = arg_info->labelcount++;
 
   mallocf(label,"L%d", l_begin); addlabel(arg_info,label);
+  if (WHILE_DOFIRST( arg_node))
+  {
+    WHILE_DO( arg_node) = TRAVdo( WHILE_DO( arg_node), arg_info);
+  }
 
   WHILE_COND( arg_node) = TRAVdo( WHILE_COND( arg_node), arg_info);
   mallocf(line,"branch_f L%d", l_end); addline(arg_info,line,NULL);
 
-  WHILE_DO( arg_node) = TRAVdo( WHILE_DO( arg_node), arg_info);
+  if (! WHILE_DOFIRST( arg_node))
+  {
+    WHILE_DO( arg_node) = TRAVdo( WHILE_DO( arg_node), arg_info);
+  }
   mallocf(line,"jump L%d", l_begin); addline(arg_info,line,NULL);
   mallocf(label,"L%d", l_end); addlabel(arg_info,label);
 
