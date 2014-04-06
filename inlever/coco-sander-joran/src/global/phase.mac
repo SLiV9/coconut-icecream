@@ -1,0 +1,201 @@
+/*
+ * Phase and subphase definitions
+ */
+
+
+#include "phase_initialise_defs.mac"
+
+/******************************************************************************/
+
+
+PHASE( ld,
+       "Loading CiviC program",
+       ALWAYS)
+
+SUBPHASE( mycpp,
+          "Running C preprocessor",
+          MYCPPdoPreprocessing, 
+          myglobal.preprocessing,
+          ld)
+
+SUBPHASE( myscp,
+          "Reading input file",
+          MYSCPdoScanParse, 
+          ALWAYS,
+          ld)
+
+ENDPHASE( ld) 
+
+/******************************************************************************/
+
+PHASE( ca,
+			 "Context Analysis",
+			 ALWAYS)
+
+SUBPHASE( namelink,
+					"Linking calls to names",
+					NAMELINKdoLinkNames,
+					ALWAYS,
+					ca)
+
+SUBPHASE( split,
+					"Splitting",
+					SPLITdoSplit,
+					ALWAYS,
+					ca)
+
+ENDPHASE( ca)
+
+/******************************************************************************/
+
+PHASE( tc,
+			 "Type Checking",
+			 ALWAYS)
+
+SUBPHASE( tpinf,
+					"Type Inference",
+					TPINFdoInference,
+					ALWAYS,
+					tc)
+
+SUBPHASE( tpmat,
+					"Type Matching",
+					TPMATdoMatching,
+					ALWAYS,
+					tc)
+
+ENDPHASE( tc)
+
+/******************************************************************************/
+
+PHASE( cr,
+			 "Code restructuring",
+			 ALWAYS)
+
+SUBPHASE( alitunfold,
+					"Unfolding arraylits",
+					ALITUNFOLDdoUnfold,
+					ALWAYS,
+					cr)
+
+SUBPHASE( dimreduct,
+					"Dimension reduction",
+					DIMREDUCTdoReduct,
+					ALWAYS,
+					cr)
+
+SUBPHASE( aconstunfold,
+					"Unfolding arrayconsts",
+					ACONSTUNFOLDdoUnfold,
+					ALWAYS,
+					cr)
+
+SUBPHASE( arraysplit,
+					"Pulling array dims",
+					ARRAYSPLITdoSplit,
+					ALWAYS,
+					cr)
+
+SUBPHASE( itersplit,
+					"Pulling iterators from for loops",
+					ITERSPLITdoSplit,
+					ALWAYS,
+					cr)
+
+SUBPHASE( replace,
+					"Finishing itersplit and arraysplit",
+					REPLACEdoReplace,
+					ALWAYS,
+					cr)
+
+SUBPHASE( getset,
+					"Handling external variables",
+					GETSETdoReplace,
+					ALWAYS,
+					cr)
+
+SUBPHASE( ternary,
+					"Casts and SCL to ternaries",
+					TERNARYdoReplace,
+					ALWAYS,
+					cr)
+
+ENDPHASE( cr)
+
+/******************************************************************************/
+
+PHASE( co,
+			 "Code optimalisation",
+			 myglobal.optlevel > 0)
+
+SUBPHASE( calcconst,
+					"Calculate Constants",
+					CALCCONSTdoConstCalc,
+					ALWAYS,
+					co)
+
+SUBPHASE( unroll,
+					"Unroll for loops",
+					UNROLLdoUnroll,
+					ALWAYS,
+					co)
+SUBPHASE( print,
+					"Print",
+					PRTdoPrint,
+					ALWAYS,
+					ca)
+
+ENDPHASE( co)
+
+/******************************************************************************/
+
+
+PHASE( pr,
+       "Code Preparation",
+       ALWAYS)
+
+SUBPHASE( varcount,
+					"Counting local variables",
+					VARCOUNTdoCount,
+					ALWAYS,
+					pr)
+
+SUBPHASE( nestrename,
+					"Renaming nested functions",
+					NESTRENAMEdoRename,
+					ALWAYS,
+					pr)
+
+ENDPHASE( pr)
+
+/******************************************************************************/
+
+
+PHASE( cg,
+       "Generating Code",
+       ALWAYS)
+
+SUBPHASE( prt, 
+          "Print before generation",
+          PRTdoPrint, 
+          global.verbosity > 1,
+          cg)  
+
+SUBPHASE( gbc, 
+          "Generating byte code",
+          CODEGENdoCodegen, 
+          ALWAYS,
+          cg)      
+
+SUBPHASE( frtr, 
+          "De-allocating syntax tree representation",
+          FREEdoFreeTree, 
+          ALWAYS,
+          cg)
+
+ENDPHASE( cg) 
+
+
+/******************************************************************************/
+
+#include "phase_undefine_defs.mac"
