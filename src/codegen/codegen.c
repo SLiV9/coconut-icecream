@@ -1139,9 +1139,12 @@ node *CODEGENdoCodegen(node *syntaxtree)
   syntaxtree = TRAVdo( syntaxtree, code);
   TRAVpop();
 
-  printf("+-+-+-+-+-+-+-+-+-+-+-+-\n");
-  printcode(stdout, code, TRUE);
-  printf("+-+-+-+-+-+-+-+-+-+-+-+-\n");
+  if (global.verbosity > 0)
+  {
+    printf("+-+-+-+-+-+-+-+-+-+-+-+-\n");
+    printcode(stdout, code, TRUE);
+    printf("+-+-+-+-+-+-+-+-+-+-+-+-\n");
+  }
 
   if (global.outfile == NULL)
   {

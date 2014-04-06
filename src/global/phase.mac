@@ -139,11 +139,6 @@ SUBPHASE( unroll,
 					UNROLLdoUnroll,
 					ALWAYS,
 					co)
-SUBPHASE( print,
-					"Print",
-					PRTdoPrint,
-					ALWAYS,
-					ca)
 
 ENDPHASE( co)
 
