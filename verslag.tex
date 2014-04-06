@@ -11,10 +11,16 @@
 \maketitle
 \tableofcontents
 
-%\begin{abstract}
-%\end{abstract}
+\begin{abstract}
+This document describes our decisions in constructing a compiler for the course ``Compiler Construction'' at the UvA, anno 2014. Our compiler is built with \emph{consistency} as a key value. At each step, our compiler tries to take the most logical and consistent option in interpreting the user's code.
+\end{abstract}
 
 \chapter{Abstract Syntax Tree}
+The AST is designed as to facilitate the full range of CiviC code. Some names of nodes consist of two parts: a prefix like \emph{Var}, which is a variable, \emph{Fun}, which is a function, or \emph{Dim}, which is a dimension, and a suffix such as \emph{Def}, a declaration combined with definition, \emph{Dec}, a sole declaration, \emph{Call}, which returns a value, or \emph{Let}, which is the left hand side of an assignment. For instance, a \emph{FunDef} is a function definition, which includes both the function header and its body. On the other hand, a \emph{FunDec} consists only of a header. The distinction between a local and a global \emph{FunDef} is not made, as its only difference is the ability of global \emph{FunDef}'s to be exported. Similarly, both a \emph{VarCall} and a \emph{FunCall} return a value, thus are considered similar.
+
+An instruction (or statement) is either an assignment, a control flow construct such as \texttt{if}, \texttt{while} and \texttt{for}, or a \emph{FunState}, a function statement. A function statement consists only of a function call to either a void-returning function or a function which normally returns a value; now, this value is discarded. An assignment must always consist of an expression and a \emph{VarLet}, the variable the expression is assigned to. Sole expressions are not valid statements.
+
+An Array Literal can be used in an assignment where the corresponding \emph{VarLet} is an array, and nowhere else. This is in line with how arrays cannot be used in expressions, unless dereferenced. Similarly, an array can be initialised by a constant (in which case each array entry is filled with this constant), but this is shorthand notation. The constant is not considered an array, and thus cannot be used to substitute calls to arrays and or part of an array literal.
 
 \chapter{Compiler Phases}
 The first three phases interpret the code and build the full abstract syntax tree. The next three phases restructure, optimise and prepare the AST, before the last phase generates the assembly instructions.
@@ -62,8 +68,7 @@ Then, types are matched using the \emph{getType} and \emph{getDepth} functions. 
 
 \section{Code Restructuring}
 
-\subsection{Array Splitting}
-\subsubsection{Array Literal Unfolding}
+\subsection{Array Literal Unfolding}
 Array literals must be homogenous. Mixed array literal and array constant notation, such as
 \begin{verbatim}
 int[2, 2] a = [1, [3, 4]];
@@ -86,10 +91,10 @@ a[1, 1] = 8;
 \end{verbatim}
 Note that the intermediate stages are not valid code, but this is of no significance, since the phase never stops until it is finished. Incomplete array literals will leave some values uninitialised, and too large array literals (that is, too many entries) will yield run time errors, since they are undetectable at this stage.
 
-\subsubsection{Dimension Reduction and Constant Unfolding}
-Now, the dimensions of all arrays are reduced to 1. This is done after Array Literal Unfolding, to allow incomplete array literals to initialise the correct entries, and before Array Constant Unfolding, which then requires only 1 \texttt{for} statement. 
+\subsection{Dimension Reduction and Constant Unfolding}
+Now, the dimensions of all arrays are reduced to 1. This is done after Array Literal Unfolding, to allow incomplete array literals to initialise the correct entries, and before Array Constant Unfolding, which then requires only 1 \texttt{for} statement. Our compiler only fully supports array value unfolding where the value is either a constant or a call to a variable; compound expressions or calls to functions are not correctly implemented.
 
-\subsubsection{Array Splitting and Iterator Splitting}
+\subsection{Array Splitting and Iterator Splitting}
 In these phases, iterators are moved to the back of the local variable list, and dimensions are moved to right before the array declaration they belong to. This includes arguments in function calls and parameters in function headers.
 
 \subsection{Getters and Setters}
@@ -100,26 +105,26 @@ Short circuit binary operators are replaced by Hoare's conditionals: \texttt{a \
 Casts from bools to ints and floats also become Hoare's conditionals: \texttt{(int) b} becomes $1~\triangleleft$ \texttt{b} $\triangleright~0$, and \texttt{(float) b} becomes $1.0~\triangleleft$ \texttt{b} $\triangleright~0.0$.
 
 \section{Code Optimisation}
-There are two types of optimalisation implemented, we calculate as much constant values at compile time as posible an we unroll forloops where posible.
+There are two types of optimalisation implemented: we calculate as many constant values at compile time as possible, and we unroll for-loops where possible.
 \subsection{Constant Calculating}
-To save time at runtime some calculations can be made at compiletime, for example:
+To save time at run-time some calculations can be made at compile-time, for example:
 \[
 (3+4)*x \Rightarrow 7*x
 \]
-We implemented a very minimal optimalisation that only does something in simple cases.
-It wont reconize cases like:
+We implemented a very minimal optimalisation that only works in simple cases.
+It wont recognize cases like:
 \[
 3+x+4
 \]
-Or even, due to the tree structure:
+or even, due to the tree structure:
 \[
 x+3+4 = (x+3)+4
 \]
-It will only alter branches of an expression without variables or function calls in it.
+It will only alter branches of an expression without any variables or function calls in it.
 \subsection{Loop unrolling}
-As with the above optimalisation, we use that some values are known at compiletime to save some work at runtime.
-If the range of a forloop is known and small enough we can output the body of the loop for each value instead of jumping back and fort.
-The range has to bo small enough, we define this as five or below, so the size of the bytecode does not exploid.
+As with the above optimalisation, we use that some values are known at compile-time to save some work at runtime.
+If the range of a for-loop is known and small enough, we can output the body of the loop for each value instead of jumping back and forth.
+The range has to be small enough; we define this as 5 or less, so the size of the bytecode does not explode.
 
 
 \section{Code Preparation}
@@ -131,18 +136,18 @@ For loops increase the number of local variables either by 1 or by 3, reserving 
 Nested functions are renamed in the style \texttt{foo.bar}, where \texttt{foo} is a function containing a function \texttt{bar}. This way, no conflicts arise with user defined functions \texttt{foo\_bar}.
 
 \section{Code Generation}
-The codegeneration is one of the main aspects of the compiler and there is a lot of administration involved.
+The code generation is one of the main aspects of the compiler and there is a lot of administration involved.
 For a start, we have to keep track of the generated code.
-We use a linked list asambley lines and a lot of helperfunctions to make the managment easier.
+We use a linked list of assembly lines and a lot of helper-functions to make the management easier.
 
-Then there is the problem of constants, they have to be listed at the end of the code.
-This brings the problem that we dont want to list the same constant twice, so we have to keep a list of already used constants.
+Then there is the problem of constants, as they have to be listed at the end of the code.
+We dont want to list the same constant twice, so we have to keep a list of already used constants.
 This list contains both ints and floats so we had to use a union.
  
 Then, for the actual code generation; the simplest cases are the integer and floatingpoint expressions.
-This is due to the stack based nature of the VM. To do $A+B$ where $A$ and $B$ are more complex expressions, we simply take the assembly of $A$, this will leave the result on the stack when executed, then te assembly of $B$ and and with a simple "iadd".
+This is due to the stack based nature of the VM. To do $A+B$ where $A$ and $B$ are more complex expressions, we simply take the assembly of $A$, this will leave the result on the stack when executed, then the assembly of $B$ and we end the code with a simple "iadd".
 
-Bolean expressions formt a bigger problem since most had no implementation in the VM. However, this could always be solvedwith a few more lines of assembly.
+Boolean expressions formed a bigger problem since most had no implementation in the VM. However, this could always be solved with a few more lines of assembly.
 
-All ather strucures in the AST are also strait forward, it is mostly the assembly of the children wraped in a few lines of extra assembly.
+All other structures in the AST are also straight-forward; it is mostly the assembly of the children wrapped in a few lines of extra assembly, including labels and (conditional) jumps.
 \end{document}
