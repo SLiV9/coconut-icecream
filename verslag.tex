@@ -94,7 +94,27 @@ Short circuit binary operators are replaced by Hoare's conditionals: \texttt{a \
 Casts from bools to ints and floats also become Hoare's conditionals: \texttt{(int) b} becomes $1~\triangleleft$ \texttt{b} $\triangleright~0$, and \texttt{(float) b} becomes $1.0~\triangleleft$ \texttt{b} $\triangleright~0.0$.
 
 \section{Code Optimisation}
+There are two types of optimalisation implemented, we calculate as much constant values at compile time as posible an we unroll forloops where posible.
 \subsection{Constant Calculating}
+To save time at runtime some calculations can be made at compiletime, for example:
+\[
+(3+4)*x \Rigtharrow 7*x
+\]
+We implemented a very minimal optimalisation that only does something in simple cases.
+It wont reconize cases like:
+\[
+3+x+4
+\]
+Or even, due to the tree structure:
+\[
+x+3+4 = (x+3)+4
+\]
+It will only alter branches of an expression without variables or function calls in it.
+\subsection{Loop unrolling}
+As with the above optimalisation, we use that some values are known at compiletime to save some work at runtime.
+If the range of a forloop is known and small enough we can output the body of the loop for each value instead of jumping back and fort.
+The range has to bo small enough, we define this as five or below, so the size of the bytecode does not exploid.
+
 
 \section{Code Preparation}
 \subsection{Variable Counting}
@@ -105,5 +125,18 @@ For loops increase the number of local variables either by 1 or by 3, reserving 
 Nested functions are renamed in the style \texttt{foo.bar}, where \texttt{foo} is a function containing a function \texttt{bar}. This way, no conflicts arise with user defined functions \texttt{foo\_bar}.
 
 \section{Code Generation}
+The codegeneration is one of the main aspects of the compiler and there is a lot of administration involved.
+For a start, we have to keep track of the generated code.
+We use a linked list asambley lines and a lot of helperfunctions to make the managment easier.
 
+Then there is the problem of constants, they have to be listed at the end of the code.
+This brings the problem that we dont want to list the same constant twice, so we have to keep a list of already used constants.
+This list contains both ints and floats so we had to use a union.
+ 
+Then, for the actual code generation; the simplest cases are the integer and floatingpoint expressions.
+This is due to the stack based nature of the VM. To do $A+B$ where $A$ and $B$ are more complex expressions, we simply take the assembly of $A$, this will leave the result on the stack when executed, then te assembly of $B$ and and with a simple "iadd".
+
+Bolean expressions formt a bigger problem since most had no implementation in the VM. However, this could always be solvedwith a few more lines of assembly.
+
+All ather strucures in the AST are also strait forward, it is mostly the assembly of the children wraped in a few lines of extra assembly.
 \end{document}
