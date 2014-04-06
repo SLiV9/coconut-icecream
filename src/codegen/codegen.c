@@ -334,7 +334,7 @@ extern node* CODEGENif(node *arg_node, info *arg_info){
 extern node* CODEGENfor(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENfor");
 
-  int l_begin,l_end;
+  int l_begin,l_end, l_else, l_end2;
   char * line;
   char * label;
   char * comment;
@@ -358,6 +358,15 @@ extern node* CODEGENfor(node *arg_node, info *arg_info){
     mallocf(line,"istore %i", pos + 1);
     mallocf(comment,"incr");
     addline(arg_info,line,comment);
+
+    mallocf(line,"iload %i", pos + 1);
+    mallocf(comment,"incr");
+    addline(arg_info,line,comment);
+    mallocf(line,"iloadc_0"); addline(arg_info,line,NULL);
+    mallocf(line,"ilt"); addline(arg_info,line,NULL);
+    mallocf(line,"bstore %i", pos + 2);
+    mallocf(comment,"desc");
+    addline(arg_info,line,comment);
   }
 
   l_begin = arg_info->labelcount++;
@@ -369,7 +378,26 @@ extern node* CODEGENfor(node *arg_node, info *arg_info){
   mallocf(line,"iload %i", pos);
   mallocf(comment,"goal");
   addline(arg_info,line,comment);
-  mallocf(line,"ilt"); addline(arg_info,line,NULL);
+
+  if (FOR_INCR( arg_node) != NULL)
+  {
+    l_else = arg_info->labelcount++;
+    l_end2 = arg_info->labelcount++;
+    mallocf(line,"bload %i", pos + 2);
+    mallocf(comment,"desc");
+    addline(arg_info,line,comment);
+    mallocf(line,"branch_t %d", l_else); addline(arg_info,line,NULL);
+    mallocf(line,"ilt"); addline(arg_info,line,NULL);
+    mallocf(line,"jump %d", l_end2); addline(arg_info,line,NULL);
+    mallocf(label,"%d", l_else); addlabel(arg_info,label);
+    mallocf(line,"igt"); addline(arg_info,line,NULL);
+    mallocf(label,"%d", l_end2); addlabel(arg_info,label);
+  }
+  else
+  {
+    mallocf(line,"ilt"); addline(arg_info,line,NULL);
+  }
+
   mallocf(line,"branch_f %d", l_end); addline(arg_info,line,NULL);
 
   FOR_DO( arg_node) = TRAVdo( FOR_DO( arg_node), arg_info);
@@ -468,9 +496,10 @@ extern node* CODEGENbody(node *arg_node, info *arg_info){
       node* instr = INSTRS_INSTR( instrs);
       if (NODE_TYPE( instr) == N_for)
       {
-        nlocs++;
-        if (FOR_INCR( instr) != NULL)
-          nlocs++;
+        if (FOR_INCR( instr) == NULL)
+          nlocs += 1;
+        else
+          nlocs += 3;
       }
       instrs = INSTRS_NEXT( instrs);
     }

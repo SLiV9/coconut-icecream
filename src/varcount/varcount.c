@@ -128,7 +128,7 @@ node* VARCOUNTfor(node *arg_node, info *arg_info)
 	if (FOR_INCR( arg_node) == NULL)
 		INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 1;
 	else
-		INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 2;
+		INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 3;
 
 	FOR_DO( arg_node) = TRAVopt( FOR_DO( arg_node), arg_info);
 
