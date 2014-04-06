@@ -240,6 +240,7 @@
           <node name="VarCall" />
           <node name="If" />
           <node name="While" />
+          <node name="For" />
           <node name="Hoare" />
         </travuser>
       </traversal>

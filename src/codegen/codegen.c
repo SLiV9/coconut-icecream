@@ -269,6 +269,40 @@ void addexport(node* arg_node, info* inf)
 }
 
 
+
+static void var( info* arg_info, char c, const char* op, \
+    const char* name, node* dec, int diff)
+{
+  int pos;
+  char * line;
+  char * comment;
+  mallocf(comment,"%s",name);
+  if(NODE_TYPE(dec) == N_vardec){
+    pos = VARDEC_SCOPEPOS(dec)-1;
+    if(diff == NDSD_LOCAL()){
+      mallocf(line,"%c%s %i",c,op,pos);
+    }else{
+      mallocf(line,"%c%sn %i %i",c,op,diff,pos);
+    }
+    addline(arg_info,line,comment);
+  }else if(NODE_TYPE(dec) == N_param){
+    pos = PARAM_SCOPEPOS(dec)-1;
+    if(diff == NDSD_LOCAL()){
+      mallocf(line,"%c%s %i",c,op,pos);
+    }else{
+      mallocf(line,"%c%sn %i %i",c,op,diff,pos);
+    }
+    addline(arg_info,line,comment);
+  }else{
+    pos = GLOBDEF_GLOBALPOS(dec)-1;
+    mallocf(line,"%c%sg %i",c,op,pos);
+    addline(arg_info,line,comment);
+  }
+}
+
+
+
+
 extern node* CODEGENif(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENif");
 
@@ -297,8 +331,73 @@ extern node* CODEGENif(node *arg_node, info *arg_info){
 }
 
 
+extern node* CODEGENfor(node *arg_node, info *arg_info){
+  DBUG_ENTER("CODEGENfor");
+
+  int l_begin,l_end;
+  char * line;
+  char * label;
+  char * comment;
+  int pos = FOR_SCOPEPOS( arg_node) - 1;
+
+  DBUG_ASSERT( FOR_ITERDEC( arg_node) != NULL, "no iterdec!");
+  DBUG_ASSERT( FOR_ITER( arg_node) != NULL, "no iter!");
+
+  FOR_FROM( arg_node) = TRAVdo( FOR_FROM( arg_node), arg_info);
+  var(arg_info, 'i', "store", ITER_NAME( FOR_ITER( arg_node)), \
+      FOR_ITERDEC( arg_node), NDSD_LOCAL());
+
+  FOR_TO( arg_node) = TRAVdo( FOR_TO( arg_node), arg_info);
+  mallocf(line,"istore %i", pos);
+  mallocf(comment,"goal");
+  addline(arg_info,line,comment);
+
+  if (FOR_INCR( arg_node) != NULL)
+  {
+    FOR_INCR( arg_node) = TRAVdo( FOR_INCR( arg_node), arg_info);
+    mallocf(line,"istore %i", pos + 1);
+    mallocf(comment,"incr");
+    addline(arg_info,line,comment);
+  }
+
+  l_begin = arg_info->labelcount++;
+  l_end = arg_info->labelcount++;
+
+  mallocf(label,"%d", l_begin); addlabel(arg_info,label);
+  var(arg_info, 'i', "load", ITER_NAME( FOR_ITER( arg_node)), \
+      FOR_ITERDEC( arg_node), NDSD_LOCAL());
+  mallocf(line,"iload %i", pos);
+  mallocf(comment,"goal");
+  addline(arg_info,line,comment);
+  mallocf(line,"ilt"); addline(arg_info,line,NULL);
+  mallocf(line,"branch_f %d", l_end); addline(arg_info,line,NULL);
+
+  FOR_DO( arg_node) = TRAVdo( FOR_DO( arg_node), arg_info);
+  if (FOR_INCR( arg_node) != NULL)
+  {
+    var(arg_info, 'i', "load", ITER_NAME( FOR_ITER( arg_node)), \
+      FOR_ITERDEC( arg_node), NDSD_LOCAL());
+    mallocf(line,"iload %i", pos + 1);
+    mallocf(comment,"incr");
+    addline(arg_info,line,comment);
+    mallocf(line,"iadd"); addline(arg_info,line,NULL);
+    var(arg_info, 'i', "store", ITER_NAME( FOR_ITER( arg_node)), \
+        FOR_ITERDEC( arg_node), NDSD_LOCAL());
+  }
+  else
+  {
+    mallocf(line,"iinc_1 %i", VARDEC_SCOPEPOS(FOR_ITERDEC(arg_node))-1);
+    mallocf(comment,"%s++",VARDEC_NAME(FOR_ITERDEC(arg_node)));
+    addline(arg_info,line,comment);
+  }
+  mallocf(line,"jump %d", l_begin); addline(arg_info,line,NULL);
+  mallocf(label,"%d", l_end); addlabel(arg_info,label);
+
+  DBUG_RETURN( arg_node);
+}
+
 extern node* CODEGENwhile(node *arg_node, info *arg_info){
-  DBUG_ENTER("CODEGENif");
+  DBUG_ENTER("CODEGENwhile");
 
   int l_begin,l_end;
   char * line;
@@ -363,6 +462,18 @@ extern node* CODEGENbody(node *arg_node, info *arg_info){
       nlocs++;
       vdecs = VARDECS_NEXT( vdecs);
     }
+  node * instrs = BODY_INSTRS( arg_node);
+  while (instrs != NULL)
+    {
+      node* instr = INSTRS_INSTR( instrs);
+      if (NODE_TYPE( instr) == N_for)
+      {
+        nlocs++;
+        if (FOR_INCR( instr) != NULL)
+          nlocs++;
+      }
+      instrs = INSTRS_NEXT( instrs);
+    }
   mallocf(line,"esr %d", nlocs); addline(arg_info,line,NULL);
 
   BODY_INSTRS( arg_node) = TRAVopt( BODY_INSTRS( arg_node), arg_info);
@@ -424,36 +535,6 @@ extern node* CODEGENfunstate(node *arg_node, info *arg_info){
       DBUG_ASSERT( 0, "illegal funcall type detected!");
     }
   DBUG_RETURN( arg_node);
-}
-
-static void var( info* arg_info, char c, const char* op, \
-    const char* name, node* dec, int diff)
-{
-  int pos;
-  char * line;
-  char * comment;
-  mallocf(comment,"%s",name);
-  if(NODE_TYPE(dec) == N_vardec){
-    pos = VARDEC_SCOPEPOS(dec)-1;
-    if(diff == NDSD_LOCAL()){
-      mallocf(line,"%c%s %i",c,op,pos);
-    }else{
-      mallocf(line,"%c%sn %i %i",c,op,diff,pos);
-    }
-    addline(arg_info,line,comment);
-  }else if(NODE_TYPE(dec) == N_param){
-    pos = PARAM_SCOPEPOS(dec)-1;
-    if(diff == NDSD_LOCAL()){
-      mallocf(line,"%c%s %i",c,op,pos);
-    }else{
-      mallocf(line,"%c%sn %i %i",c,op,diff,pos);
-    }
-    addline(arg_info,line,comment);
-  }else{
-    pos = GLOBDEF_GLOBALPOS(dec)-1;
-    mallocf(line,"%c%sg %i",c,op,pos);
-    addline(arg_info,line,comment);
-  }
 }
 
 extern node* CODEGENvarcall(node *arg_node, info *arg_info){
@@ -1033,7 +1114,7 @@ node *CODEGENdoCodegen(node *syntaxtree)
   {
     global.outfile = "out.s";
   }
-  
+
   FILE* out = fopen(global.outfile, "w+");
   if (out == NULL)
   {
