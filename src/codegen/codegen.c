@@ -224,7 +224,14 @@ void addglobal(node* arg_node, info* inf, int pos)
 {
   char* ln;
   vtype t = GLOBDEF_TYPE( arg_node);
-  mallocf(ln,".global %s\n",vtype_name[t]);
+  if (GLOBDEF_DIMDECS( arg_node) > 0)
+  {
+    mallocf(ln,".global %s[]\n",vtype_name[t]);
+  }
+  else
+  {
+    mallocf(ln,".global %s\n",vtype_name[t]);
+  }
   int i = addentry(inf, ln, &(inf->globals));
   DBUG_ASSERT(i == pos, "globals out of order!");
 }
@@ -619,13 +626,13 @@ extern node* CODEGENvarlet(node *arg_node, info *arg_info){
     c = ct;
 
   char* op = "store";
-  if (isArray)
+  if (isArray && VARLET_INDX( arg_node) != NULL)
     op = "load";
 
   var( arg_info, c, op, VARLET_NAME( arg_node), \
       VARLET_DEC( arg_node), VARLET_SCOPEDIFF( arg_node));
 
-  if (isArray)
+  if (isArray && VARLET_INDX( arg_node) != NULL)
   {
     char* line;
     mallocf(line,"%cstorea",ct);
