@@ -13,7 +13,39 @@ export void main()
 	
 	int foo(int x)
 	{
+		void bar()
+		{
+			foo(x);
+			hee();
+			bar();
+			baz();
+			main();
+		}
+		void baz()
+		{
+			foo(x);
+			hee();
+			bar();
+			baz();
+			main();
+		}
+
+		foo(x);
+		hee();
+		bar();
+		baz();
+		main();
+
 		return -x;
+	}
+
+	void hee()
+	{
+		foo(x);
+		hee();
+		//bar();
+		//baz();
+		main();
 	}
 
 	printInt(foo(x));

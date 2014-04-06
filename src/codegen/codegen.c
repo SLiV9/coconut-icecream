@@ -426,10 +426,13 @@ extern node* CODEGENfunstate(node *arg_node, info *arg_info){
   DBUG_RETURN( arg_node);
 }
 
-static void var( info* arg_info, char c, const char* op, node* dec, int diff)
+static void var( info* arg_info, char c, const char* op, \
+    const char* name, node* dec, int diff)
 {
   int pos;
   char * line;
+  char * comment;
+  mallocf(comment,"%s",name);
   if(NODE_TYPE(dec) == N_vardec){
     pos = VARDEC_SCOPEPOS(dec)-1;
     if(diff == NDSD_LOCAL()){
@@ -437,7 +440,7 @@ static void var( info* arg_info, char c, const char* op, node* dec, int diff)
     }else{
       mallocf(line,"%c%sn %i %i",c,op,diff,pos);
     }
-    addline(arg_info,line,NULL);
+    addline(arg_info,line,comment);
   }else if(NODE_TYPE(dec) == N_param){
     pos = PARAM_SCOPEPOS(dec)-1;
     if(diff == NDSD_LOCAL()){
@@ -445,11 +448,11 @@ static void var( info* arg_info, char c, const char* op, node* dec, int diff)
     }else{
       mallocf(line,"%c%sn %i %i",c,op,diff,pos);
     }
-    addline(arg_info,line,NULL);
+    addline(arg_info,line,comment);
   }else{
     pos = GLOBDEF_GLOBALPOS(dec)-1;
     mallocf(line,"%c%sg %i",c,op,pos);
-    addline(arg_info,line,NULL);
+    addline(arg_info,line,comment);
   }
 }
 
@@ -472,7 +475,7 @@ extern node* CODEGENvarcall(node *arg_node, info *arg_info){
   else
     c = ct;
 
-  var( arg_info, c, "load", \
+  var( arg_info, c, "load", VARCALL_NAME( arg_node), \
       VARCALL_DEC( arg_node), VARCALL_SCOPEDIFF( arg_node));
 
   if (isArray)
@@ -509,7 +512,7 @@ extern node* CODEGENvarlet(node *arg_node, info *arg_info){
   if (isArray)
     op = "load";
 
-  var( arg_info, c, op, \
+  var( arg_info, c, op, VARLET_NAME( arg_node), \
       VARLET_DEC( arg_node), VARLET_SCOPEDIFF( arg_node));
 
   if (isArray)
@@ -526,9 +529,34 @@ extern node* CODEGENfuncall(node *arg_node, info *arg_info){
   DBUG_ENTER("CODEGENfuncall");
   char * line;
   char * comment;
+
+  bool isAlloc = (STReq("__alloc", FUNCALL_NAME( arg_node)));
+
+  if (!isAlloc)
+  {
+    int diff = FUNCALL_SCOPEDIFF( arg_node);
+    switch (diff)
+    {
+      case 1:
+        mallocf(line,"isr");
+        break;
+      case NDSD_GLOBAL():
+        mallocf(line,"isrg");
+        break;
+      case NDSD_LOCAL():
+        mallocf(line,"isrl");
+        break;
+      default:
+        DBUG_ASSERT(diff > 1, "illegal funcall scopediff!");
+        mallocf(line,"isrn %d",(diff - 1));
+    }
+    mallocf(comment,"%s(",FUNCALL_NAME(arg_node));
+    addline(arg_info,line,comment);
+  }
+
   FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
 
-  if (STReq("__alloc", FUNCALL_NAME( arg_node)))
+  if (isAlloc)
     {
       char c;
       switch (FUNCALL_TYPE( arg_node))
@@ -568,7 +596,7 @@ extern node* CODEGENfuncall(node *arg_node, info *arg_info){
     default:
       DBUG_ASSERT( 0, "illegal funcall dec type detected!");
     }
-  mallocf(comment,"%s", FUNCALL_NAME( arg_node));
+  mallocf(comment,")");
   addline(arg_info,line,comment);
   DBUG_RETURN( arg_node);
 }
