@@ -586,7 +586,7 @@ extern node* CODEGENvarcall(node *arg_node, info *arg_info){
   var( arg_info, c, "load", VARCALL_NAME( arg_node), \
       VARCALL_DEC( arg_node), VARCALL_SCOPEDIFF( arg_node));
 
-  if (isArray)
+  if (isArray && VARCALL_INDX( arg_node) != NULL)
   {
     char* line;
     mallocf(line,"%cloada",ct);

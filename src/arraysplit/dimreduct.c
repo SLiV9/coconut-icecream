@@ -19,7 +19,7 @@ node* DIMREDUCTfuncall(node *arg_node, info *arg_info)
 {
   DBUG_ENTER ("DIMREDUCTfuncall");
 
-  // no need to travdo
+  FUNCALL_ARGS( arg_node) = TRAVopt( FUNCALL_ARGS( arg_node), arg_info);
 
   if (STReq("__alloc", FUNCALL_NAME( arg_node)))
   {
