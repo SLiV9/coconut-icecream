@@ -201,7 +201,9 @@ node* CALCCONSTbinop(node *arg_node, info *arg_info){
       break;
     case BO_div:
       if (r != 0)
+      {
         DBISNS(TBmakeInt(l/r));
+      }
       break;
     case BO_mod:
       DBISNS(TBmakeInt(l % r));
@@ -245,7 +247,9 @@ node* CALCCONSTbinop(node *arg_node, info *arg_info){
       break;
     case BO_div:
       if (r != 0.0f)
+      {
         DBISNS(TBmakeFloat(l/r));
+      }
       break;
     case BO_lt:
       DBISNS(TBmakeBool(l < r));

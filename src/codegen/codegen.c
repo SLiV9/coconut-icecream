@@ -746,7 +746,7 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
   BINOP_RIGHT( arg_node) = TRAVopt( BINOP_RIGHT( arg_node), arg_info);
   char * line;
   char * label;
-  int l_either, l_end;
+  int l_either1, l_either2, l_end;
 
   switch(getType(BINOP_LEFT( arg_node))){
   case VT_int:
@@ -856,24 +856,30 @@ extern node* CODEGENbinop(node *arg_node, info *arg_info){
   case VT_bool:
     switch(BINOP_OP(arg_node)){
     case BO_add:
-      l_either = arg_info->labelcount++;
-      mallocf(line,"branch_t %d", l_either); addline(arg_info,line,NULL);
-      mallocf(line,"branch_t %d", l_either); addline(arg_info,line,NULL);
+      l_either1 = arg_info->labelcount++;
+      l_either2 = arg_info->labelcount++;
+      mallocf(line,"branch_t %d", l_either1); addline(arg_info,line,NULL);
+      mallocf(line,"branch_t %d", l_either2); addline(arg_info,line,NULL);
       mallocf(line,"bloadc_f"); addline(arg_info,line,NULL);
       l_end = arg_info->labelcount++;
       mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_either); addlabel(arg_info,label);
+      mallocf(label,"%d", l_either1); addlabel(arg_info,label);
+      mallocf(line,"bpop"); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_either2); addlabel(arg_info,label);
       mallocf(line,"bloadc_t"); addline(arg_info,line,NULL);
       mallocf(label,"%d", l_end); addlabel(arg_info,label);
       break;
     case BO_mul:
-      l_either = arg_info->labelcount++;
-      mallocf(line,"branch_f %d", l_either); addline(arg_info,line,NULL);
-      mallocf(line,"branch_f %d", l_either); addline(arg_info,line,NULL);
+      l_either1 = arg_info->labelcount++;
+      l_either2 = arg_info->labelcount++;
+      mallocf(line,"branch_f %d", l_either1); addline(arg_info,line,NULL);
+      mallocf(line,"branch_f %d", l_either2); addline(arg_info,line,NULL);
       mallocf(line,"bloadc_t"); addline(arg_info,line,NULL);
       l_end = arg_info->labelcount++;
       mallocf(line,"jump %d", l_end); addline(arg_info,line,NULL);
-      mallocf(label,"%d", l_either); addlabel(arg_info,label);
+      mallocf(label,"%d", l_either1); addlabel(arg_info,label);
+      mallocf(line,"bpop"); addline(arg_info,line,NULL);
+      mallocf(label,"%d", l_either2); addlabel(arg_info,label);
       mallocf(line,"bloadc_f"); addline(arg_info,line,NULL);
       mallocf(label,"%d", l_end); addlabel(arg_info,label);
       break;
