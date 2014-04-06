@@ -23,6 +23,8 @@ GLOBAL( type, name, init)
 #endif
 
 GLOBAL( char *, fn, NULL)
+GLOBAL( int, optlevel, 1)
+GLOBAL( char *, cpp_I, NULL)
 
 
 #undef GLOBALtype

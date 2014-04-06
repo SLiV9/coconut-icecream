@@ -167,7 +167,7 @@ PHASE( cg,
 SUBPHASE( prt, 
           "Print before generation",
           PRTdoPrint, 
-          ALWAYS,
+          global.verbosity > 1,
           cg)  
 
 SUBPHASE( gbc, 

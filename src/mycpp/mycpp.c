@@ -7,6 +7,7 @@
 #include "dbug.h"
 #include "memory.h"
 #include "globals.h"
+#include "myglobals.h"
 #include "ctinfo.h"
 #include "str.h"
 
@@ -24,14 +25,31 @@ node *MYCPPdoPreprocessing(node *syntaxtree)
 	dirnm = dirname( buffer1);
 	basenm = basename( buffer2);
 
-  cppcallstr = STRcatn( 7, 
-                        "cpp ",
-                        global.infile,
-                        " > ",
-                        dirnm,
-                        "/.",
-                        basenm,
-                        ".cpp");
+  if (myglobal.cpp_I != NULL)
+  {
+    cppcallstr = STRcatn( 10, 
+                          "cpp ",
+                          "-I ",
+                          myglobal.cpp_I,
+                          " ",
+                          global.infile,
+                          " > ",
+                          dirnm,
+                          "/.",
+                          basenm,
+                          ".cpp");
+  }
+  else
+  {
+    cppcallstr = STRcatn( 7, 
+                          "cpp ",
+                          global.infile,
+                          " > ",
+                          dirnm,
+                          "/.",
+                          basenm,
+                          ".cpp");
+  }
   
   err = system( cppcallstr);
 

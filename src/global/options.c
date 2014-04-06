@@ -2,6 +2,7 @@
 #include "dbug.h"
 #include "str.h"
 #include "globals.h"
+#include "myglobals.h"
 #include "usage.h"
 #include "ctinfo.h"
 #include "phase_options.h"
@@ -19,7 +20,11 @@ void OPTcheckOptions( int argc, char **argv)
 
   ARGS_OPTION( "o", global.outfile = STRcpy( ARG));
 
+  ARGS_OPTION( "I", myglobal.cpp_I = STRcpy( ARG));
+
   ARGS_OPTION( "v", ARG_RANGE(global.verbosity, 0, 3));
+
+  ARGS_FLAG( "noopt", myglobal.optlevel = 0);
 
   ARGS_FLAG( "tc", global.treecheck = TRUE);
 

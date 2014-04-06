@@ -26,8 +26,10 @@ void PrintGeneralInfo(void)
           
           "    <filename>      Name of program file to compile.\n\n"
           "    -o <filename>   Name of output file.\n\n"
+          "    -I <pathname>   Name of directory to search for header files.\n\n"
           "    -v <n>          Verbosity level (default: %d).\n\n"
           "    -tc             Apply syntax tree consistency checks.\n\n"
+          "    -noopt          Do not use optimisations.\n\n"
           "    -#d,<id>        Print debugging information for tag <id>.\n"
           "                    Supported tags are:\n\n"
           
