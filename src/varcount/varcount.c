@@ -95,6 +95,8 @@ node* VARCOUNTbody(node *arg_node, info *arg_info)
 
 	BODY_FUNDEFS( arg_node) = TRAVopt( BODY_FUNDEFS( arg_node), NULL);
 
+	BODY_INSTRS( arg_node) = TRAVopt( BODY_INSTRS( arg_node), arg_info);
+
 	DBUG_RETURN (arg_node);
 }
 
@@ -118,25 +120,17 @@ node* VARCOUNTparam(node *arg_node, info *arg_info)
 	DBUG_RETURN (arg_node);
 }
 
-node* VARCOUNTiter(node *arg_node, info *arg_info)
+node* VARCOUNTfor(node *arg_node, info *arg_info)
 {
-	DBUG_ENTER ("VARCOUNTiter");
+	DBUG_ENTER ("VARCOUNTfor");
 
-	ITER_SCOPEPOS( arg_node) = INFO_COUNT( arg_info);
-	INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 1;
+	FOR_SCOPEPOS( arg_node) = INFO_COUNT( arg_info);
+	if (FOR_INCR( arg_node) == NULL)
+		INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 2;
+	else
+		INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 3;
 
-	DBUG_RETURN (arg_node);
-}
-
-node* VARCOUNTdim(node *arg_node, info *arg_info)
-{
-	DBUG_ENTER ("VARCOUNTdim");
-
-	if (arg_info != NULL)
-	{
-		DIM_SCOPEPOS( arg_node) = INFO_COUNT( arg_info);
-		INFO_COUNT( arg_info) = INFO_COUNT( arg_info) + 1;
-	}
+	FOR_DO( arg_node) = TRAVopt( FOR_DO( arg_node), arg_info);
 
 	DBUG_RETURN (arg_node);
 }

@@ -188,18 +188,6 @@ void printLink(node* dec, int scopediff)
         printf(" #%d", PARAM_SCOPEPOS(dec) - 1);
       }
       break;
-    case N_iter:
-      if (ITER_SCOPEPOS(dec))
-      {
-        printf(" #%d", ITER_SCOPEPOS(dec) - 1);
-      }
-      break;
-    case N_dim:
-      if (DIM_SCOPEPOS(dec))
-      {
-        printf(" #%d", DIM_SCOPEPOS(dec) - 1);
-      }
-      break;
     default:
       /* nothing */;
   }
@@ -351,11 +339,6 @@ PRTdim (node * arg_node, info * arg_info)
   printf( " %s", DIM_NAME( arg_node));
   if (INFO_INDENT( arg_info) >= 0)
     printf(";");
-
-  if (DIM_SCOPEPOS( arg_node))
-  {
-    printf(" #%d", DIM_SCOPEPOS( arg_node) - 1);
-  }
 
   if (INFO_INDENT( arg_info) >= 0)
     printf("\n");
@@ -938,7 +921,12 @@ PRTfor (node * arg_node, info * arg_info)
 		FOR_INCR( arg_node) = TRAVdo( FOR_INCR( arg_node), arg_info);
 	}
 	
-	printf(")\n");
+	printf(")");
+  if (FOR_SCOPEPOS( arg_node) > 0)
+  {
+    printf(" #%d", FOR_SCOPEPOS( arg_node) - 1);
+  }
+  printf("\n");
 	
 	printIndent( arg_info);
 	printf("{\n");
@@ -961,11 +949,6 @@ PRTiter (node * arg_node, info * arg_info)
   printIndent( arg_info);
   printf( "itr");
   printf( " %s;", ITER_NAME( arg_node));
-
-  if (ITER_SCOPEPOS( arg_node))
-  {
-    printf(" #%d", ITER_SCOPEPOS( arg_node) - 1);
-  }
 
   printf("\n");
 

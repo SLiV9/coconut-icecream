@@ -200,8 +200,7 @@
           <node name="GlobDec" />
           <node name="VarDec" />
           <node name="Param" />
-          <node name="Iter" />
-          <node name="Dim" />
+          <node name="For" />
         </travuser>
       </traversal>
 
@@ -594,18 +593,6 @@
                 <any />
                 <phases>
                   <all />
-                </phases>
-              </target>
-            </targets>
-          </type>
-        </attribute>
-        <attribute name="ScopePos">
-          <type name="Int">
-            <targets>
-              <target mandatory="no">
-                <any />
-                <phases>
-                  <range from="cr" to="cg" />
                 </phases>
               </target>
             </targets>
@@ -1049,7 +1036,7 @@
               <target mandatory="no">
                 <any />
                 <phases>
-                  <range from="cr" to="cg" />
+                  <range from="cp" to="cg" />
                 </phases>
               </target>
             </targets>
@@ -1145,7 +1132,7 @@
               <target mandatory="no">
                 <any />
                 <phases>
-                  <range from="cr" to="cg" />
+                  <range from="cp" to="cg" />
                 </phases>
               </target>
             </targets>
@@ -1317,6 +1304,18 @@
             </targets>
           </type>
         </attribute>
+        <attribute name="ScopePos">
+          <type name="Int">
+            <targets>
+              <target mandatory="no">
+                <any />
+                <phases>
+                  <range from="cp" to="cg" />
+                </phases>
+              </target>
+            </targets>
+          </type>
+        </attribute>
       </attributes>
     </node>
     <node name="Iter">
@@ -1331,18 +1330,6 @@
                   <all />
                 </phases>
               </target>
-            </targets>
-          </type>
-        </attribute>
-        <attribute name="ScopePos">
-          <type name="Int">
-            <targets>
-              <target mandatory="no">
-                <any />
-                <phases>
-                  <range from="cr" to="cg" />
-                </phases>
-                </target>g
             </targets>
           </type>
         </attribute>
