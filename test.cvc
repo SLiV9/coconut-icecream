@@ -1,0 +1,11 @@
+int test(){
+ return 5;
+}
+
+export int main(){
+  int a;
+  for(int i = 1,4){
+    a = test();
+  }
+  return 0;
+}
