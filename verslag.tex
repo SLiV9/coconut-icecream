@@ -24,6 +24,11 @@ Our compiler runs the \texttt{CPP} preprocessor and saves the resulting code in 
 The resulting code is used as input for the next phase.
 
 \subsection{Scanning}
+Our scanner interprets the \texttt{\#line} preprocessor hints to provide accurate error messages during scanning and parsing.
+
+The scanner accepts \texttt{CR}, \texttt{LF}, \texttt{CR LF} and \texttt{LF CR} as a valid line ending.
+
+Integers between $-2^{31}$ and $2^{31}-1$ (inclusive) are always supported; larger integers may be supported, depending on the platform. Floats have similar ranges of support. The scanner accepts both \texttt{.5} and \texttt{2.} as shorthand notation for \texttt{0.5} and \texttt{2.0} respectively.
 
 \subsection{Parsing}
 
