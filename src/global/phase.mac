@@ -134,6 +134,17 @@ SUBPHASE( calcconst,
 					ALWAYS,
 					co)
 
+SUBPHASE( unroll,
+					"Unroll for loops",
+					UNROLLdoUnroll,
+					ALWAYS,
+					co)
+SUBPHASE( print,
+					"Print",
+					PRTdoPrint,
+					ALWAYS,
+					ca)
+
 ENDPHASE( co)
 
 /******************************************************************************/

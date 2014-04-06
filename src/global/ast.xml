@@ -83,6 +83,14 @@
         </travuser>
       </traversal>
 
+      <traversal id="UNROLL" name="Unroll for loops" default="sons" include="unroll.h">
+        <travuser>
+          <node name="For" />
+          <node name="VarCall" />
+          <node name="Instrs" />
+        </travuser>
+      </traversal>
+
       <traversal id="TPMAT" name="Type matching" default="sons" include="tpmat.h">
         <travuser>
           <node name="FunDef" />
