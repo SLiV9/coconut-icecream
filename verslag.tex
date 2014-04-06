@@ -14,8 +14,10 @@
 %\begin{abstract}
 %\end{abstract}
 
+\chapter{Abstract Syntax Tree}
+
 \chapter{Compiler Phases}
-The first three phases, `Loading', `Context Analysis' and `Type Checking', interpret the code and build the full abstract syntax tree. The next three phases restructure, optimise and prepare the AST, before the last phase, `Code Generation'. ZINNEN ZIJN LASTIG.
+The first three phases interpret the code and build the full abstract syntax tree. The next three phases restructure, optimise and prepare the AST, before the last phase generates the assembly instructions.
 
 \section{Loading the code}
 \subsection{Running the preprocessor}
@@ -23,19 +25,35 @@ Our compiler runs the \texttt{CPP} preprocessor and saves the resulting code in 
 
 The resulting code is used as input for the next phase.
 
-\subsection{Scanning}
+\subsection{Scanning and Parsing}
 Our scanner interprets the \texttt{\#line} preprocessor hints to provide accurate error messages during scanning and parsing.
 
 The scanner accepts \texttt{CR}, \texttt{LF}, \texttt{CR LF} and \texttt{LF CR} as a valid line ending.
 
 Integers between $-2^{31}$ and $2^{31}-1$ (inclusive) are always supported; larger integers may be supported, depending on the platform. Floats have similar ranges of support. The scanner accepts both \texttt{.5} and \texttt{2.} as shorthand notation for \texttt{0.5} and \texttt{2.0} respectively.
 
-\subsection{Parsing}
+The parser follows the associativity and precedence of operators as described by the C standard.
 
 \section{Context Analysis}
-Namelinking happens before declaration splitting.
-\subsection{Namelinking}
-\subsection{Declaration splitting}
+In our compiler, the code is analysed just as it is written: from top to bottom, from left to right. In this light, a piece of code such as
+\begin{verbatim}
+int a = b;
+int b = 2;
+\end{verbatim}
+will be interpreted as ``\emph{declare} \texttt{a}, \emph{assign} \texttt{b} \emph{to} \texttt{a}, \emph{declare} \texttt{b}, \emph{assign} $2$ \emph{to} \texttt{b}'', and thus results in a namelinking error. Similarly, when namelinking a piece of code such as
+\begin{verbatim}
+int a = 2;
+int foo()
+{
+  int a = a;
+  return a;
+}
+\end{verbatim}
+the declaration of the local variable \texttt{a} overshadows the global variable \texttt{a}, \emph{before} the call \texttt{a} is linked to the last declaration (that is, to the local variable); the resulting program will have unspecified behaviour, and a call to \texttt{foo()} will most likely not return $2$.
+
+An exception to this rule is the global scope. First, the global functions are stored, then the global variables are linked from top to bottom, from left to right. After this, namelinking enters the bodies of the global function definitions. A functions body is always entered \emph{after} everything else on the current scope level is namelinked.
+
+The iterators of \texttt{for}-loops are also linked in this phase. Iterators are considered to be part of the \texttt{for}-loop's subscope, and thus are namelinked \emph{after} the \emph{from}, \emph{to} and \emph{incr} fields of the loop. Nested \texttt{for}-loops may have the same iterator name, with each new iterator shadowing calls to previous iterators.
 
 \section{Type Checking}
 \subsection{Type Inference}
@@ -43,16 +61,48 @@ Namelinking happens before declaration splitting.
 
 \section{Code Restructuring}
 \subsection{Iterator Splitting}
+In this phase, iterators are moved to the back of the local variable list.
+
 \subsection{Array Splitting}
+\subsubsection{Array Literal Unfolding}
+Array literals must be homogenous. Mixed array literal and array constant notation, such as
+\begin{verbatim}
+int[2, 2] a = [1, [3, 4]];
+\end{verbatim}
+is not allowed. Having been matched to their proper dimensions during type checking, they are now unfolded recursively, where a piece of code such as
+\begin{verbatim}
+a = [[5, 6], [7, 8]];
+\end{verbatim}
+first becomes
+\begin{verbatim}
+a[0] = [5, 6];
+a[1] = [7, 8];
+\end{verbatim}
+before finishing at
+\begin{verbatim}
+a[0, 0] = 5;
+a[0, 1] = 6;
+a[1, 0] = 7;
+a[1, 1] = 8;
+\end{verbatim}
+Note that the intermediate stages are not valid code, but this is of no significance, since the phase never stops until it is finished.
 \subsection{Getters and Setters}
+Creating getters and setters out of global variables happens in three phases. First, a getter and setter is created for each exported global variable and each external global variable. Then, calls to external variables become calls to getters, and assignments to them become setter-statements. Finally, the external global variables are removed from the AST, as they have been fully replaced. Exported variables are not removed, as they are still used locally.
 \subsection{Ternary Operators}
+Short circuit binary operators are replaced by Hoare's conditionals: \texttt{a \&\& b} becomes \texttt{b} $\triangleleft$ \texttt{a} $\triangleright$ \texttt{false}, and \texttt{a || b} becomes \texttt{true} $\triangleleft$ \texttt{a} $\triangleright$ \texttt{b}.
+
+Casts from bools to ints and floats also become Hoare's conditionals: \texttt{(int) b} becomes $1~\triangleleft$ \texttt{b} $\triangleright~0$, and \texttt{(float) b} becomes $1.0~\triangleleft$ \texttt{b} $\triangleright~0.0$.
 
 \section{Code Optimisation}
 \subsection{Constant Calculating}
 
 \section{Code Preparation}
 \subsection{Variable Counting}
+In this phase, the external functions are assigned their ``import position'', and global variables get a ``global position''. Then, each function's parameters and local variables are given a ``scope position'', and the function notes its number of local variables. 
+
+For loops increase the number of local variables either by 1 or by 3, reserving space to store the \emph{to} and, if specified, the \emph{incr} field. If the \emph{incr} field is present, the third space is used to store wether or not the for loop is decreasing or increasing.
 \subsection{Nested Function Renaming}
+Nested functions are renamed in the style \texttt{foo.bar}, where \texttt{foo} is a function containing a function \texttt{bar}. This way, no conflicts arise with user defined functions \texttt{foo\_bar}.
 
 \section{Code Generation}
 
